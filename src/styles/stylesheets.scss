@@ -1,0 +1,9 @@
+@import 'variables';
+@import 'mixins';
+// Import Libraries and external sheets.
+@import url('https://www.ebi.ac.uk/web_guidelines/EBI-Framework/v1.2/libraries/foundation-6/css/foundation.css');
+@import url('https://www.ebi.ac.uk/web_guidelines/EBI-Framework/v1.2/css/ebi-global.css');
+@import url('https://www.ebi.ac.uk/web_guidelines/EBI-Icon-fonts/v1.2/fonts.css');
+@import url('https://www.ebi.ac.uk/web_guidelines/EBI-Framework/v1.2/css/theme-embl-petrol.css');
+// Import Custom Styles.
+@import 'styles/styles';

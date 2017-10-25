@@ -1,10 +1,30 @@
-import { Component } from '@angular/core';
+/**
+ * Angular 2 decorators and services
+ */
+import {
+  Component,
+  OnInit,
+  AfterContentInit
+} from '@angular/core';
 
+declare var $;
+
+/**
+ * App Component
+ * Top Level Component
+ */
 @Component({
   selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: [
+    './app.component.css'
+  ],
+  templateUrl: './app.component.html'
 })
 export class AppComponent {
-  title = 'app works!';
+  constructor() {}
+
+  ngAfterViewInit() {
+    $(document).foundation();
+    $(document).foundationExtendEBI();
+  }
 }
