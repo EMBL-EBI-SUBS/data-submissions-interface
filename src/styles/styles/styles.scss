@@ -1,0 +1,226 @@
+/* file management */
+.submission-file-attach table {
+  width: 100%;
+}
+
+.submission-file-attach table thead th {
+  padding: 0 0.2rem;
+}
+
+.submission-file-attach table tbody,
+.submission-file-attach table tfoot,
+.submission-file-attach table thead,
+.submission-file-attach table.no-stripe tbody tr:nth-child(even) {
+  background: none;
+}
+/* forms */
+fieldset {
+  border-left: 1px solid #999;
+  clear: both;
+  margin: 1rem 0 1.5rem;
+  padding-left: 1.5rem;
+}
+
+legend {
+  color: rgb(0,124,130);
+  margin: 0;
+  /*font-size: 1rem;*/
+  padding: 1.5rem 0 0;
+}
+/* progress meter */
+.progress {
+  height: 1.5rem;
+}
+
+.progress-meter-text {
+  top: 50%;
+  transform: translate(15%, -50%);
+}
+/* customise tabs */
+.tabs {
+  border: none;
+}
+
+.tabs-title > a {
+  color: #888;
+  font-size: 1rem;
+  margin: 0 1.25rem;
+  padding: 1.25rem 0.25rem 0.5rem;
+}
+
+.button.hover,
+.button.primary:focus,
+.button.primary:hover,
+.button:active,
+.button:focus,
+.button:hover,
+.tabs-title > a:hover {
+  background: none;
+  color: #000;
+}
+
+.tabs-title > a:focus,
+.tabs-title > a.active {
+  background: none;
+  border-bottom: 3px solid rgb(0,124,130);
+  color: #000;
+}
+
+.tabs-content {
+  color: #333;
+}
+
+.tabs-content,
+.tabs.tabs-clear {
+  border: none;
+}
+
+.tabs.tabs-clear .tabs-title > a,
+.tabs.tabs-clear .tabs-title > a[aria-selected='false'] {
+  border-bottom: 2px solid #AAA;
+}
+
+.tabs.tabs-clear .tabs-title > a:focus,
+.tabs.tabs-clear .tabs-title > a[aria-selected='true'] {
+  background: none;
+  border-bottom: 2px solid #FFF;
+}
+
+.tabs.tabs-clear .tabs-title > a h4,
+.tabs.tabs-clear .tabs-title > a[aria-selected='false'] h4 {
+  /*font-size: .8rem;
+  top: 1rem;
+  position: relative;*/
+  opacity: 0.7;
+}
+
+.tabs.tabs-clear .tabs-title > a:focus h4,
+.tabs.tabs-clear .tabs-title > a[aria-selected='true'] h4 {
+  color: #222;
+  /*font-size: 1.5rem;
+  top: 0rem;*/
+  opacity: 1;
+}
+/* /websites/patterns/masthead-compact.html */
+.masthead.compact-for-data .masthead-inner {
+  padding-top: 0.5rem;
+}
+
+.masthead.compact-for-data .masthead-inner div#local-title {
+  margin-bottom: 0;
+}
+
+.masthead.compact-for-data .masthead-inner h1 {
+  font-size: 2.5rem;
+  margin-bottom: 0;
+  margin-top: -.5rem;
+}
+
+.masthead.compact-for-data .masthead-inner form {
+  margin-top: -1rem;
+}
+
+.masthead.compact-for-data .masthead-inner nav {
+  clear: none;
+  margin-top: 0.75rem;
+}
+
+.masthead.compact-for-data.compact-disabled .masthead-inner > nav.column {
+  left: 0;
+  width: 100%;
+}
+/* https://www.thecssninja.com/css/custom-inputs-using-css */
+.large-form > input + label {}
+
+.large-form > input[type=radio] {
+  margin: 0 -1rem 0 0;
+  opacity: 0;
+}
+
+.large-form > input[type=radio] + label {
+  font-size: 1.5rem;
+  line-height: 1.2rem;
+}
+
+.large-form > input[type=radio] + label:before {
+  border: 0.2rem solid rgba(0,0,0,.5);
+  border-radius: 1.6rem;
+  color: rgba(0,0,0,0);
+  content: ". ";
+  display: inline-block;
+  font-family: 'EBI-Functional';
+  height: 1.5rem;
+  margin: 0 0.5rem 0.5rem 0;
+  text-align: center;
+  width: 1.5rem;
+}
+/* Checked styles */
+.large-form > input[type=radio] + label:hover:before,
+.large-form > input[type=radio]:checked + label:before {
+  border-color: rgba(0,0,0,0);
+  color: rgb(0,124,130); /* content: "/ "; */
+  /* checkbox */
+  content: "T ";
+  left: -3px;
+  position: relative;
+}
+
+.large-form > input[type=radio]:checked + label:hover:before,
+.large-form > input[type=radio]:focus:checked + label:before,
+.large-form > input[type=radio]:focus:checked + label:before,
+.large-form > input[type=radio]:hover:checked + label:before {}
+/* Hover & Focus styles */
+.large-form > input[type=radio] + label:hover:before {
+  color: rgba(0,0,0,.5);
+}
+
+.large-form > input[type=radio] + label:hover:before,
+.large-form > input[type=radio]:focus + label:before,
+.large-form > input[type=radio]:hover + label:before {}
+/* Active styles */
+.large-form > input[type=radio] + label:hover:before:active,
+.large-form > input[type=radio]:active + label:before {}
+
+.large-form > input[type=radio]:active:checked + label:before,
+.large-form > input[type=radio]:checked + label:hover:before:active {}
+/* Disabled styles */
+.large-form > input[type=radio]:disabled + label:before,
+.large-form > input[type=radio]:disabled + label:hover:before,
+.large-form > input[type=radio]:disabled + label:hover:before:active,
+.large-form > input[type=radio]:focus:disabled + label:before,
+.large-form > input[type=radio]:hover:disabled + label:before {}
+
+.large-form > input[type=radio]:disabled:checked + label:before,
+.large-form > input[type=radio]:disabled:checked + label:hover:before,
+.large-form > input[type=radio]:disabled:checked + label:hover:before:active,
+.large-form > input[type=radio]:focus:disabled:checked + label:before,
+.large-form > input[type=radio]:hover:disabled:checked + label:before {}
+/* Checked styles */
+.large-form > input[type=radio]:checked + label:before {}
+
+.large-form > input[type=radio]:checked + label:hover:before,
+.large-form > input[type=radio]:focus:checked + label:before,
+.large-form > input[type=radio]:focus:checked + label:before,
+.large-form > input[type=radio]:hover:checked + label:before {}
+/* Hover & Focus styles */
+.large-form > input[type=radio] + label:hover:before,
+.large-form > input[type=radio]:focus + label:before,
+.large-form > input[type=radio]:hover + label:before {}
+/* Active styles */
+.large-form > input[type=radio] + label:hover:before:active,
+.large-form > input[type=radio]:active + label:before {}
+
+.large-form > input[type=radio]:active:checked + label:before,
+.large-form > input[type=radio]:checked + label:hover:before:active {}
+/* Disabled styles */
+.large-form > input[type=radio]:disabled + label:before,
+.large-form > input[type=radio]:disabled + label:hover:before,
+.large-form > input[type=radio]:disabled + label:hover:before:active,
+.large-form > input[type=radio]:focus:disabled + label:before,
+.large-form > input[type=radio]:hover:disabled + label:before {}
+
+.large-form > input[type=radio]:disabled:checked + label:before,
+.large-form > input[type=radio]:disabled:checked + label:hover:before,
+.large-form > input[type=radio]:disabled:checked + label:hover:before:active,
+.large-form > input[type=radio]:focus:disabled:checked + label:before,
+.large-form > input[type=radio]:hover:disabled:checked + label:before {}

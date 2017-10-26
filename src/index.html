@@ -15,12 +15,18 @@
   <!-- End Google Analytics -->
 
   <!-- CSS will be injected by webpack here -->
+  <link rel="stylesheet" type="text/css" href="styles/styles/loading.css">
   <!-- Preload link tags will be injected by webpack here -->
 </head>
 
 <body>
   <app-root>
-    Loading...
+    <div class="loading-wrapper">
+      <span class="loading-inner">
+        <div class="loading-image"></div>
+        <p>Loading the experience..</p>
+      </span>
+    </div>
   </app-root>
 </body>
 </html>

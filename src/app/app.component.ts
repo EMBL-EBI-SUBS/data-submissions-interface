@@ -3,8 +3,7 @@
  */
 import {
   Component,
-  OnInit,
-  AfterContentInit
+  OnInit
 } from '@angular/core';
 
 declare var $;
@@ -16,7 +15,7 @@ declare var $;
 @Component({
   selector: 'app-root',
   styleUrls: [
-    './app.component.css'
+    './app.component.scss'
   ],
   templateUrl: './app.component.html'
 })
