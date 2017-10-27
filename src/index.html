@@ -20,18 +20,59 @@
   <!-- End Google Analytics -->
 
   <!-- CSS will be injected by webpack here -->
-  <link rel="stylesheet" type="text/css" href="styles/styles/loading.css">
+  <link rel="stylesheet" type="text/css" href="https://www.ebi.ac.uk/web_guidelines/EBI-Framework/v1.2/libraries/foundation-6/css/foundation.css">
+  <link rel="stylesheet" type="text/css" href="https://www.ebi.ac.uk/web_guidelines/EBI-Framework/v1.2/css/ebi-global.css">
+  <link rel="stylesheet" type="text/css" href="https://www.ebi.ac.uk/web_guidelines/EBI-Icon-fonts/v1.2/fonts.css">
+  <link rel="stylesheet" type="text/css" href="https://www.ebi.ac.uk/web_guidelines/EBI-Framework/v1.2/css/theme-embl-petrol.css">
   <!-- Preload link tags will be injected by webpack here -->
 </head>
 
 <body>
   <app-root>
-    <div class="loading-wrapper">
-      <span class="loading-inner">
-        <div class="loading-image"></div>
-        <p>Loading the experience..</p>
-      </span>
+    <!-- This layout will be purged but we use this markup as a preaload placeholder -->
+    <header id="masthead-black-bar" class="clearfix masthead-black-bar" style="background:#091316;">
+      <nav class="row">
+        <ul id="global-nav" class="menu">
+          <!-- set active class as appropriate -->
+          <li class="home-mobile"><a href="//www.ebi.ac.uk"></a></li>
+          <li class="home active"><a href="//www.ebi.ac.uk">EMBL-EBI</a></li>
+          <li class="services"><a href="//www.ebi.ac.uk/services">Services</a></li>
+          <li class="research"><a href="//www.ebi.ac.uk/research">Research</a></li>
+          <li class="training"><a href="//www.ebi.ac.uk/training">Training</a></li>
+          <li class="about"><a href="//www.ebi.ac.uk/about">About us</a></li>
+          <li class="search">
+            <a href="#" data-toggle="search-global-dropdown"><span class="show-for-small-only">Search</span></a>
+            <div id="search-global-dropdown" class="dropdown-pane" data-dropdown data-options="closeOnClick:true;">
+            </div>
+          </li>
+          <li class="float-right show-for-medium embl-selector">
+            <button class="button float-right" type="button" data-toggle="embl-dropdown">Hinxton</button>
+            <!-- The dropdown menu will be programatically added by script.js -->
+          </li>
+        </ul>
+      </nav>
+    </header>
+    <div id="content">
+      <header id="masthead" class="masthead" style="background:#091316;">
+        <div class="masthead-inner row">
+          <div class="columns medium-12" id="local-title">
+            <h1><a href="/" title="Back to Data Submission Interface homepage">Data Submission Interface</a></h1>
+          </div>
+          <nav>
+            <ul id="local-nav" class="dropdown menu float-left" data-description="navigational">
+              <li><a href="/"> &nbsp; </a></li>
+            </ul>
+          </nav>
+        </div>
+      </header>
+      <!-- Suggested layout containers -->
+      <section id="main-content-area" class="row" role="main">
+        <div class="columns">
+          <p class="padding-top-xlarge padding-bottom-xlarge">Loading the experience...</p>
+        </div>
+      </section>
     </div>
   </app-root>
 </body>
+
 </html>
