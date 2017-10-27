@@ -3,21 +3,21 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 
-import { UserLogoutPageComponent } from './user-logout-page.component';
+import { NotAuthenticatedPageComponent } from './not-authenticated-page.component';
 
-describe('UserLogoutPageComponent', () => {
-  let component: UserLogoutPageComponent;
-  let fixture: ComponentFixture<UserLogoutPageComponent>;
+describe('NotAuthenticatedPageComponent', () => {
+  let component: NotAuthenticatedPageComponent;
+  let fixture: ComponentFixture<NotAuthenticatedPageComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ UserLogoutPageComponent ]
+      declarations: [ NotAuthenticatedPageComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(UserLogoutPageComponent);
+    fixture = TestBed.createComponent(NotAuthenticatedPageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

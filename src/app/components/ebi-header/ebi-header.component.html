@@ -10,15 +10,28 @@
       <!-- local-nav -->
       <nav>
         <ul id="local-nav" class="dropdown menu float-left" data-description="navigational" role="menubar" data-dropdown-menu="x56xdv-dropdown-menu">
-          <li role="menuitem" *ngFor="let link of links" routerLinkActive="active">
-            <a [routerLink]="link.href" routerLinkActive="active">{{link.title}}</a>
+          <li role="menuitem" routerLinkActive="active">
+            <a routerLink="/home" routerLinkActive="active">Home</a>
+          </li>
+          <li role="menuitem" routerLinkActive="active" *ngIf="isLoggedIn()">
+            <a routerLink="/submission" routerLinkActive="active">New Submission</a>
+          </li>
+          <li role="menuitem" routerLinkActive="active" *ngIf="isLoggedIn()">
+            <a routerLink="/dashboard" routerLinkActive="active">My Dashboard</a>
+          </li>
+          <li role="menuitem" routerLinkActive="active" *ngIf="isLoggedIn()">
+            <a routerLink="/library" routerLinkActive="active">My Library</a>
+          </li>
+          <li role="menuitem" routerLinkActive="active">
+            <a routerLink="/help" routerLinkActive="active">About & Help</a>
           </li>
         </ul>
 
         <ul id="secondary-menu-user-links" class="float-right menu">
-          <li class="disable"><a routerLink="/user">Hi Mae</a></li>
-          <li class="menu"><a routerLink="/dashboard">My dashboard</a></li>
-          <li class=""><a routerLink="/user/login">Login</a></li>
+          <li class="disable" *ngIf="isLoggedIn()"><a routerLink="/user">Hi {{authService.getName()}}</a></li>
+          <li class="menu" *ngIf="isLoggedIn()"><a routerLink="/dashboard">My dashboard</a></li>
+          <li class="menu" *ngIf="!isLoggedIn()"><a [href]="authService.getSSOURL()" target="_blank">Login</a></li>
+          <li class="menu" *ngIf="isLoggedIn()" (click)="onLogout()"><a (click)="onLogout()">Logout</a></li>
         </ul>
       </nav>
       <!-- /local-nav -->
