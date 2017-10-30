@@ -1,0 +1,26 @@
+language: node_js
+node_js:
+  - "8.7.0"
+
+branches:
+  only:
+    - master
+    - develop
+
+before_script:
+  - npm install -g angular-cli
+  - npm install -g angular-cli-ghpages
+  - npm install -g karma
+  - npm install
+  - ng build
+
+script:
+  - ng build --prod --base-href "https://embl-ebi-subs.github.io/data-submissions-interface/"
+
+after_success:
+  - ngh
+
+notifications:
+  email:
+    on_failure: change
+    on_success: change
