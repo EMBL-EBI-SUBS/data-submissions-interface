@@ -6,7 +6,7 @@ import { AuthService } from 'angular-aap-auth';
   selector: 'ebi-header',
   templateUrl: './ebi-header.component.html',
   styleUrls: ['./ebi-header.component.scss'],
-  providers: []
+  providers: [AuthService]
 })
 export class EbiHeaderComponent {
   private tokenListener: Function;

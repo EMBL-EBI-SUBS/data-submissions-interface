@@ -32,7 +32,8 @@ import { EbiFooterComponent } from './components/ebi-footer/ebi-footer.component
 // Import Guards.
 import { LoggedInGuard } from './guards/logged-in/logged-in.guard';
 
-
+// Import Tests Classes.
+import { RouterLinkStubDirective, RouterOutletStubComponent } from './testing/router.stubs';
 
 @NgModule({
   declarations: [
@@ -52,13 +53,15 @@ import { LoggedInGuard } from './guards/logged-in/logged-in.guard';
     SubmitPageComponent,
     DashboardPageComponent,
     LibraryPageComponent,
-    HelpPageComponent
+    HelpPageComponent,
+    RouterLinkStubDirective,
+    RouterOutletStubComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
     HttpModule,
-    AppRoutingModule
+    AppRoutingModule,
   ],
   providers: [
     LoggedInGuard,

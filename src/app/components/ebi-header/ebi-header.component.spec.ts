@@ -1,25 +1,23 @@
-/* tslint:disable:no-unused-variable */
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { DebugElement } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { AuthService, TokenService } from 'angular-aap-auth';
 import { JwtHelper } from 'angular2-jwt';
 
-import { MockRouter } from '../../../testing/mockrouter.tests';
-import { RouterLinkStubDirective } from '../../../testing/router.stubs';
+import { MockRouter } from '../../testing/mockrouter.tests';
+
+//  Import Components.
+import { EbiHeaderComponent } from './ebi-header.component';
 
 
-import { DataPageComponent } from './data-page.component';
-import { EbiHeaderComponent } from '../../../components/ebi-header/ebi-header.component';
 
-describe('DataPageComponent', () => {
-  let component: DataPageComponent;
-  let fixture: ComponentFixture<DataPageComponent>;
+describe('EbiHeaderComponent', () => {
+  let component: EbiHeaderComponent;
+  let fixture: ComponentFixture<EbiHeaderComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ DataPageComponent, EbiHeaderComponent, RouterLinkStubDirective ],
+      declarations: [ EbiHeaderComponent ],
       providers: [
         {provide: Router, useClass: MockRouter},
         AuthService,
@@ -37,7 +35,7 @@ describe('DataPageComponent', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(DataPageComponent);
+    fixture = TestBed.createComponent(EbiHeaderComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

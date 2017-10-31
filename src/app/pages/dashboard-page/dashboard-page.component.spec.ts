@@ -1,9 +1,16 @@
 /* tslint:disable:no-unused-variable */
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
+import { Router } from '@angular/router';
 
+import { AuthService, TokenService } from 'angular-aap-auth';
+import { JwtHelper } from 'angular2-jwt';
+
+import { MockRouter } from '../../testing/mockrouter.tests';
+
+//  Import Components.
 import { DashboardPageComponent } from './dashboard-page.component';
+import { EbiHeaderComponent } from '../../components/ebi-header/ebi-header.component';
 
 describe('DashboardPageComponent', () => {
   let component: DashboardPageComponent;
@@ -11,7 +18,22 @@ describe('DashboardPageComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ DashboardPageComponent ]
+      declarations: [
+        DashboardPageComponent,
+        EbiHeaderComponent
+      ],
+      providers: [
+        {provide: Router, useClass: MockRouter},
+        AuthService,
+        TokenService,
+        JwtHelper,
+        {
+          provide: 'AAP_CONFIG',
+          useValue: {
+            authURL: 'https://api.aap.tsi.ebi.ac.uk'
+          }
+        }
+      ]
     })
     .compileComponents();
   }));
