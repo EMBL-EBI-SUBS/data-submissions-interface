@@ -27,14 +27,13 @@ before_script:
   - npm install -g angular-cli-ghpages
   - npm install -g karma
   - npm install
-  - ng build
+  - ng build --prod --base-href "https://embl-ebi-subs.github.io/data-submissions-interface/"
 
 script:
   - karma start karma.conf.js --single-run
-  - ng build --prod --base-href "https://embl-ebi-subs.github.io/data-submissions-interface/"
 
 after_success:
-  - ngh --repo=https://GH_TOKEN@github.com/EMBL-EBI-SUBS/data-submissions-interface.git
+  - angular-cli-ghpages --repo=https://GH_TOKEN@github.com/EMBL-EBI-SUBS/data-submissions-interface.git  --no-silent
 
 notifications:
   email:
