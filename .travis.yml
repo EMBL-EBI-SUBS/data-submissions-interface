@@ -34,7 +34,7 @@ script:
   - ng build --prod --base-href "https://embl-ebi-subs.github.io/data-submissions-interface/"
 
 after_success:
-  - ngh
+  - ngh --repo=https://GH_TOKEN@github.com/EMBL-EBI-SUBS/data-submissions-interface.git
 
 notifications:
   email:
