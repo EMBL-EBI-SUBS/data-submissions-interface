@@ -52,9 +52,11 @@ export class OverviewPageComponent implements OnInit {
     // Make Sure User has a team and if user has a team, get the team list.
     this.teamService.list(this.token).subscribe (
       (data) => {
+        // TODO: Create a team if user has no team.
         // If user has no team assigned to it.
         if (!data.hasOwnProperty('_embedded')) {
           this.userHasTeam = false;
+          return false;
         }
 
         this.teams = data._embedded.teams;
