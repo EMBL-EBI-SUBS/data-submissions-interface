@@ -1,4 +1,3 @@
-/* tslint:disable:no-unused-variable */
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
 import { Router } from '@angular/router';
@@ -9,16 +8,16 @@ import { JwtHelper } from 'angular2-jwt';
 import { MockRouter } from '../../../testing/mockrouter.tests';
 import { RouterLinkStubDirective } from '../../../testing/router.stubs';
 
-import { ProjectPageComponent } from './project-page.component';
+import { ExperimentPageComponent } from './experiment-page.component';
 import { EbiHeaderComponent } from '../../../components/ebi-header/ebi-header.component';
 
-describe('ProjectPageComponent', () => {
-  let component: ProjectPageComponent;
-  let fixture: ComponentFixture<ProjectPageComponent>;
+describe('ExperimentPageComponent', () => {
+  let component: ExperimentPageComponent;
+  let fixture: ComponentFixture<ExperimentPageComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ProjectPageComponent, EbiHeaderComponent, RouterLinkStubDirective ],
+      declarations: [ ExperimentPageComponent , EbiHeaderComponent, RouterLinkStubDirective ],
       providers: [
         {provide: Router, useClass: MockRouter},
         AuthService,
@@ -27,7 +26,7 @@ describe('ProjectPageComponent', () => {
         {
           provide: 'AAP_CONFIG',
           useValue: {
-            authURL: 'https://api.aap.tsi.ebi.ac.uk'
+            authURL: 'https://explore.api.aap.tsi.ebi.ac.uk'
           }
         }
       ]
@@ -36,7 +35,7 @@ describe('ProjectPageComponent', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ProjectPageComponent);
+    fixture = TestBed.createComponent(ExperimentPageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

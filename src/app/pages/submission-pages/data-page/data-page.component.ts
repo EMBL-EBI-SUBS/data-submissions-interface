@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 declare var $;
 
@@ -8,18 +9,22 @@ declare var $;
   styleUrls: ['./data-page.component.scss']
 })
 export class DataPageComponent implements OnInit {
+  userHasTeam = true;
+  token: string;
   tabLinks: any = [
-    {"title": "Data", "href": "/submission/data"},
-    {"title": "Project", "href": "/submission/project"},
-    {"title": "Team", "href": "/submission/team"},
     {"title": "Overview", "href": "/submission/overview"},
+    {"title": "Study", "href": "/submission/study"},
+    {"title": "Data", "href": "/submission/data"},
+    {"title": "Experiment", "href": "/submission/experiment"},
+    {"title": "Samples", "href": "/submission/samples"},
+    {"title": "Contacts", "href": "/submission/contacts"},
     {"title": "Submit", "href": "/submission/submit"},
   ];
-  constructor() { }
+  constructor(
+    private router: Router
+  ) { }
 
-  ngOnInit() {
-
-  }
+  ngOnInit() {}
 
   ngAfterViewInit() {
     $("#main-content-area").foundation();

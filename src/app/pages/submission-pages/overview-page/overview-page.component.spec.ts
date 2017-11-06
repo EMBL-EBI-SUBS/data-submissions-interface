@@ -2,6 +2,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
 import { Router } from '@angular/router';
+import { ReactiveFormsModule } from '@angular/forms';
+import { HttpModule } from '@angular/http';
 
 import { AuthService, TokenService } from 'angular-aap-auth';
 import { JwtHelper } from 'angular2-jwt';
@@ -18,6 +20,7 @@ describe('OverviewPageComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      imports: [ReactiveFormsModule, HttpModule],
       declarations: [ OverviewPageComponent, EbiHeaderComponent, RouterLinkStubDirective ],
       providers: [
         {provide: Router, useClass: MockRouter},
@@ -27,7 +30,7 @@ describe('OverviewPageComponent', () => {
         {
           provide: 'AAP_CONFIG',
           useValue: {
-            authURL: 'https://api.aap.tsi.ebi.ac.uk'
+            authURL: 'https://explore.api.aap.tsi.ebi.ac.uk'
           }
         }
       ]

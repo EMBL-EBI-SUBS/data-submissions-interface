@@ -31,7 +31,7 @@ describe('HelpPageComponent', () => {
        {
          provide: 'AAP_CONFIG',
          useValue: {
-           authURL: 'https://api.aap.tsi.ebi.ac.uk'
+           authURL: 'https://explore.api.aap.tsi.ebi.ac.uk'
          }
        }
      ]

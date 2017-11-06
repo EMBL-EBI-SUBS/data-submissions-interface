@@ -1,23 +1,23 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { DebugElement } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { AuthService, TokenService } from 'angular-aap-auth';
 import { JwtHelper } from 'angular2-jwt';
 
-import { MockRouter } from '../../testing/mockrouter.tests';
+import { MockRouter } from '../../../testing/mockrouter.tests';
+import { RouterLinkStubDirective } from '../../../testing/router.stubs';
 
-//  Import Components.
-import { EbiHeaderComponent } from './ebi-header.component';
+import { ContactsPageComponent } from './contacts-page.component';
+import { EbiHeaderComponent } from '../../../components/ebi-header/ebi-header.component';
 
-
-
-describe('EbiHeaderComponent', () => {
-  let component: EbiHeaderComponent;
-  let fixture: ComponentFixture<EbiHeaderComponent>;
+describe('ContactsPageComponent', () => {
+  let component: ContactsPageComponent;
+  let fixture: ComponentFixture<ContactsPageComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ EbiHeaderComponent ],
+      declarations: [ ContactsPageComponent, EbiHeaderComponent, RouterLinkStubDirective ],
       providers: [
         {provide: Router, useClass: MockRouter},
         AuthService,
@@ -35,7 +35,7 @@ describe('EbiHeaderComponent', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(EbiHeaderComponent);
+    fixture = TestBed.createComponent(ContactsPageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

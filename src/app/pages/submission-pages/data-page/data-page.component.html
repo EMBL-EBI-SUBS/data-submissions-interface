@@ -10,13 +10,13 @@
       </li>
     </ul>
 
-    <ul class="tabs" data-tabs id="submissions-data-tabs">
+    <ul class="tabs" data-tabs id="submissions-data-tabs" *ngIf="userHasTeam">
       <li class="tabs-title is-active"><a href="#samples-tab" (event)="false"  aria-selected="true">Samples</a></li>
       <li class="tabs-title"><a href="#data-tab" (event)="false">Data</a></li>
       <li class="tabs-title"><a href="#protocols-tab" (event)="false">Protocols</a></li>
     </ul>
 
-    <div class="tabs-content" data-tabs-content="submissions-data-tabs">
+    <div class="tabs-content" data-tabs-content="submissions-data-tabs" *ngIf="userHasTeam">
       <div class="tabs-panel is-active" id="samples-tab">
         <table class="hover">
           <thead class="fixed">
