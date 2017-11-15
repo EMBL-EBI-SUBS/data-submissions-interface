@@ -4,43 +4,87 @@
   <section id="main-content-area" class="row padding-top-xsmall padding-bottom-xsmall" role="main">
     <h2 class="padding-top-xlarge">New data submission</h2>
 
-    <!-- TODO: Put an appropriate message in case if user has no team assigned to it. -->
-    <p *ngIf="!userHasTeam">
-      Your account is not assigned to any team. Please contact EBI AAP Community.
-    </p>
-
-    <ul class="tabs" id="example-tabs" *ngIf="userHasTeam">
+    <ul class="tabs" id="example-tabs">
       <li *ngFor="let link of tabLinks" routerLinkActive="active is-active" class="tabs-title">
         <a [routerLink]="link.href" routerLinkActive="active">{{link.title}}</a>
       </li>
     </ul>
 
-    <form [formGroup]="overviewForm" novalidate class="conditional-form" *ngIf="userHasTeam">
-      <fieldset required class="large-form padding-bottom-large padding-top-large hidden">
-        <legend>Select your lovely team! (To be Removed)</legend>
-        <select name="team" formControlName="team" required (onChange)="onSelectTeam()">
-          <option *ngFor="let team of teams; let i = index" [selected]="i == 0" [value]="team.name">
+    <form [formGroup]="overviewForm" novalidate class="conditional-form">
+
+      <!-- Print Team Field -->
+      <fieldset required class="large-form padding-bottom-large padding-top-large ">
+        <legend>Select your lovely team!</legend>
+        <select name="team" formControlName="team" required (change)="onSelectTeam()">
+          <option selected value="_none">
+            Select your team
+          </option>
+
+          <option *ngFor="let team of teams; let i = index" [value]="team.name">
             {{team.name}}
           </option>
         </select>
       </fieldset>
 
-      <fieldset required class="large-form padding-bottom-large padding-top-large">
-        <legend>Is your study on human research subjects?</legend>
-        <input type="radio" name="human" value="1" formControlName="human" id="humanYes" required><label for="humanYes">Yes</label>
-        <input type="radio" name="human" value="0" formControlName="human" id="humanNo"><label for="humanNo">No</label>
+      <fieldset required class="large-form padding-bottom-large padding-top-large" *ngIf="overviewForm.value.team !== '_none'">
+        <legend>Before you begin</legend>
+
+        <fieldset class="large-form padding-bottom-large padding-top-large">
+          <legend>Is your study on human research subjects?</legend>
+          <input type="radio" name="human" value="1" formControlName="human" id="humanYes" required><label for="humanYes">Yes</label>
+          <input type="radio" name="human" value="0" formControlName="human" id="humanNo"><label for="humanNo">No</label>
+        </fieldset>
+
+
+        <fieldset class="large-form padding-bottom-large padding-top-large" *ngIf="overviewForm.value.human == 1">
+          <legend>Does it require controlled access once it becomes public?</legend>
+          <input type="radio" name="controlled" value="1" formControlName="controlled" id="controlledYes"><label for="controlledYes">Yes</label>
+          <input type="radio" name="controlled" value="0" formControlName="controlled" id="controlledNo"><label for="controlledNo">No</label>
+        </fieldset>
       </fieldset>
 
-      <!-- Show if human = yes -->
-      <fieldset class="large-form padding-bottom-large padding-top-large" *ngIf="overviewForm.value.human == 1">
-        <legend>Does it require controlled access once it becomes public?</legend>
-        <input type="radio" name="controlled" value="1" formControlName="controlled" id="controlledYes"><label for="controlledYes">Yes</label>
-        <input type="radio" name="controlled" value="0" formControlName="controlled" id="controlledNo"><label for="controlledNo">No</label>
+
+      <fieldset required class="large-form padding-bottom-large padding-top-large" [ngClass]="{'hidden': !onPartOneReady()}">
+        <legend>Data type</legend>
+
+        <fieldset class="large-form padding-bottom-large padding-top-large">
+          <legend>What type of data are you submitting?</legend>
+          <select name="dataType" formControlName="dataType" class="choices"  required multiple>
+            <option value="data-type-1">
+              Data Type 1
+            </option>
+            <option value="data-type-2">
+              Data Type 2
+            </option>
+            <option value="data-type-3">
+              Data Type 3
+            </option>
+            <option value="data-type-4">
+              Data Type 4
+            </option>
+          </select>
+
+          <legend>And more specifically?</legend>
+          <select name="dataSubType" formControlName="dataSubType" class="choices" required multiple>
+            <option value="data-type-1">
+              Data Type 1
+            </option>
+            <option value="data-type-2">
+              Data Type 2
+            </option>
+            <option value="data-type-3">
+              Data Type 3
+            </option>
+            <option value="data-type-4">
+              Data Type 4
+            </option>
+          </select>
+        </fieldset>
       </fieldset>
 
-      <div *ngIf="onReady()">
-        <button class="button secondary-color white-background" (click)="onSaveExit()">Save &amp; exit</button>
-        <button class="button readmore" (click)="onSaveContinue()">Save &amp; continue</button>
+      <div *ngIf="onPartTwoReady()">
+        <button class="button secondary-color white-background" (click)="onSaveExit()" [disabled]="overviewForm.invalid">Save & exit</button>
+        <button class="button readmore" (click)="onSaveContinue()" [disabled]="overviewForm.invalid">Save &amp; continue</button>
       </div>
     </form>
   </section>

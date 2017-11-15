@@ -9,7 +9,7 @@ import { DashboardPageComponent } from './pages/dashboard-page/dashboard-page.co
 import { LibraryPageComponent } from './pages/library-page/library-page.component';
 import { HelpPageComponent } from './pages/help-page/help-page.component';
 import { DataPageComponent } from './pages/submission-pages/data-page/data-page.component';
-import { StudyPageComponent } from './pages/submission-pages/study-page/study-page.component';
+import { ProjectPageComponent } from './pages/submission-pages/project-page/project-page.component';
 import { ExperimentPageComponent } from './pages/submission-pages/experiment-page/experiment-page.component';
 import { SamplesPageComponent } from './pages/submission-pages/samples-page/samples-page.component';
 import { ContactsPageComponent } from './pages/submission-pages/contacts-page/contacts-page.component';
@@ -26,7 +26,7 @@ export const ROUTES: Routes = [
   { path: 'user', component: UserPageComponent, canActivate: [LoggedInGuard] },
   { path: 'submission', redirectTo: 'submission/overview', pathMatch: 'full', canActivate: [LoggedInGuard] },
   { path: 'submission/overview', component: OverviewPageComponent, canActivate: [LoggedInGuard] },
-  { path: 'submission/study', component: StudyPageComponent, canActivate: [LoggedInGuard] },
+  { path: 'submission/project', component: ProjectPageComponent, canActivate: [LoggedInGuard] },
   { path: 'submission/data', component: DataPageComponent, canActivate: [LoggedInGuard] },
   { path: 'submission/experiment', component: ExperimentPageComponent, canActivate: [LoggedInGuard] },
   { path: 'submission/samples', component: SamplesPageComponent, canActivate: [LoggedInGuard] },

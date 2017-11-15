@@ -50,4 +50,40 @@ export class RequestsService {
     var response = this.http.post(requestUrl, body, requestOptions).map(res => res.json());
     return response;
   }
+
+  /**
+   * Update an existing record.
+   */
+  update(token, url, data) {
+      let headers = this.variables.buildHeader(token);
+
+    let requestOptions = new RequestOptions({
+        headers: headers
+    });
+
+    // Post an Empty object to create submission.
+    let body = JSON.stringify(data);
+
+    let requestUrl =  url;
+    var response = this.http.put(requestUrl, body, requestOptions).map(res => res.json());
+    return response;
+  }
+
+  /**
+   * Delete an existing record.
+   */
+  delete(token, url) {
+    let headers = this.variables.buildHeader(token);
+
+    let requestOptions = new RequestOptions({
+        headers: headers
+    });
+
+    // Post an Empty object to create submission.
+    let body = JSON.stringify({});
+
+    let requestUrl =  url;
+    var response = this.http.delete(requestUrl, requestOptions).map(res => res.json());
+    return response;
+  }
 }

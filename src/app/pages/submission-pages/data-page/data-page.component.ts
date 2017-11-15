@@ -13,7 +13,7 @@ export class DataPageComponent implements OnInit {
   token: string;
   tabLinks: any = [
     {"title": "Overview", "href": "/submission/overview"},
-    {"title": "Study", "href": "/submission/study"},
+    {"title": "Project", "href": "/submission/project"},
     {"title": "Data", "href": "/submission/data"},
     {"title": "Experiment", "href": "/submission/experiment"},
     {"title": "Samples", "href": "/submission/samples"},

@@ -19,7 +19,7 @@ import { NotAuthenticatedPageComponent } from './pages/not-authenticated-page/no
 import { DataPageComponent } from './pages/submission-pages/data-page/data-page.component';
 import { OverviewPageComponent } from './pages/submission-pages/overview-page/overview-page.component';
 import { SubmitPageComponent } from './pages/submission-pages/submit-page/submit-page.component';
-import { StudyPageComponent } from './pages/submission-pages/study-page/study-page.component';
+import { ProjectPageComponent } from './pages/submission-pages/project-page/project-page.component';
 import { ExperimentPageComponent } from './pages/submission-pages/experiment-page/experiment-page.component';
 import { SamplesPageComponent } from './pages/submission-pages/samples-page/samples-page.component';
 import { ContactsPageComponent } from './pages/submission-pages/contacts-page/contacts-page.component';
@@ -50,7 +50,7 @@ import { RouterLinkStubDirective, RouterOutletStubComponent } from './testing/ro
     EbiNavbarComponent,
     EbiFooterComponent,
     DataPageComponent,
-    StudyPageComponent,
+    ProjectPageComponent,
     ExperimentPageComponent,
     SamplesPageComponent,
     ContactsPageComponent,

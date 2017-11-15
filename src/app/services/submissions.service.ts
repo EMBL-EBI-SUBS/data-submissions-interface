@@ -7,8 +7,6 @@ import { VariablesService } from './variables.service';
 @Injectable()
 export class SubmissionsService {
   variables = new VariablesService;
-  listApiEndpoint = this.variables.host + "teams";
-
 
   constructor(private http: Http) { }
 
@@ -53,23 +51,44 @@ export class SubmissionsService {
   }
 
   /**
-   * Update active submission
+   * Update active submission.
    */
   setActiveSubmission(submission: any) {
-    localStorage.setItem("submission", JSON.stringify(submission));
+    localStorage.setItem("active_submission", JSON.stringify(submission));
   }
 
   /**
-   * Retrieve active submission
+   * Retrieve active submission.
    */
   getActiveSubmission() {
-    return JSON.parse(localStorage.getItem("submission"));
+    return JSON.parse(localStorage.getItem("active_submission"));
   }
 
   /**
-   * Delete active submission
+   * Delete active submission.
    */
   deleteActiveSubmission() {
-    localStorage.removeItem("submission");
+    localStorage.removeItem("active_submission");
+  }
+
+  /**
+   * Set all submissions.
+   */
+  setSubmissions(submissions) {
+    localStorage.setItem("submissions", JSON.stringify(submissions));
+  }
+
+  /**
+   * Retrieve all submissions.
+   */
+  getSubmissions() {
+    return JSON.parse(localStorage.getItem("submissions"));
+  }
+
+  /**
+   * Delete all submissions.
+   */
+  deleteSubmissions() {
+    localStorage.removeItem("submissions");
   }
 }

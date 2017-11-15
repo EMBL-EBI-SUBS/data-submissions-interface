@@ -224,3 +224,16 @@ legend {
 .large-form > input[type=radio]:disabled:checked + label:hover:before:active,
 .large-form > input[type=radio]:focus:disabled:checked + label:before,
 .large-form > input[type=radio]:hover:disabled:checked + label:before {}
+
+.pagination {
+  li {
+    min-height: 30px;
+    min-width: 100px;
+  }
+}
+
+fieldset {
+  fieldset {
+    border-left: none;
+  }
+}

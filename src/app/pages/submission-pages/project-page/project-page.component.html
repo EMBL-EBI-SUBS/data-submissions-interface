@@ -1,0 +1,83 @@
+<div id="content">
+  <ebi-header title="New Submission"></ebi-header>
+
+  <section id="main-content-area" class="row padding-top-xsmall padding-bottom-xsmall" role="main">
+    <h2 class="padding-top-xlarge">Project and Publications</h2>
+
+    <ul class="tabs" id="example-tabs">
+      <li *ngFor="let link of tabLinks" routerLinkActive="active is-active" class="tabs-title">
+        <a [routerLink]="link.href" routerLinkActive="active">{{link.title}}</a>
+      </li>
+    </ul>
+
+    <form [formGroup]="projectForm" novalidate class="conditional-form">
+      <!-- Project Details Fieldset. -->
+      <fieldset required class="large-form padding-bottom-large padding-top-large">
+        <legend>Project Details</legend>
+
+        <label>Select from Projects
+          <select name="project" formControlName="project" required (change)="onSelectProject()">
+            <option selected value="_create">
+              Create a new Project
+            </option>
+
+            <option *ngFor="let project of projects; let i = index" [value]="i">
+              {{project.title}}
+            </option>
+          </select>
+        </label>
+
+        <label>Project title
+          <input type="text" placeholder="e.g. “Parallelism in Fish”" [readonly]="projectForm.value.project !== '_create'" class="form-control" formControlName="projectTitle" required />
+          <span class="form-error" *ngIf="projectForm.get('projectTitle').hasError('required')">
+        Yo, you had better fill this out, it's required.
+        </span>
+        </label>
+
+        <label>Project description
+          <textarea rows="5" placeholder="Enter project description here" [readonly]="projectForm.value.project !== '_create'" formControlName="projectDescription"></textarea>
+          <span class="form-error">
+        Yo, you had better fill this out, it's required.
+        </span>
+        </label>
+
+        <label>Project short name (for easy referebce)
+          <input type="text" placeholder="e.g. “RAD sequencing - 2004 Liverpool”" [readonly]="projectForm.value.project !== '_create'" formControlName="projectShortName"/> For your reference. Will only show in your dashboard.
+          <span class="form-error">
+        Yo, you had better fill this out, it's required.
+        </span>
+        </label>
+
+      </fieldset>
+
+      <!-- This Submission Fieldset. -->
+      <fieldset required class="large-form padding-bottom-large padding-top-large">
+        <legend>This Submission</legend>
+
+        <label>Submission short name (for easy referebce)
+          <input type="text" placeholder="e.g. “RAD sequencing - 2004 Liverpool”" formControlName="submissionShortName"/> For your reference. Will only show in your dashboard.
+          <span class="form-error">
+        Yo, you had better fill this out, it's required.
+        </span>
+        </label>
+      </fieldset>
+
+      <!-- Publications Fieldset. -->
+      <fieldset required class="large-form padding-bottom-large padding-top-large">
+        <legend>Publication</legend>
+
+        <label>Link to original publication, if available at this point:
+          <input type="url" placeholder="http://www.example.com”" formControlName="submissionPublication" pattern="https?://.+"/>
+          <span class="form-error">
+        Yo, you had better fill this out, it's required.
+        </span>
+        </label>
+      </fieldset>
+
+      <div>
+        <button class="button secondary-color white-background" (click)="onSaveExit()" [disabled]="projectForm.invalid">Save &amp; exit</button>
+        <button class="button readmore" (click)="onSaveContinue()" [disabled]="projectForm.invalid">Save &amp; continue</button>
+      </div>
+    </form>
+  </section>
+</div>
