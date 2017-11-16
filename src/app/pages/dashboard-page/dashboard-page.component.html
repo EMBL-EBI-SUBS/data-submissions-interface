@@ -53,7 +53,7 @@
 
     <ul class="pagination" *ngIf="submissions && submissions.page.totalPages > 0">
       <li class="arrow">
-        <a (click)="onPagerClick('first')" *ngIf="!submissions.page.number == 0">&laquo; First</a>
+        <a (click)="onPagerClick('first')" *ngIf="!(submissions.page.number == 0)">&laquo; First</a>
       </li>
       <li class="arrow">
         <a (click)="onPagerClick('prev')" *ngIf="submissions._links.prev">&laquo; Previous</a>

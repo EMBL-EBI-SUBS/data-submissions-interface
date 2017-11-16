@@ -27,7 +27,7 @@ export class DashboardPageComponent implements OnInit {
   submissionsSummary: any;
 
   constructor(
-    private authService: AuthService,
+    public authService: AuthService,
     private submissionsService: SubmissionsService,
     private requestsService: RequestsService,
     private userService: UserService,
