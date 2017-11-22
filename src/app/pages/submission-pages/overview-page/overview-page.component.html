@@ -49,34 +49,16 @@
 
         <fieldset class="large-form padding-bottom-large padding-top-large">
           <legend>What type of data are you submitting?</legend>
-          <select name="dataType" formControlName="dataType" class="choices"  required multiple>
-            <option value="data-type-1">
-              Data Type 1
-            </option>
-            <option value="data-type-2">
-              Data Type 2
-            </option>
-            <option value="data-type-3">
-              Data Type 3
-            </option>
-            <option value="data-type-4">
-              Data Type 4
+          <select name="dataType" formControlName="dataType" required multiple>
+            <option *ngFor="let dataType of dataTypes; let i = index" [value]="dataType">
+              {{dataType}}
             </option>
           </select>
 
           <legend>And more specifically?</legend>
           <select name="dataSubType" formControlName="dataSubType" class="choices" required multiple>
-            <option value="data-type-1">
-              Data Type 1
-            </option>
-            <option value="data-type-2">
-              Data Type 2
-            </option>
-            <option value="data-type-3">
-              Data Type 3
-            </option>
-            <option value="data-type-4">
-              Data Type 4
+            <option *ngFor="let dataSubType of dataSubTypes; let i = index" [value]="dataSubType">
+              {{dataSubType}}
             </option>
           </select>
         </fieldset>

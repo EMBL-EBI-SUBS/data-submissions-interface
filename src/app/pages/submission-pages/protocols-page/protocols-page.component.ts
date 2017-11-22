@@ -1,17 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-experiment-page',
-  templateUrl: './experiment-page.component.html',
-  styleUrls: ['./experiment-page.component.scss']
+  selector: 'app-protocols-page',
+  templateUrl: './protocols-page.component.html',
+  styleUrls: ['./protocols-page.component.scss']
 })
-export class ExperimentPageComponent implements OnInit {
+export class ProtocolsPageComponent implements OnInit {
   tabLinks: any = [
     {"title": "Overview", "href": "/submission/overview"},
     {"title": "Project", "href": "/submission/project"},
     {"title": "Data", "href": "/submission/data"},
-    {"title": "Experiment", "href": "/submission/experiment"},
     {"title": "Samples", "href": "/submission/samples"},
+    {"title": "Protocols", "href": "/submission/protocols"},
     {"title": "Contacts", "href": "/submission/contacts"},
     {"title": "Submit", "href": "/submission/submit"},
   ];

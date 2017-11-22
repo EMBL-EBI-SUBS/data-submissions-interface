@@ -1,8 +1,10 @@
 <div id="content">
+  <link href="https://unpkg.com/uppy/dist/uppy.min.css" rel="stylesheet">
+
   <ebi-header title="New Submission"></ebi-header>
 
   <section id="main-content-area" class="row padding-top-xsmall padding-bottom-xsmall" role="main">
-    <h2 class="padding-top-xlarge">New data submission</h2>
+    <h2 class="padding-top-xlarge">Data upload</h2>
 
     <ul class="tabs" id="example-tabs">
       <li *ngFor="let link of tabLinks" routerLinkActive="active" class="tabs-title">
@@ -10,148 +12,51 @@
       </li>
     </ul>
 
-    <ul class="tabs" data-tabs id="submissions-data-tabs" *ngIf="userHasTeam">
-      <li class="tabs-title is-active"><a href="#samples-tab" (event)="false"  aria-selected="true">Samples</a></li>
-      <li class="tabs-title"><a href="#data-tab" (event)="false">Data</a></li>
-      <li class="tabs-title"><a href="#protocols-tab" (event)="false">Protocols</a></li>
-    </ul>
+    <h3>Data Upload</h3>
+    <p>Based on your data type selection, please feel free to upload:</p>
 
-    <div class="tabs-content" data-tabs-content="submissions-data-tabs" *ngIf="userHasTeam">
-      <div class="tabs-panel is-active" id="samples-tab">
-        <table class="hover">
-          <thead class="fixed">
-            <tr>
-              <th>Sample ID</th>
-              <th>Sample Name</th>
-              <th>Organ</th>
-              <th>Body Part</th>
-              <th>Cell Type</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>DA001011MN</td>
-              <td>A-DA001011MN</td>
-              <td>Pancreas</td>
-              <td>...</td>
-              <td>PBMC</td>
-              <td class="text-center"><i class="icon icon-functional" data-icon="8"></i></td>
-            </tr>
-            <tr>
-              <td>DA001012MN</td>
-              <td>A-DA001012MN</td>
-              <td>Pancreas - C</td>
-              <td>...</td>
-              <td>PBMC</td>
-              <td class="text-center"><i class="icon icon-functional" data-icon="8"></i></td>
-            </tr>
-            <tr>
-              <td>DA001013MN</td>
-              <td>A-DA001013MN</td>
-              <td>Pancreas - D</td>
-              <td>...</td>
-              <td>PBMC</td>
-              <td class="text-center"><i class="icon icon-functional" data-icon="8"></i></td>
-            </tr>
-          </tbody>
-        </table>
+    <div class="uppy-drag-drop margin-bottom-large">
+    </div>
 
-        <form>
-          <label>Select organ
-            <select>
-              <option value="pancreas">Pancreas</option>
-              <option value="stomach">Stomach</option>
-              <option value="hotdog">Hot Dog</option>
-              <option value="apollo">Apollo</option>
-            </select>
-          </label>
-        </form>
-      </div>
-      <!-- End of Tab -->
+    <h3>Data Files</h3>
+    <table class="hover">
+      <thead class="fixed">
+      <tr>
+        <th>File Name</th>
+        <th>Date</th>
+        <th>Size</th>
+        <th>Status</th>
+        <th></th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+        <td>D1001011MN.fastq</td>
+        <td>11-Oct-17</td>
+        <td>180 MB</td>
+        <td class="text-center"><i class="icon icon-functional" data-icon="/"></i></td>
+        <td class="text-center"><i class="icon icon-functional" data-icon="d"></i></td>
+      </tr>
+      <tr>
+        <td>D1001012MN.fastq</td>
+        <td>11-Oct-17</td>
+        <td>150 MB</td>
+        <td class="text-center"><i class="icon icon-functional" data-icon="/"></i></td>
+        <td class="text-center"><i class="icon icon-functional" data-icon="d"></i></td>
+      </tr>
+      <tr>
+        <td>D1001013MN.fastq</td>
+        <td>11-Oct-17</td>
+        <td>120 MB</td>
+        <td class="text-center"><i class="icon icon-functional" data-icon="x"></i></td>
+        <td class="text-center"><i class="icon icon-functional" data-icon="d"></i></td>
+      </tr>
+      </tbody>
+    </table>
 
-      <div class="tabs-panel" id="data-tab">
-        <table class="hover">
-          <thead class="fixed">
-            <tr>
-              <th>Sample ID</th>
-              <th>File</th>
-              <th>Date</th>
-              <th>Size</th>
-              <th>Experiment Library</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>DA001011MN</td>
-              <td>D1001011MN.fastq</td>
-              <td>11-Oct-17</td>
-              <td>180 MB</td>
-              <td>10x LLumina</td>
-              <td class="text-center"><i class="icon icon-functional" data-icon="8"></i></td>
-            </tr>
-            <tr>
-              <td>DA001012MN</td>
-              <td>D1001012MN.fastq</td>
-              <td>11-Oct-17</td>
-              <td>150 MB</td>
-              <td>10x LLumina</td>
-              <td class="text-center"><i class="icon icon-functional" data-icon="8"></i></td>
-            </tr>
-            <tr>
-              <td>DA001013MN</td>
-              <td>D1001013MN.fastq</td>
-              <td>11-Oct-17</td>
-              <td>120 MB</td>
-              <td>10x LLumina</td>
-              <td class="text-center"><i class="icon icon-functional" data-icon="8"></i></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <!-- End of Tab -->
-
-      <div class="tabs-panel" id="protocols-tab">
-        <table class="hover">
-          <thead class="fixed">
-            <tr>
-              <th>Sample ID</th>
-              <th>Dissociation</th>
-              <th>Conservation</th>
-              <th>Sequencing</th>
-              <th>Normalisation</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>DA001011MN</td>
-              <td>Select Protocol <i class="icon icon-functional float-right" data-icon="8"></i></td>
-              <td>Time Measures <i class="icon icon-functional float-right" data-icon="8"></i></td>
-              <td>180 MB</td>
-              <td>10x LLumina</td>
-              <td class="text-center"><i class="icon icon-functional" data-icon="8"></i></td>
-            </tr>
-            <tr>
-              <td>DA001012MN</td>
-              <td>MXX Dissociation <i class="icon icon-functional float-right" data-icon="8"></i></td>
-              <td>Time Measures <i class="icon icon-functional float-right" data-icon="8"></i></td>
-              <td>150 MB</td>
-              <td>10x LLumina</td>
-              <td class="text-center"><i class="icon icon-functional" data-icon="8"></i></td>
-            </tr>
-            <tr>
-              <td>DA001013MN</td>
-              <td>Select Protocol <i class="icon icon-functional float-right" data-icon="8"></i></td>
-              <td>Time Measures <i class="icon icon-functional float-right" data-icon="8"></i></td>
-              <td>120 MB</td>
-              <td>10x LLumina</td>
-              <td class="text-center"><i class="icon icon-functional" data-icon="8"></i></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+    <div>
+      <button class="button secondary-color white-background" (click)="onSaveExit()">Save &amp; exit</button>
+      <button class="button readmore" (click)="onSaveContinue()" [disabled]="formDisabled">Save &amp; continue</button>
     </div>
   </section>
 </div>

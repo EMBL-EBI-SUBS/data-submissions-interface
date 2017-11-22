@@ -70,6 +70,24 @@ export class RequestsService {
   }
 
   /**
+   * Partially update an existing record.
+   */
+  partialUpdate(token, url, data) {
+      let headers = this.variables.buildHeader(token);
+
+      let requestOptions = new RequestOptions({
+          headers: headers
+      });
+
+      // Post an Empty object to create submission.
+      let body = JSON.stringify(data);
+
+      let requestUrl =  url;
+      var response = this.http.patch(requestUrl, body, requestOptions).map(res => res.json());
+      return response;
+  }
+
+  /**
    * Delete an existing record.
    */
   delete(token, url) {

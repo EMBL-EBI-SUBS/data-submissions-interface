@@ -26,14 +26,16 @@ export class OverviewPageComponent implements OnInit {
   token: string;
   activeSubmission: any;
   activeTeam: any;
+  dataTypes= [];
+  dataSubTypes= [];
   teams = [];
 
   tabLinks: any = [
     {'title': 'Overview', 'href': '/submission/overview'},
     {'title': 'Project', 'href': '/submission/project'},
     {'title': 'Data', 'href': '/submission/data'},
-    {'title': 'Experiment', 'href': '/submission/experiment'},
     {'title': 'Samples', 'href': '/submission/samples'},
+    {'title': 'Protocols', 'href': '/submission/protocols'},
     {'title': 'Contacts', 'href': '/submission/contacts'},
     {'title': 'Submit', 'href': '/submission/submit'},
   ];
@@ -54,23 +56,13 @@ export class OverviewPageComponent implements OnInit {
         dataSubType: new FormControl(),
         controlled: new FormControl(),
     });
+    // Get Data Types.
+    this.getDataTypes();
     // Load User Teams.
     this.getUserTeams();
     // Get Active Submmission if exist.
     this.setActiveSubmission();
 
-  }
-
-  /**
-   * Initialize the Choices Plugin.
-   */
-  ngAfterViewInit() {
-    const multipleCancelButton = new Choices('select.choices', {
-      delimiter: ',',
-      editItems: true,
-      maxItemCount: 5,
-      removeItemButton: true,
-    });
   }
 
   /**
@@ -128,6 +120,62 @@ export class OverviewPageComponent implements OnInit {
         }
       );
     }
+  }
+
+  /**
+   * Retrieve list of data types.
+   */
+  getDataTypes() {
+    this.submissionsService.getDataTypes(this.token).subscribe (
+      (data) => {
+        // If no data Types.
+        if (!data.content.hasOwnProperty('Sequencing')) {
+          return false;
+        }
+
+        for (let dataType of data.content.Sequencing) {
+          this.dataTypes.push({
+            value: dataType,
+            label: dataType,
+          });
+        }
+
+        let dataTypesSelect = new Choices('select[name="dataType"]', {
+          delimiter: ',',
+          editItems: false,
+          maxItemCount: -1,
+          removeItemButton: true,
+          choices: this.dataTypes,
+          items: this.dataTypes,
+        });
+
+          // If no data SubTypes.
+        if (!data.content.hasOwnProperty('FunctionalGenomics')) {
+            return false;
+        }
+
+        for (let dataSubType of data.content.FunctionalGenomics) {
+          this.dataSubTypes.push({
+            value: dataSubType,
+            label: dataSubType,
+          });
+        }
+
+        new Choices('select[name="dataSubType"]', {
+          delimiter: ',',
+          editItems: false,
+          maxItemCount: -1,
+          removeItemButton: true,
+          choices: this.dataSubTypes,
+          items: this.dataSubTypes,
+        });
+
+      },
+      (err) => {
+        // TODO: Handle Errors.
+        console.log(err);
+      }
+    );
   }
 
   /**
@@ -226,6 +274,5 @@ export class OverviewPageComponent implements OnInit {
         }
       );
     }
-    console.log(this.overviewForm.value.team);
   }
 }

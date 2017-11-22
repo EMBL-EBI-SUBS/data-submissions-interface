@@ -29,6 +29,7 @@ export class DashboardPageComponent implements OnInit {
   constructor(
     public authService: AuthService,
     private submissionsService: SubmissionsService,
+    private teamService: TeamsService,
     private requestsService: RequestsService,
     private userService: UserService,
     private tokenService: TokenService,
@@ -111,15 +112,26 @@ export class DashboardPageComponent implements OnInit {
     this.submissions = this.getUserSubmissionsByUrl(getSubmissionUrl);
   }
 
-  onEditDraftSubmission(submission: any) {
+  onEditDraftSubmission(submissionItem: any) {
+    let submissionLinkEndpoint = submissionItem._links['self'].href;
+    this.requestsService.get(this.token, submissionLinkEndpoint).subscribe (
+      (data) => {
+        this.submissionsService.setActiveSubmission(data);
+        this.teamService.setActiveTeam(data.team);
+        this.router.navigate(['/submission/overview']);
+      },
+      (err) => {
+        // TODO: Handle Errors.
+        console.log(err);
+      }
+    );
+  }
+
+  onEditSubmittedSubmission(submissionItem: any) {
 
   }
 
-  onEditSubmittedSubmission(submission: any) {
-
-  }
-
-  onViewCompletedSubmission(submission: any) {
+  onViewCompletedSubmission(submissionItem: any) {
 
   }
 

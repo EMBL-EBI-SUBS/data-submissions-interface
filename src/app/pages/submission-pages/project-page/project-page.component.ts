@@ -8,6 +8,7 @@ import { SubmissionsService } from '../../../services/submissions.service';
 import { UserService } from '../../../services/user.service';
 import { RequestsService } from '../../../services/requests.service';
 
+declare var Choices;
 
 @Component({
   selector: 'app-project-page',
@@ -30,8 +31,8 @@ export class ProjectPageComponent implements OnInit {
     {"title": "Overview", "href": "/submission/overview"},
     {"title": "Project", "href": "/submission/project"},
     {"title": "Data", "href": "/submission/data"},
-    {"title": "Experiment", "href": "/submission/experiment"},
     {"title": "Samples", "href": "/submission/samples"},
+    {"title": "Protocols", "href": "/submission/protocols"},
     {"title": "Contacts", "href": "/submission/contacts"},
     {"title": "Submit", "href": "/submission/submit"},
   ];
@@ -49,7 +50,7 @@ export class ProjectPageComponent implements OnInit {
     this.projectForm = new FormGroup({
       project: new FormControl('_create', Validators.required),
       projectTitle: new FormControl('', Validators.required),
-      projectDescription: new FormControl('', Validators.required),
+      projectDescription: new FormControl(''),
       projectShortName: new FormControl('', Validators.required),
       submissionShortName: new FormControl('', Validators.required),
       submissionPublication: new FormControl(''),
@@ -58,6 +59,7 @@ export class ProjectPageComponent implements OnInit {
     this.onLoadProjects();
     this.initializeForm();
   }
+
 
 
   /**
@@ -149,7 +151,6 @@ export class ProjectPageComponent implements OnInit {
    * Return true when form is ready to submit.
    */
   onReady() {
-    console.log(this.projectForm);
     // TODO: Add form validation.
     return this.projectForm.valid;
   }

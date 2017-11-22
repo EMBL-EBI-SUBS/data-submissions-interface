@@ -7,6 +7,7 @@ import { VariablesService } from './variables.service';
 @Injectable()
 export class SubmissionsService {
   variables = new VariablesService;
+  dataTypesEndpoint = this.variables.host + "studyDataTypes";
 
   constructor(private http: Http) { }
 
@@ -47,6 +48,21 @@ export class SubmissionsService {
 
     let requestUrl =  url;
     var response = this.http.post(requestUrl, body, requestOptions).map(res => res.json());
+    return response;
+  }
+
+  /**
+   * List Projects for Current Logged in user.
+   */
+  getDataTypes(token: String) {
+    let headers = this.variables.buildHeader(token);
+
+    let requestOptions = new RequestOptions({
+        headers: headers
+    });
+
+    let requestUrl =  this.dataTypesEndpoint;
+    var response = this.http.get(requestUrl, requestOptions).map(res => res.json());
     return response;
   }
 

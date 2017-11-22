@@ -29,6 +29,8 @@
     "jquery": "^3.2.1",
     "rxjs": "^5.5.2",
     "ts-helpers": "^1.1.1",
+    "tus-js-client": "^1.4.5",
+    "uppy": "^0.21.0",
     "zone.js": "^0.7.2"
   },
   "devDependencies": {

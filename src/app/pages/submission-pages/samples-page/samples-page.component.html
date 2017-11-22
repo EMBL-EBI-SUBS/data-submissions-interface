@@ -1,4 +1,6 @@
 <div id="content">
+  <link href="https://unpkg.com/uppy/dist/uppy.min.css" rel="stylesheet">
+
   <ebi-header title="New Submission"></ebi-header>
 
   <section id="main-content-area" class="row padding-top-xsmall padding-bottom-xsmall" role="main">
@@ -10,6 +12,53 @@
       </li>
     </ul>
 
-    Samples page
+
+    <form [formGroup]="samplesForm" novalidate class="conditional-form">
+      <fieldset required class="large-form padding-bottom-large padding-top-large ">
+        <legend>Samples</legend>
+
+
+          <label>What is the source of your biological samples?
+          <select name="samplesSource" formControlName="samplesSource" class="choices"  required multiple>
+            <option value="data-type-1">
+              Organism - eukaryote
+            </option>
+            <option value="data-type-2">
+              Organism - Pprokaryote
+            </option>
+            <option value="data-type-3">
+              Source - Water
+            </option>
+            <option value="data-type-4">
+              Source - metagenome
+            </option>
+          </select>
+          </label>
+
+          <label class="margin-top-large">Enter species name of Tax ID
+            <input type="text" placeholder="E.g Human .... 9606"  name="samplesSpecies" formControlName="samplesSpecies"/>
+            <span class="form-error">
+        Yo, you had better fill this out, it's required.
+        </span>
+          </label>
+
+      </fieldset>
+
+      <fieldset required class="large-form padding-bottom-large padding-top-large ">
+        <legend>Samples Templates</legend>
+        <p>
+          Based on your selection above, you might find the following community sample templates helpful:
+        </p>
+        <div><a class="readmore" target="_blank">human anonymised samples template </a></div>
+        <div><a class="readmore" target="_blank">Eukaryote general samples template </a></div>
+
+        <div class="uppy-drag-drop margin-top-large"></div>
+      </fieldset>
+
+      <div>
+        <button class="button secondary-color white-background" (click)="onSaveExit()" [disabled]="samplesForm.invalid">Save &amp; exit</button>
+        <button class="button readmore" (click)="onSaveContinue()" [disabled]="samplesForm.invalid">Save &amp; continue</button>
+      </div>
+    </form>
   </section>
 </div>
