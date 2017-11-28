@@ -2,11 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, FormControl, Validators} from '@angular/forms';
 
-import Uppy from 'uppy/src/core';
-import Dashboard from 'uppy/src/plugins/Dashboard';
-import Tus from 'uppy/src/plugins/Tus';
-import MetaData from 'uppy/src/plugins/MetaData';
-import GoldenRetriever from 'uppy/src/plugins/GoldenRetriever';
+import Uppy from 'uppy/lib/core';
+import Dashboard from 'uppy/lib/plugins/Dashboard';
+import Tus from 'uppy/lib/plugins/Tus10';
+import MetaData from 'uppy/lib/plugins/MetaData';
+import GoldenRetriever from 'uppy/lib/plugins/GoldenRetriever';
 
 // Import Services.
 import { SubmissionsService } from '../../../services/submissions.service';
