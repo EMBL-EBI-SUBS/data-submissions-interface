@@ -5,6 +5,7 @@ import { TokenService } from 'angular-aap-auth';
 
 // Import Services.
 import { SubmissionsService } from '../../../services/submissions.service';
+import { TeamsService } from '../../../services/teams.service';
 import { UserService } from '../../../services/user.service';
 import { RequestsService } from '../../../services/requests.service';
 
@@ -16,6 +17,7 @@ declare var Choices;
   styleUrls: ['./project-page.component.scss'],
   providers: [
     SubmissionsService,
+    TeamsService,
     UserService,
     RequestsService,
     TokenService
@@ -39,6 +41,7 @@ export class ProjectPageComponent implements OnInit {
 
   constructor(
     private submissionsService: SubmissionsService,
+    private teamsService: TeamsService,
     private userService: UserService,
     private requestsService: RequestsService,
     private tokenService: TokenService,
@@ -83,6 +86,7 @@ export class ProjectPageComponent implements OnInit {
     //  TODO: Fix creating duplicated projects issue.
     this.requestsService.create(this.token, submissionProjectCreateUrl, submissionProjectDataObject).subscribe (
       (data) => {
+        this.submissionsService.setActiveProject(data);
       },
       (err) => {
         // TODO: Handle Errors.
@@ -102,6 +106,9 @@ export class ProjectPageComponent implements OnInit {
     );
 
     this.submissionsService.deleteActiveSubmission();
+    this.submissionsService.deleteActiveProject();
+    this.teamsService.deleteActiveTeam();
+    this.router.navigate(['/dashboard']);
   }
 
   /**
@@ -125,6 +132,7 @@ export class ProjectPageComponent implements OnInit {
     //  TODO: Fix creating duplicated projects issue.
     this.requestsService.create(this.token, submissionProjectCreateUrl, submissionProjectDataObject).subscribe (
       (data) => {
+        console.log(data);
       },
       (err) => {
         // TODO: Handle Errors.

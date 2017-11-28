@@ -72,6 +72,9 @@ export class OverviewPageComponent implements OnInit {
     // TODO: Save the data to existing submission.
     if(this.activeSubmission) {
       this.submissionsService.deleteActiveSubmission();
+      this.submissionsService.deleteActiveProject();
+      this.teamsService.deleteActiveTeam();
+
       this.router.navigate(['/dashboard']);
     }
     // Create new submission

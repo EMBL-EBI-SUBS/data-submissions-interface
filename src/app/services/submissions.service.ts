@@ -67,6 +67,75 @@ export class SubmissionsService {
   }
 
   /**
+   * Get Project for Submission.
+   */
+  getActiveSubmissionProject(token: String) {
+    let activeSubmission = this.getActiveSubmission();
+    let headers = this.variables.buildHeader(token);
+
+    let requestOptions = new RequestOptions({
+        headers: headers
+    });
+
+    if(!activeSubmission) {
+        return ;
+    }
+
+    // If Contents links not exist then retrieve it.
+    if (!activeSubmission._links.contents.hasOwnProperty("_links")) {
+      let contentsLinks = activeSubmission._links.contents.href;
+      var response = this.http.get(contentsLinks, requestOptions)
+        .map(res => {
+          let response = res.json();
+          activeSubmission._links.contents['_links'] = response._links;
+          this.setActiveSubmission(activeSubmission);
+          return response._links.projects.href;
+        })
+        .flatMap((projectsUrl) => {
+          return this.http.get(projectsUrl, requestOptions);
+        })
+        .map(res => {
+          let response = res.json();
+          if(response.hasOwnProperty("_embedded") && response._embedded.hasOwnProperty("projects")) {
+            let activeProject = response._embedded.projects.pop();
+            return activeProject._links.self.href;
+          }
+        })
+        .flatMap((projectsUrl) => {
+          return this.http.get(projectsUrl, requestOptions);
+        })
+        .map(res => {
+          let project = res.json();
+          this.setActiveProject(project);
+          return project;
+        });
+
+      return response;
+    }
+    else {
+      let projectsLinks = activeSubmission._links.contents._links.projects.href;
+      var response = this.http.get(projectsLinks, requestOptions)
+        .map(res => {
+          let response = res.json();
+          if(response.hasOwnProperty("_embedded") && response._embedded.hasOwnProperty("projects")) {
+            let activeProject = response._embedded.projects.pop();
+            return activeProject._links.self.href;
+          }
+        })
+        .flatMap((projectsUrl) => {
+          return this.http.get(projectsUrl, requestOptions);
+        })
+        .map(res => {
+          let project = res.json();
+          this.setActiveProject(project);
+          return project;
+        });
+
+      return response;
+    }
+  }
+
+  /**
    * Update active submission.
    */
   setActiveSubmission(submission: any) {
@@ -106,5 +175,26 @@ export class SubmissionsService {
    */
   deleteSubmissions() {
     localStorage.removeItem("submissions");
+  }
+
+  /**
+   * Update active project.
+   */
+  setActiveProject(project: any) {
+      localStorage.setItem("active_project", JSON.stringify(project));
+  }
+
+  /**
+   * Retrieve active project.
+   */
+  getActiveProject() {
+      return JSON.parse(localStorage.getItem("active_project"));
+  }
+
+  /**
+   * Delete active project.
+   */
+  deleteActiveProject() {
+      localStorage.removeItem("active_project");
   }
 }

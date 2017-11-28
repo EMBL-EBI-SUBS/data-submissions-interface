@@ -2,14 +2,15 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, FormControl, Validators} from '@angular/forms';
 
-import Uppy from 'uppy/lib/core';
-import Dashboard from 'uppy/lib/plugins/Dashboard';
-import Tus from 'uppy/lib/plugins/Tus';
-import MetaData from 'uppy/lib/plugins/MetaData';
-import GoldenRetriever from 'uppy/lib/plugins/GoldenRetriever';
+import Uppy from 'uppy/src/core';
+import Dashboard from 'uppy/src/plugins/Dashboard';
+import Tus from 'uppy/src/plugins/Tus';
+import MetaData from 'uppy/src/plugins/MetaData';
+import GoldenRetriever from 'uppy/src/plugins/GoldenRetriever';
 
 // Import Services.
 import { SubmissionsService } from '../../../services/submissions.service';
+import { TeamsService } from '../../../services/teams.service';
 
 declare var Choices;
 
@@ -17,7 +18,10 @@ declare var Choices;
   selector: 'app-samples-page',
   templateUrl: './samples-page.component.html',
   styleUrls: ['./samples-page.component.scss'],
-  providers: [SubmissionsService]
+  providers: [
+    SubmissionsService,
+    TeamsService
+  ]
 })
 export class SamplesPageComponent implements OnInit {
   samplesForm: FormGroup;
@@ -38,7 +42,8 @@ export class SamplesPageComponent implements OnInit {
   
   constructor(
     private router: Router,
-    private submissionsService: SubmissionsService
+    private submissionsService: SubmissionsService,
+    private teamsService: TeamsService
   ) { }
 
   ngOnInit() {
@@ -62,7 +67,10 @@ export class SamplesPageComponent implements OnInit {
       target: '.uppy-drag-drop',
       note: 'Drag & drop filled out .CSV file'
     })
-    .use(GoldenRetriever, { serviceWorker: false })
+    .use(GoldenRetriever, {
+      serviceWorker: false,
+      indexedDB: { maxFileSize: Infinity, maxTotalSize: Infinity },
+    })
     .use(Tus, {
       resume: true,
       autoRetry: true,
@@ -95,7 +103,11 @@ export class SamplesPageComponent implements OnInit {
   }
 
   onSaveExit() {
+    this.submissionsService.deleteActiveSubmission();
+    this.submissionsService.deleteActiveProject();
+    this.teamsService.deleteActiveTeam();
 
+    this.router.navigate(['/dashboard']);
   }
 
   onSaveContinue() {

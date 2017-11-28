@@ -1,14 +1,15 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { Router } from '@angular/router';
 
-import Uppy from 'uppy/lib/core';
-import Dashboard from 'uppy/lib/plugins/Dashboard';
-import Tus from 'uppy/lib/plugins/Tus';
-import MetaData from 'uppy/lib/plugins/MetaData';
-import GoldenRetriever from 'uppy/lib/plugins/GoldenRetriever';
+import Uppy from 'uppy/src/core';
+import Dashboard from 'uppy/src/plugins/Dashboard';
+import Tus from 'uppy/src/plugins/Tus';
+import MetaData from 'uppy/src/plugins/MetaData';
+import GoldenRetriever from 'uppy/src/plugins/GoldenRetriever';
 
 // Import Services.
 import { SubmissionsService } from '../../../services/submissions.service';
+import { TeamsService } from '../../../services/teams.service';
 
 declare var $;
 
@@ -16,7 +17,10 @@ declare var $;
   selector: 'app-data-page',
   templateUrl: './data-page.component.html',
   styleUrls: ['./data-page.component.scss'],
-  providers: [SubmissionsService]
+  providers: [
+    SubmissionsService,
+    TeamsService
+  ]
 })
 export class DataPageComponent implements OnInit {
   activeSubmission: any;
@@ -41,6 +45,7 @@ export class DataPageComponent implements OnInit {
   constructor(
     private router: Router,
     private submissionsService: SubmissionsService,
+    private teamsService: TeamsService,
   ) { }
 
   /**
@@ -64,7 +69,10 @@ export class DataPageComponent implements OnInit {
       target: '.uppy-drag-drop',
       note: 'FASTQ, FASTA, CRAM, BAM and ETC files.'
     })
-    .use(GoldenRetriever, { serviceWorker: false })
+    .use(GoldenRetriever, {
+      serviceWorker: false,
+      indexedDB: { maxFileSize: Infinity, maxTotalSize: Infinity },
+    })
     .use(Tus, {
       resume: true,
       autoRetry: true,
@@ -84,11 +92,14 @@ export class DataPageComponent implements OnInit {
   }
 
   onSaveExit() {
+    this.submissionsService.deleteActiveSubmission();
+    this.submissionsService.deleteActiveProject();
+    this.teamsService.deleteActiveTeam();
 
+    this.router.navigate(['/dashboard'])
   }
 
   onSaveContinue() {
-    console.log(this.uploadUppy);
     this.router.navigate(['/submission/samples'])
   }
 
