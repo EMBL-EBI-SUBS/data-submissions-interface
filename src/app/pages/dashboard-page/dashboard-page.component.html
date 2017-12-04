@@ -19,7 +19,7 @@
       </div>
     </div>
 
-    <table class="stack" *ngIf="submissions && submissions._embedded.submissions">
+    <table class="stack" *ngIf="submissions?._embedded?.submissions?.length > 0">
       <thead>
         <tr>
           <th>Updated</th>

@@ -50,11 +50,10 @@ export class OverviewPageComponent implements OnInit {
   ngOnInit() {
     this.token = this.tokenService.getToken();
     this.overviewForm = new FormGroup({
-        team: new FormControl('_none'),
-        human: new FormControl(),
-        dataType: new FormControl(),
-        dataSubType: new FormControl(),
-        controlled: new FormControl(),
+      human: new FormControl(),
+      dataType: new FormControl(),
+      dataSubType: new FormControl(),
+      controlled: new FormControl(),
     });
     // Get Data Types.
     this.getDataTypes();
@@ -62,7 +61,6 @@ export class OverviewPageComponent implements OnInit {
     this.getUserTeams();
     // Get Active Submmission if exist.
     this.setActiveSubmission();
-
   }
 
   /**
@@ -82,13 +80,13 @@ export class OverviewPageComponent implements OnInit {
       let createSubmissionUrl = this.activeTeam._links['submissions:create'].href;
       this.submissionsService.create(this.token, createSubmissionUrl).subscribe (
         (data) => {
-          // TODO: store overview data in submission.
-          this.router.navigate(['/dashboard']);
+            // TODO: store overview data in submission.
+            this.router.navigate(['/dashboard']);
         },
         (err) => {
-          // TODO: Handle Errors.
-          console.log(err);
-       }
+            // TODO: Handle Errors.
+            console.log(err);
+        }
       );
     }
   }
@@ -213,12 +211,10 @@ export class OverviewPageComponent implements OnInit {
    */
   setActiveSubmission() {
     // If Submission Already created before then return it.
-    const getActiveSubmission = this.submissionsService.getActiveSubmission();
+    let getActiveSubmission = this.submissionsService.getActiveSubmission();
+
     if (getActiveSubmission) {
       this.activeSubmission = getActiveSubmission;
-      // TODO: Set form default field values.
-      this.overviewForm.controls['team'].setValue(getActiveSubmission.team.name);
-      this.overviewForm.controls['team'].disable();
     }
   }
 
@@ -251,6 +247,10 @@ export class OverviewPageComponent implements OnInit {
         }
 
         this.teams = data._embedded.teams;
+        // TODO: Currently we set the first team as default one. We have to change this later on.
+        if (this.teams[0].name) {
+          this.setActiveTeam(this.teams[0].name);
+        }
       },
       (err) => {
         // TODO: Handle Errors.
@@ -277,5 +277,23 @@ export class OverviewPageComponent implements OnInit {
         }
       );
     }
+  }
+
+  /**
+   * On Change / Select the team.
+   * Set active team.
+   */
+  setActiveTeam(name) {
+    this.teamsService.getTeam(this.token, name).subscribe (
+      (data) => {
+        this.activeTeam = data;
+        this.teamsService.setActiveTeam(data);
+      },
+      (err) => {
+        // TODO: Handle Errors.
+        console.log(err);
+      }
+    );
+
   }
 }

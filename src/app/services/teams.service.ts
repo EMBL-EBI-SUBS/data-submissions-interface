@@ -8,6 +8,7 @@ import { VariablesService } from './variables.service';
 export class TeamsService {
   variables = new VariablesService;
   teamEndpoint = this.variables.host + "teams/";
+  createTeamEndPoint = this.variables.authenticationHost + "domains";
 
   constructor(private http: Http) { }
 
@@ -51,6 +52,45 @@ export class TeamsService {
 
     let requestUrl =  this.teamEndpoint + name;
     var response = this.http.get(requestUrl, requestOptions).map(res => res.json());
+    return response;
+  }
+
+  /**
+   * Create Team for User.
+   */
+  createTeam(token) {
+    let headers = this.variables.buildHeader(token);
+
+    let requestOptions = new RequestOptions({
+        headers: headers
+    });
+
+    // Post an Empty object to create submission.
+    let body = JSON.stringify({
+      "domainName" : Date.now(),
+      "domainDesc" : Date.now()
+    });
+
+    let requestUrl =  this.createTeamEndPoint;
+    var response = this.http.post(requestUrl, body, requestOptions).map(res => res.json());
+    return response;
+  }
+
+  /**
+   * Add User to Team.
+   */
+  addUserToTeam(token, teamDomainRef, userRef) {
+    let headers = this.variables.buildHeader(token);
+
+    let requestOptions = new RequestOptions({
+        headers: headers
+    });
+
+    // Post an Empty object to create submission.
+    let body = JSON.stringify({});
+
+    let requestUrl =  this.createTeamEndPoint + "/" + teamDomainRef + "/" +  userRef + "/user";
+    var response = this.http.put(requestUrl, body, requestOptions).map(res => res.json());
     return response;
   }
 

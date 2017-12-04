@@ -38,6 +38,9 @@ export class DashboardPageComponent implements OnInit {
 
   ngOnInit() {
     this.token = this.tokenService.getToken();
+    this.submissionsService.deleteActiveProject();
+    this.submissionsService.deleteActiveSubmission();
+    this.teamService.deleteActiveTeam();
 
     // Get all submissions.
     if(!this.submissions) {

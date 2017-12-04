@@ -33,6 +33,7 @@ export const ROUTES: Routes = [
   { path: 'submission/contacts', component: ContactsPageComponent, canActivate: [LoggedInGuard] },
   { path: 'submission/submit', component: SubmitPageComponent, canActivate: [LoggedInGuard] },
   { path: 'dashboard', component: DashboardPageComponent, canActivate: [LoggedInGuard] },
+  { path: 'user/login', component: UserLoginPageComponent },
   { path: 'library', component: LibraryPageComponent, canActivate: [LoggedInGuard] },
   { path: 'help', component: HelpPageComponent },
   { path: '**', component: NotFoundPageComponent },

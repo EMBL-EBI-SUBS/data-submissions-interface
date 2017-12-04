@@ -1,4 +1,4 @@
-import { Component, Input, Renderer } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from 'angular-aap-auth';
 
@@ -18,11 +18,8 @@ export class EbiHeaderComponent {
 
   constructor(
     private authService: AuthService,
-    public renderer: Renderer,
     private router: Router
-  ) {
-    this.tokenListener = this.authService.getTokenListenerRemover(renderer, () => { });
-  }
+  ) {}
 
   isLoggedIn() {
     return this.authService.loggedIn();

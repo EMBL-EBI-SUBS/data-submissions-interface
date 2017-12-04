@@ -30,7 +30,7 @@
         <ul id="secondary-menu-user-links" class="float-right menu">
           <li class="disable" *ngIf="isLoggedIn()"><a routerLink="/user">Hi {{authService.getName()}}</a></li>
           <li class="menu" *ngIf="isLoggedIn()"><a routerLink="/dashboard">My dashboard</a></li>
-          <li class="menu" *ngIf="!isLoggedIn()"><a [href]="authService.getSSOURL()" target="_blank">Login</a></li>
+          <li class="menu" *ngIf="!isLoggedIn()"><a routerLink="/user/login">Login</a></li>
           <li class="menu" *ngIf="isLoggedIn()" (click)="onLogout()"><a (click)="onLogout()">Logout</a></li>
         </ul>
       </nav>

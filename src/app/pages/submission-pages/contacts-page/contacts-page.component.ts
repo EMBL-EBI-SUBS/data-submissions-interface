@@ -95,7 +95,6 @@ export class ContactsPageComponent implements OnInit {
     if (!this.activeProject) {
       this.submissionsService.getActiveSubmissionProject(this.token).subscribe(
         (data) => {
-          console.log(data);
           this.activeProject = data;
         },
         (error) =>  {

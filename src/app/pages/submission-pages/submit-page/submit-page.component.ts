@@ -46,7 +46,7 @@ export class SubmitPageComponent implements OnInit {
     let updateObj = {
       "status" : "Submitted",
     }
-    this.requestsService.partialUpdate(this.token, activeSubmissionUpdateEndpoint, updateObj).subscribe(
+    this.requestsService.update(this.token, activeSubmissionUpdateEndpoint, updateObj).subscribe(
       (data) => {
         // If updating status successfully done. redirect to dashboard.
         this.submissionsService.deleteActiveSubmission();

@@ -12,21 +12,7 @@
 
     <form [formGroup]="overviewForm" novalidate class="conditional-form">
 
-      <!-- Print Team Field -->
-      <fieldset required class="large-form padding-bottom-large padding-top-large ">
-        <legend>Select your lovely team!</legend>
-        <select name="team" formControlName="team" required (change)="onSelectTeam()">
-          <option selected value="_none">
-            Select your team
-          </option>
-
-          <option *ngFor="let team of teams; let i = index" [value]="team.name">
-            {{team.name}}
-          </option>
-        </select>
-      </fieldset>
-
-      <fieldset required class="large-form padding-bottom-large padding-top-large" *ngIf="overviewForm.value.team !== '_none'">
+      <fieldset required class="large-form padding-bottom-large padding-top-large">
         <legend>Before you begin</legend>
 
         <fieldset class="large-form padding-bottom-large padding-top-large">
@@ -36,7 +22,7 @@
         </fieldset>
 
 
-        <fieldset class="large-form padding-bottom-large padding-top-large" *ngIf="overviewForm.value.human == 1">
+        <fieldset class="large-form padding-bottom-large padding-top-large">
           <legend>Does it require controlled access once it becomes public?</legend>
           <input type="radio" name="controlled" value="1" formControlName="controlled" id="controlledYes"><label for="controlledYes">Yes</label>
           <input type="radio" name="controlled" value="0" formControlName="controlled" id="controlledNo"><label for="controlledNo">No</label>
@@ -44,7 +30,7 @@
       </fieldset>
 
 
-      <fieldset required class="large-form padding-bottom-large padding-top-large" [ngClass]="{'hidden': !onPartOneReady()}">
+      <fieldset required class="large-form padding-bottom-large padding-top-large">
         <legend>Data type</legend>
 
         <fieldset class="large-form padding-bottom-large padding-top-large">
@@ -64,7 +50,7 @@
         </fieldset>
       </fieldset>
 
-      <div *ngIf="onPartTwoReady()">
+      <div>
         <button class="button secondary-color white-background" (click)="onSaveExit()" [disabled]="overviewForm.invalid">Save & exit</button>
         <button class="button readmore" (click)="onSaveContinue()" [disabled]="overviewForm.invalid">Save &amp; continue</button>
       </div>

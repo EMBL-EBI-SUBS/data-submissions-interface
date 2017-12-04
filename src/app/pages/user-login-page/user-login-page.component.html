@@ -2,22 +2,30 @@
   <ebi-header title="User Login"></ebi-header>
 
   <section id="main-content-area" class="row padding-top-xsmall padding-bottom-xsmall" role="main">
-    <h2 class="padding-top-xlarge text-center">Log in with you email account</h2>
+    <div class="login-form" *ngIf="!isLoggedIn()">
+      <h2 class="padding-top-xlarge text-center">Log in with you email account</h2>
 
-    <form class="login-form">
-      <label>Email
-        <input type="email" placeholder="Somebody@example.com"/>
-      </label>
+      <form class="login-form">
+        <label>Email
+          <input type="email" placeholder="Somebody@example.com"/>
+        </label>
 
-      <label>Password
-        <input type="password" placeholder="Password">
-      </label>
+        <label>Password
+          <input type="password" placeholder="Password">
+        </label>
 
-      <p>
-        <input type="submit" class="button expanded" value="Log in"/>
-      </p>
+        <p>
+          <input type="submit" class="button expanded" value="Log in"/>
+        </p>
 
-      <p class="text-center"><a href="#">Forgot your password?</a></p>
-    </form>
+        <p class="text-center"><a [href]="authService.getSSOURL()" target="_blank">Login with SSO</a></p>
+      </form>
+    </div>
+
+    <div *ngIf="isLoggedIn()" class="text-center padding-top-large">
+      You are already logged in..
+      <br><br>
+      <a class="button" routerLink="/dashboard">Visit Your Dashboard</a>
+    </div>
   </section>
 </div>
