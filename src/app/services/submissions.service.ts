@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Http, RequestOptions } from '@angular/http';
 import 'rxjs/add/operator/map';
+import { Observable } from 'rxjs';
+
 // Import Service Variables.
 import { VariablesService } from './variables.service';
 
@@ -36,15 +38,14 @@ export class SubmissionsService {
   /**
    * Create new record.
    */
-  create(token, url) {
+  create(token, url, bodyData = {}) {
     let headers = this.variables.buildHeader(token);
-
     let requestOptions = new RequestOptions({
         headers: headers
     });
 
     // Post an Empty object to create submission.
-    let body = JSON.stringify({});
+    let body = JSON.stringify(bodyData);
 
     let requestUrl =  url;
     var response = this.http.post(requestUrl, body, requestOptions).map(res => res.json());
@@ -80,7 +81,6 @@ export class SubmissionsService {
     if(!activeSubmission) {
         return ;
     }
-
     // If Contents links not exist then retrieve it.
     if (!activeSubmission._links.contents.hasOwnProperty("_links")) {
       let contentsLinks = activeSubmission._links.contents.href;
@@ -89,47 +89,45 @@ export class SubmissionsService {
           let response = res.json();
           activeSubmission._links.contents['_links'] = response._links;
           this.setActiveSubmission(activeSubmission);
-          return response._links.projects.href;
+          return response._links.project.href;
         })
         .flatMap((projectsUrl) => {
           return this.http.get(projectsUrl, requestOptions);
         })
         .map(res => {
           let response = res.json();
-          if(response.hasOwnProperty("_embedded") && response._embedded.hasOwnProperty("projects")) {
-            let activeProject = response._embedded.projects.pop();
-            return activeProject._links.self.href;
-          }
-        })
-        .flatMap((projectsUrl) => {
-          return this.http.get(projectsUrl, requestOptions);
-        })
-        .map(res => {
-          let project = res.json();
-          this.setActiveProject(project);
-          return project;
+          this.setActiveProject(response);
+          return response;
         });
 
       return response;
     }
     else {
-      let projectsLinks = activeSubmission._links.contents._links.projects.href;
-      var response = this.http.get(projectsLinks, requestOptions)
-        .map(res => {
-          let response = res.json();
-          if(response.hasOwnProperty("_embedded") && response._embedded.hasOwnProperty("projects")) {
-            let activeProject = response._embedded.projects.pop();
-            return activeProject._links.self.href;
-          }
-        })
-        .flatMap((projectsUrl) => {
-          return this.http.get(projectsUrl, requestOptions);
-        })
-        .map(res => {
-          let project = res.json();
-          this.setActiveProject(project);
-          return project;
-        });
+      try {
+        let projectsLinks = activeSubmission._links.contents._links.project.href;
+
+        var response = this.http.get(projectsLinks, requestOptions)
+          .map(res => {
+            let response = res.json();
+            if(response.hasOwnProperty("_embedded") && response._embedded.hasOwnProperty("project")) {
+              let activeProject = response._embedded.project.pop();
+              return activeProject._links.self.href;
+            }
+          })
+          .flatMap((projectsUrl) => {
+            return this.http.get(projectsUrl, requestOptions);
+          })
+          .map(res => {
+            let project = res.json();
+            this.setActiveProject(project);
+            return project;
+          });
+      } catch (err) {
+        // Return empty reponse variable.
+        let emptyVariable: any;
+        var response = Observable.of(emptyVariable);
+      }
+
 
       return response;
     }
@@ -181,20 +179,20 @@ export class SubmissionsService {
    * Update active project.
    */
   setActiveProject(project: any) {
-      localStorage.setItem("active_project", JSON.stringify(project));
+    localStorage.setItem("active_project", JSON.stringify(project));
   }
 
   /**
    * Retrieve active project.
    */
   getActiveProject() {
-      return JSON.parse(localStorage.getItem("active_project"));
+    return JSON.parse(localStorage.getItem("active_project"));
   }
 
   /**
    * Delete active project.
    */
   deleteActiveProject() {
-      localStorage.removeItem("active_project");
+    localStorage.removeItem("active_project");
   }
 }

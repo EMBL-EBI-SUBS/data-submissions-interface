@@ -1,11 +1,10 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { Router } from '@angular/router';
 
-import Uppy from 'uppy/lib/core';
-import Dashboard from 'uppy/lib/plugins/Dashboard';
-import Tus from 'uppy/lib/plugins/Tus10';
-import MetaData from 'uppy/lib/plugins/MetaData';
-import GoldenRetriever from 'uppy/lib/plugins/GoldenRetriever';
+const Uppy = require('uppy/lib/core');
+const Dashboard = require('uppy/lib/plugins/Dashboard');
+const Tus = require('uppy/lib/plugins/Tus');
+const GoldenRetriever = require('uppy/lib/plugins/GoldenRetriever');
 
 // Import Services.
 import { SubmissionsService } from '../../../services/submissions.service';
@@ -28,8 +27,6 @@ export class DataPageComponent implements OnInit {
   uploadEndpoint  = "http://mac-subs-008:1080/files/";
   uploadUppy : any;
 
-  formDisabled = true;
-
   userHasTeam = true;
   token: string;
   tabLinks: any = [
@@ -48,12 +45,6 @@ export class DataPageComponent implements OnInit {
     private teamsService: TeamsService,
   ) { }
 
-  /**
-   * Initialize Plugin.
-   */
-  ngAfterViewInit() {
-  }
-
   ngOnInit() {
     this.activeSubmission = this.submissionsService.getActiveSubmission();
     this.uploadUppy = Uppy({
@@ -67,7 +58,11 @@ export class DataPageComponent implements OnInit {
       trigger: '.UppyModalOpenerBtn',
       inline: true,
       target: '.uppy-drag-drop',
-      note: 'FASTQ, FASTA, CRAM, BAM and ETC files.'
+      note: 'FASTQ, FASTA, CRAM, BAM and ETC files.',
+      metaFields: [
+        { id: 'license', name: 'License', value: 'Creative Commons', placeholder: 'specify license' },
+        { id: 'caption', name: 'Caption', value: 'none', placeholder: 'describe what the image is about' }
+      ]
     })
     .use(GoldenRetriever, {
       serviceWorker: false,
@@ -78,16 +73,9 @@ export class DataPageComponent implements OnInit {
       autoRetry: true,
       endpoint: this.uploadEndpoint
     })
-    .use(MetaData, {
-      fields: [
-        { id: 'license', name: 'License', value: 'Creative Commons', placeholder: 'specify license' },
-        { id: 'caption', name: 'Caption', value: 'none', placeholder: 'describe what the image is about' }
-      ]
-    })
     .run();
 
-    this.uploadUppy.on('core:upload-success', (fileId, url) => {
-      this.formDisabled = false;
+    this.uploadUppy.on('complete', (fileId, url) => {
     })
   }
 

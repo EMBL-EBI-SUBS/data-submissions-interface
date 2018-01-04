@@ -8,7 +8,7 @@
 
     <ul class="tabs" id="example-tabs">
       <li *ngFor="let link of tabLinks" routerLinkActive="active" class="tabs-title">
-        <a [routerLink]="link.href" routerLinkActive="active">{{link.title}}</a>
+        <a class="disabled" [routerLink]="link.href" routerLinkActive="active">{{link.title}}</a>
       </li>
     </ul>
 
@@ -56,7 +56,7 @@
 
     <div>
       <button class="button secondary-color white-background" (click)="onSaveExit()">Save &amp; exit</button>
-      <button class="button readmore" (click)="onSaveContinue()" [disabled]="formDisabled">Save &amp; continue</button>
+      <button class="button readmore" (click)="onSaveContinue()">Save &amp; continue</button>
     </div>
   </section>
 </div>

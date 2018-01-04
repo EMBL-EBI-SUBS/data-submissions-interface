@@ -2,11 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, FormControl, Validators} from '@angular/forms';
 
-import Uppy from 'uppy/lib/core';
-import Dashboard from 'uppy/lib/plugins/Dashboard';
-import Tus from 'uppy/lib/plugins/Tus10';
-import MetaData from 'uppy/lib/plugins/MetaData';
-import GoldenRetriever from 'uppy/lib/plugins/GoldenRetriever';
+const Uppy = require('uppy/lib/core');
+const Dashboard = require('uppy/lib/plugins/Dashboard');
+const Tus = require('uppy/lib/plugins/Tus');
+const GoldenRetriever = require('uppy/lib/plugins/GoldenRetriever');
 
 // Import Services.
 import { SubmissionsService } from '../../../services/submissions.service';
@@ -39,7 +38,7 @@ export class SamplesPageComponent implements OnInit {
     {"title": "Contacts", "href": "/submission/contacts"},
     {"title": "Submit", "href": "/submission/submit"},
   ];
-  
+
   constructor(
     private router: Router,
     private submissionsService: SubmissionsService,
@@ -65,7 +64,11 @@ export class SamplesPageComponent implements OnInit {
       trigger: '.UppyModalOpenerBtn',
       inline: true,
       target: '.uppy-drag-drop',
-      note: 'Drag & drop filled out .CSV file'
+      note: 'Drag & drop filled out .CSV file',
+      metaFields: [
+        { id: 'license', name: 'License', value: 'Creative Commons', placeholder: 'specify license' },
+        { id: 'caption', name: 'Caption', value: 'none', placeholder: 'describe what the image is about' }
+      ]
     })
     .use(GoldenRetriever, {
       serviceWorker: false,
@@ -75,12 +78,6 @@ export class SamplesPageComponent implements OnInit {
       resume: true,
       autoRetry: true,
       endpoint: this.uploadEndpoint
-    })
-    .use(MetaData, {
-      fields: [
-        { id: 'license', name: 'License', value: 'Creative Commons', placeholder: 'specify license' },
-        { id: 'caption', name: 'Caption', value: 'none', placeholder: 'describe what the image is about' }
-      ]
     })
     .run();
 

@@ -6,7 +6,7 @@
 
     <ul class="tabs" id="example-tabs">
       <li *ngFor="let link of tabLinks" routerLinkActive="active is-active" class="tabs-title">
-        <a [routerLink]="link.href" routerLinkActive="active">{{link.title}}</a>
+        <a class="disabled" [routerLink]="link.href" routerLinkActive="active">{{link.title}}</a>
       </li>
     </ul>
 
@@ -17,7 +17,7 @@
 
         <fieldset class="large-form padding-bottom-large padding-top-large">
           <legend>Is your study on human research subjects?</legend>
-          <input type="radio" name="human" value="1" formControlName="human" id="humanYes" required><label for="humanYes">Yes</label>
+          <input type="radio" name="human" value="1" formControlName="human" id="humanYes"><label for="humanYes">Yes</label>
           <input type="radio" name="human" value="0" formControlName="human" id="humanNo"><label for="humanNo">No</label>
         </fieldset>
 
@@ -35,16 +35,16 @@
 
         <fieldset class="large-form padding-bottom-large padding-top-large">
           <legend>What type of data are you submitting?</legend>
-          <select name="dataType" formControlName="dataType" required multiple>
-            <option *ngFor="let dataType of dataTypes; let i = index" [value]="dataType">
-              {{dataType}}
+          <select name="dataType" formControlName="dataType"  multiple>
+            <option *ngFor="let dataType of dataTypes; let i = index" [value]="dataType.value" [selected]="dataType.selected">
+              {{dataType.label}}
             </option>
           </select>
 
           <legend>And more specifically?</legend>
-          <select name="dataSubType" formControlName="dataSubType" class="choices" required multiple>
-            <option *ngFor="let dataSubType of dataSubTypes; let i = index" [value]="dataSubType">
-              {{dataSubType}}
+          <select name="dataSubType" formControlName="dataSubType"  multiple>
+            <option *ngFor="let dataSubType of dataSubTypes; let i = index" [value]="dataSubType.value" [selected]="dataSubType.selected">
+              {{dataSubType.label}}
             </option>
           </select>
         </fieldset>

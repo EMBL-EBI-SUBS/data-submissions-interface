@@ -32,6 +32,11 @@ legend {
   height: 1.5rem;
 }
 
+a.disabled {
+  pointer-events: none;
+}
+
+
 .progress-meter-text {
   top: 50%;
   transform: translate(15%, -50%);

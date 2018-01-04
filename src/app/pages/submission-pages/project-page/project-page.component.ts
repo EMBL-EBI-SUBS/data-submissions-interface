@@ -26,6 +26,7 @@ declare var Choices;
 export class ProjectPageComponent implements OnInit {
   projectForm : FormGroup;
   activeSubmission: any;
+  activeProject: any;
   projects: any;
   token: string;
 
@@ -61,38 +62,48 @@ export class ProjectPageComponent implements OnInit {
     // Load list of projects.
     this.onLoadProjects();
     this.initializeForm();
+    this.getActiveProject();
   }
-
-
 
   /**
    * On Save and Exit.
    */
   onSaveExit() {
-    // TODO: Save the data.
-    let submissionProjectCreateUrl = this.activeSubmission._links.contents._links['projects:create'].href;
     let submissionProjectDataObject = {
       'alias': this.projectForm.value.projectShortName,
       'title': this.projectForm.value.projectTitle,
       'description': this.projectForm.value.projectDescription
     };
 
+    try {
+      // Create new project.
+      let submissionProjectUpdateUrl = this.activeSubmission._links.contents._links['projects:create'].href;
+      this.requestsService.create(this.token, submissionProjectUpdateUrl, submissionProjectDataObject).subscribe (
+        (data) => {
+          this.submissionsService.setActiveProject(data);
+        },
+        (err) => {
+          // TODO: Handle Errors.
+        }
+      );
+    } catch (err) {
+      // Update existing project.
+      let submissionProjectUpdateUrl = this.activeProject._links['self:update'].href;
+      this.requestsService.partialUpdate(this.token, submissionProjectUpdateUrl, submissionProjectDataObject).subscribe (
+        (data) => {
+          this.submissionsService.setActiveProject(data);
+        },
+        (err) => {
+          // TODO: Handle Errors.
+          console.log(err);
+        }
+      );
+    }
+
     let submissionUpdateUrl = this.activeSubmission._links['self:update'].href;
     let submissionUpdateData = this.activeSubmission;
     submissionUpdateData['name'] = this.projectForm.value.submissionShortName;
     submissionUpdateData['projectName'] = this.projectForm.value.projectShortName;
-
-    // Create the project.
-    //  TODO: Fix creating duplicated projects issue.
-    this.requestsService.create(this.token, submissionProjectCreateUrl, submissionProjectDataObject).subscribe (
-      (data) => {
-        this.submissionsService.setActiveProject(data);
-      },
-      (err) => {
-        // TODO: Handle Errors.
-        console.log(err);
-      }
-    );
 
     // Update the submission.
     this.requestsService.update(this.token, submissionUpdateUrl, submissionUpdateData).subscribe (
@@ -108,37 +119,48 @@ export class ProjectPageComponent implements OnInit {
     this.submissionsService.deleteActiveSubmission();
     this.submissionsService.deleteActiveProject();
     this.teamsService.deleteActiveTeam();
-    this.router.navigate(['/dashboard']);
   }
 
   /**
    * On Save and continue.
    */
   onSaveContinue() {
-    // TODO: Save the data.
-    let submissionProjectCreateUrl = this.activeSubmission._links.contents._links['projects:create'].href;
     let submissionProjectDataObject = {
       'alias': this.projectForm.value.projectShortName,
       'title': this.projectForm.value.projectTitle,
       'description': this.projectForm.value.projectDescription
     };
 
+    try {
+      // Create new project.
+      let submissionProjectUpdateUrl = this.activeSubmission._links.contents._links['projects:create'].href;
+      this.requestsService.create(this.token, submissionProjectUpdateUrl, submissionProjectDataObject).subscribe (
+        (data) => {
+          this.submissionsService.setActiveProject(data);
+        },
+        (err) => {
+          // TODO: Handle Errors.
+          console.log(err);
+        }
+      );
+    } catch (err) {
+      // Update existing project.
+      let submissionProjectUpdateUrl = this.activeProject._links['self:update'].href;
+      this.requestsService.partialUpdate(this.token, submissionProjectUpdateUrl, submissionProjectDataObject).subscribe (
+        (data) => {
+          this.submissionsService.setActiveProject(data);
+        },
+        (err) => {
+          // TODO: Handle Errors.
+          console.log(err);
+        }
+      );
+    }
+
     let submissionUpdateUrl = this.activeSubmission._links['self:update'].href;
     let submissionUpdateData = this.activeSubmission;
     submissionUpdateData['name'] = this.projectForm.value.submissionShortName;
     submissionUpdateData['projectName'] = this.projectForm.value.projectShortName;
-
-    // Create the project.
-    //  TODO: Fix creating duplicated projects issue.
-    this.requestsService.create(this.token, submissionProjectCreateUrl, submissionProjectDataObject).subscribe (
-      (data) => {
-        console.log(data);
-      },
-      (err) => {
-        // TODO: Handle Errors.
-        console.log(err);
-      }
-    );
 
     // Update the submission.
     this.requestsService.update(this.token, submissionUpdateUrl, submissionUpdateData).subscribe (
@@ -155,12 +177,29 @@ export class ProjectPageComponent implements OnInit {
     this.router.navigate(['/submission/data']);
   }
 
-  /**
-   * Return true when form is ready to submit.
-   */
-  onReady() {
-    // TODO: Add form validation.
-    return this.projectForm.valid;
+  getActiveProject() {
+    this.activeProject = this.submissionsService.getActiveProject();
+
+    // If there is no active project stored in session.
+    if (!this.activeProject) {
+      this.submissionsService.getActiveSubmissionProject(this.token).subscribe(
+        (data) => {
+          this.activeProject = data;
+          this.updateProjectForm(this.activeProject.alias, this.activeProject.title, this.activeProject.description);
+        },
+        (error) =>  {
+        }
+      );
+    }
+    else {
+      this.updateProjectForm(this.activeProject.alias, this.activeProject.title, this.activeProject.description);
+    }
+  }
+
+  updateProjectForm(alias, title, description = "") {
+    this.projectForm.controls['projectShortName'].setValue(alias);
+    this.projectForm.controls['projectTitle'].setValue(title);
+    this.projectForm.controls['projectDescription'].setValue(description);
   }
 
   /**
@@ -190,14 +229,14 @@ export class ProjectPageComponent implements OnInit {
   onSelectProject() {
     // If Create a new project then disable select list.
     if(this.projectForm.value.project !== "_create") {
-      this.projectForm.controls['projectTitle'].setValue(this.projects[this.projectForm.value.project].title);
-      this.projectForm.controls['projectDescription'].setValue(this.projects[this.projectForm.value.project].description);
-      this.projectForm.controls['projectShortName'].setValue(this.projects[this.projectForm.value.project].alias);
+      this.updateProjectForm(
+        this.projects[this.projectForm.value.project].alias,
+        this.projects[this.projectForm.value.project].title,
+        this.projects[this.projectForm.value.project].description
+      );
     }
     else {
-      this.projectForm.controls['projectTitle'].setValue('');
-      this.projectForm.controls['projectDescription'].setValue('');
-      this.projectForm.controls['projectShortName'].setValue('');
+      this.updateProjectForm('', '', '');
     }
   }
 
