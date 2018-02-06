@@ -13,7 +13,7 @@
     </ul>
 
 
-    <form [formGroup]="samplesForm" novalidate class="conditional-form">
+    <form [formGroup]="samplesForm">
       <fieldset required class="large-form padding-bottom-large padding-top-large ">
         <legend>Samples</legend>
 
@@ -49,10 +49,22 @@
         <p>
           Based on your selection above, you might find the following community sample templates helpful:
         </p>
-        <div><a class="readmore" target="_blank">human anonymised samples template </a></div>
-        <div><a class="readmore" target="_blank">Eukaryote general samples template </a></div>
+        <select name="template" (change)="onSelectTemplate($event)">
+          <option value="_none"> - Select Template - </option>
+          <option *ngFor="let template of templatesList" value="{{template.name}}" attr.data-href="{{template._links['spreadsheet-csv-download'].href}}">
+              {{template.name}} 
+          </option>
+        </select>
 
-        <div class="uppy-drag-drop margin-top-large"></div>
+        <div *ngIf="selectedTemplate.name">
+          
+          <a href="{{selectedTemplate.href}}" target="_blank">Download The Template</a>
+          <br>
+          <a href="#" (click)="triggerUpload()" target="_blank">Upload Filled Template</a>
+          <input type="file" name="csv-template" (change)="previewCSVFile($event)" class="hide" />
+        </div>
+
+
       </fieldset>
 
       <div>

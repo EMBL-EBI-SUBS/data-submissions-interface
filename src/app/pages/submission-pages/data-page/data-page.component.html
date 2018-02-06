@@ -1,5 +1,5 @@
 <div id="content">
-  <link href="https://unpkg.com/uppy/dist/uppy.min.css" rel="stylesheet">
+  <link href="https://unpkg.com/uppy@0.22.0/dist/uppy.min.css" rel="stylesheet">
 
   <ebi-header title="New Submission"></ebi-header>
 
@@ -17,6 +17,11 @@
 
     <div class="uppy-drag-drop margin-bottom-large">
     </div>
+
+    <form class="uppy-metadata">
+      <input type="hidden" name="submission" value="{{activeSubmission._links['self'].href}}" />
+      <input type="hidden" name="token" value="{{token}}" />
+    </form>
 
     <h3>Data Files</h3>
     <table class="hover">

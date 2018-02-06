@@ -104,6 +104,9 @@ export class ProjectPageComponent implements OnInit {
     let submissionUpdateData = this.activeSubmission;
     submissionUpdateData['name'] = this.projectForm.value.submissionShortName;
     submissionUpdateData['projectName'] = this.projectForm.value.projectShortName;
+    submissionUpdateData['uiData']['project'] = {
+      'publication' : this.projectForm.value.submissionPublication
+    };
 
     // Update the submission.
     this.requestsService.update(this.token, submissionUpdateUrl, submissionUpdateData).subscribe (
@@ -161,6 +164,9 @@ export class ProjectPageComponent implements OnInit {
     let submissionUpdateData = this.activeSubmission;
     submissionUpdateData['name'] = this.projectForm.value.submissionShortName;
     submissionUpdateData['projectName'] = this.projectForm.value.projectShortName;
+    submissionUpdateData['uiData']['project'] = {
+      'publication' : this.projectForm.value.submissionPublication
+    };
 
     // Update the submission.
     this.requestsService.update(this.token, submissionUpdateUrl, submissionUpdateData).subscribe (
@@ -258,8 +264,13 @@ export class ProjectPageComponent implements OnInit {
       }
     );
     if(this.activeSubmission) {
-      // Update form fields.
-      this.projectForm.controls['submissionShortName'].setValue(this.activeSubmission.name);
+      try {
+        // Update form fields.
+        this.projectForm.controls['submissionShortName'].setValue(this.activeSubmission.name);
+        this.projectForm.controls['submissionPublication'].setValue(this.activeSubmission.uiData.project.publication);
+      } catch (err) {
+
+      }
     }
   }
 }

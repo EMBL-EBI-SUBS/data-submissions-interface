@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-protocols-page',
@@ -16,9 +17,22 @@ export class ProtocolsPageComponent implements OnInit {
     {"title": "Submit", "href": "/submission/submit"},
   ];
   
-  constructor() { }
+  constructor(private router: Router) { }
 
   ngOnInit() {
   }
 
+    /**
+   * On Save and Exit.
+   */
+  onSaveExit() {
+    this.router.navigate(["/dashboard"]);
+  }
+
+ /**
+   * On Save and continue.
+   */
+  onSaveContinue() {
+    this.router.navigate(["/submission/contacts"]);
+  }
 }

@@ -28,21 +28,21 @@
         </label>
 
         <label>Project title
-          <input type="text" required placeholder="e.g. “Parallelism in Fish”" [readonly]="projectForm.value.project !== '_create'" class="form-control" name="projectTitle" formControlName="projectTitle"/>
+          <input type="text" required placeholder="e.g. “Parallelism in Fish”" class="form-control" name="projectTitle" formControlName="projectTitle"/>
           <span class="form-error" *ngIf="projectForm.get('projectTitle').hasError('required')">
         Yo, you had better fill this out, it's required.
         </span>
         </label>
 
         <label>Project description
-          <textarea rows="5" placeholder="Enter project description here" [readonly]="projectForm.value.project !== '_create'" name="projectDescription" formControlName="projectDescription"></textarea>
+          <textarea rows="5" placeholder="Enter project description here"  name="projectDescription" formControlName="projectDescription"></textarea>
           <span class="form-error">
         Yo, you had better fill this out, it's required.
         </span>
         </label>
 
         <label>Project short name (for easy referebce)
-          <input type="text" placeholder="e.g. “RAD sequencing - 2004 Liverpool”" [readonly]="projectForm.value.project !== '_create'" name="projectShortName" formControlName="projectShortName"/> For your reference. Will only show in your dashboard.
+          <input type="text" placeholder="e.g. “RAD sequencing - 2004 Liverpool”"  name="projectShortName" formControlName="projectShortName"/> For your reference. Will only show in your dashboard.
           <span class="form-error">
         Yo, you had better fill this out, it's required.
         </span>
