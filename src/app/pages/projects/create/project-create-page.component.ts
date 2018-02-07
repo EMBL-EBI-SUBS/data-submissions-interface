@@ -35,4 +35,8 @@ export class ProjectCreatePageComponent implements OnInit {
       projectShortName: new FormControl('', Validators.required),
     });
   }
+
+  onCreateProject() {
+
+  }
 }

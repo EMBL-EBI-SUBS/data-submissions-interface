@@ -51,8 +51,8 @@
         </p>
         <select name="template" (change)="onSelectTemplate($event)">
           <option value="_none"> - Select Template - </option>
-          <option *ngFor="let template of templatesList" value="{{template.name}}" attr.data-href="{{template._links['spreadsheet-csv-download'].href}}">
-              {{template.name}}
+          <option *ngFor="let template of templatesList" value="{{template?.name}}" attr.data-href="{{template._links['spreadsheet-csv-download'].href}}">
+              {{template?.name}}
           </option>
         </select>
 

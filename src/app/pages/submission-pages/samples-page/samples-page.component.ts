@@ -28,8 +28,8 @@ export class SamplesPageComponent implements OnInit {
   samplesForm: FormGroup;
   activeSubmission: any;
   token: String;
-  templatesList =  [];
-  selectedTemplate = {};
+  templatesList: any;
+  selectedTemplate: any;
 
 
   tabLinks: any = [
