@@ -154,7 +154,6 @@ export class OverviewPageComponent implements OnInit {
             this.setActiveSubmission();
 
             this.router.navigate(['/submission/project']);
-
           },
           (err) => {
             console.log(err);
@@ -329,7 +328,8 @@ export class OverviewPageComponent implements OnInit {
 
   onChangeField(fieldName: string) {
     let message = "You might loss uploaded data and samples if you have changed this field value. Are you sure?";
-    if(!confirm(message)) {
+
+    if(this.activeSubmission && !confirm(message)) {
       return;
     }
 
@@ -346,6 +346,16 @@ export class OverviewPageComponent implements OnInit {
       this.savedDataType = "";
       this.selectedDataSubType = this.savedDataSubType;
       this.savedDataSubType = [];
+    }
+  }
+
+  onUpdateField(fieldName) {
+    if(fieldName == "human") {
+      this.savedHuman = this.overviewForm.value[fieldName];
+    }
+
+    if(fieldName == "controlled") {
+      this.savedControlled = this.overviewForm.value[fieldName];
     }
   }
 }

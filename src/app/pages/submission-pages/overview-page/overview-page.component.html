@@ -18,9 +18,9 @@
         <fieldset class="large-form padding-bottom-large padding-top-large">
           <legend>Is your study on human research subjects?</legend>
           <!-- Display Checkboxes if not data saved in database -->
-          <input *ngIf="!savedHuman" type="radio" name="human" value="1" formControlName="human" id="humanYes">
+          <input *ngIf="!savedHuman" type="radio" name="human" value="1" formControlName="human" id="humanYes" (change)="onUpdateField('human')">
             <label *ngIf="!savedHuman"  for="humanYes">Yes</label>
-          <input *ngIf="!savedHuman" type="radio" name="human" value="0" formControlName="human" id="humanNo">
+          <input *ngIf="!savedHuman" type="radio" name="human" value="0" formControlName="human" id="humanNo" (change)="onUpdateField('human')">
             <label *ngIf="!savedHuman" for="humanNo">No</label>
           <div *ngIf="savedHuman">
             You have selected : <span class="font-weight-bold">{{savedHuman == 1 ? 'Yes' : 'No'}}</span> <a (click)="onChangeField('human')"> (Change)</a>
@@ -30,9 +30,9 @@
 
         <fieldset class="large-form padding-bottom-large padding-top-large">
           <legend>Does it require controlled access once it becomes public?</legend>
-          <input type="radio" *ngIf="!savedControlled" name="controlled" value="1" formControlName="controlled" id="controlledYes">
+          <input type="radio" *ngIf="!savedControlled" name="controlled" value="1" formControlName="controlled" id="controlledYes" (change)="onUpdateField('controlled')">
             <label for="controlledYes" *ngIf="!savedControlled">Yes</label>
-          <input type="radio" *ngIf="!savedControlled" name="controlled" value="0" formControlName="controlled" id="controlledNo">
+          <input type="radio" *ngIf="!savedControlled" name="controlled" value="0" formControlName="controlled" id="controlledNo" (change)="onUpdateField('controlled')">
             <label for="controlledNo" *ngIf="!savedControlled">No</label>
           <div *ngIf="savedControlled">
            You have selected : <span class="font-weight-bold">{{savedControlled == 1 ? 'Yes' : 'No'}}</span> <a (click)="onChangeField('controlled')"> (Change)</a>
