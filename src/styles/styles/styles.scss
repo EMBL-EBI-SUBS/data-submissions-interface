@@ -1,3 +1,4 @@
+
 /* file management */
 .submission-file-attach table {
   width: 100%;
@@ -24,7 +25,7 @@ fieldset {
 legend {
   color: rgb(0,124,130);
   margin: 0;
-  /*font-size: 1rem;*/
+  font-size: 1.3rem;
   padding: 1.5rem 0 0;
 }
 /* progress meter */
@@ -261,5 +262,32 @@ fieldset {
     position: absolute;
     left: -50px;
     top: 10%;
+  }
+}
+
+.margin-right-10 {
+  margin-right: 10px;
+}
+
+.margin-bottom-15 {
+  margin-bottom: 15px;
+}
+
+.font-weight-bold {
+  font-weight: bold;
+}
+
+.data-type-button,
+.data-subtype-button {
+  background: $button-secondary;
+  margin-right: 10px;
+  opacity: .4;
+
+  &.selected,
+  &:hover,
+  &:active {
+    background: $button-primary;
+    color: $white;
+    opacity: 1;
   }
 }

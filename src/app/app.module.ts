@@ -11,7 +11,6 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 
 // Import Pages.
-import { HomePageComponent } from './pages/home-page/home-page.component';
 import { UserPageComponent } from './pages/user-page/user-page.component';
 import { UserLoginPageComponent } from './pages/user-login-page/user-login-page.component';
 import { NotFoundPageComponent } from './pages/not-found-page/not-found-page.component';
@@ -24,8 +23,10 @@ import { ProtocolsPageComponent } from './pages/submission-pages/protocols-page/
 import { SamplesPageComponent } from './pages/submission-pages/samples-page/samples-page.component';
 import { ContactsPageComponent } from './pages/submission-pages/contacts-page/contacts-page.component';
 import { DashboardPageComponent } from './pages/dashboard-page/dashboard-page.component';
-import { LibraryPageComponent } from './pages/library-page/library-page.component';
+import { FAQPageComponent } from './pages/faq-page/faq-page.component';
 import { HelpPageComponent } from './pages/help-page/help-page.component';
+import { ProjectsPageComponent } from './pages/projects/projects.component';
+import { ProjectCreatePageComponent } from './pages/projects/create/project-create-page.component';
 
 // Import Components.
 import { EbiHeaderComponent } from './components/ebi-header/ebi-header.component';
@@ -41,7 +42,6 @@ import { RouterLinkStubDirective, RouterOutletStubComponent } from './testing/ro
 @NgModule({
   declarations: [
     AppComponent,
-    HomePageComponent,
     NotFoundPageComponent,
     NotAuthenticatedPageComponent,
     UserPageComponent,
@@ -57,10 +57,12 @@ import { RouterLinkStubDirective, RouterOutletStubComponent } from './testing/ro
     OverviewPageComponent,
     SubmitPageComponent,
     DashboardPageComponent,
-    LibraryPageComponent,
+    FAQPageComponent,
     HelpPageComponent,
     RouterLinkStubDirective,
     RouterOutletStubComponent,
+    ProjectsPageComponent,
+    ProjectCreatePageComponent
   ],
   imports: [
     BrowserModule,

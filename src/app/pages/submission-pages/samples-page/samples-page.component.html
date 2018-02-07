@@ -1,14 +1,14 @@
 <div id="content">
   <link href="https://unpkg.com/uppy/dist/uppy.min.css" rel="stylesheet">
 
-  <ebi-header title="New Submission"></ebi-header>
+  <ebi-header></ebi-header>
 
   <section id="main-content-area" class="row padding-top-xsmall padding-bottom-xsmall" role="main">
     <h2 class="padding-top-xlarge">New data submission</h2>
 
     <ul class="tabs" id="example-tabs">
       <li *ngFor="let link of tabLinks" routerLinkActive="active is-active" class="tabs-title">
-        <a class="disabled" [routerLink]="link.href" routerLinkActive="active">{{link.title}}</a>
+        <a [routerLink]="link.href" routerLinkActive="active">{{link.title}}</a>
       </li>
     </ul>
 
@@ -52,12 +52,12 @@
         <select name="template" (change)="onSelectTemplate($event)">
           <option value="_none"> - Select Template - </option>
           <option *ngFor="let template of templatesList" value="{{template.name}}" attr.data-href="{{template._links['spreadsheet-csv-download'].href}}">
-              {{template.name}} 
+              {{template.name}}
           </option>
         </select>
 
         <div *ngIf="selectedTemplate.name">
-          
+
           <a href="{{selectedTemplate.href}}" target="_blank">Download The Template</a>
           <br>
           <a href="#" (click)="triggerUpload()" target="_blank">Upload Filled Template</a>

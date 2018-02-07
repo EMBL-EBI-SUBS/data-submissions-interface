@@ -23,7 +23,7 @@ declare var Choices;
     TokenService
   ]
 })
-export class ProjectPageComponent implements OnInit {
+export class ProjectEditPageComponent implements OnInit {
   projectForm : FormGroup;
   activeSubmission: any;
   activeProject: any;

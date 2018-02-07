@@ -27,6 +27,6 @@ export class EbiHeaderComponent {
 
   onLogout() {
     this.authService.logOut();
-    this.router.navigate(["/home"]);
+    this.router.navigate(["/user/login"]);
   }
 }

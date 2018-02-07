@@ -10,6 +10,8 @@ import { MockRouter } from '../../testing/mockrouter.tests';
 
 import { NotAuthenticatedPageComponent } from './not-authenticated-page.component';
 import { EbiHeaderComponent } from '../../components/ebi-header/ebi-header.component';
+import { UserLoginPageComponent } from '../user-login-page/user-login-page.component';
+import { HttpModule } from '@angular/http';
 
 describe('NotAuthenticatedPageComponent', () => {
   let component: NotAuthenticatedPageComponent;
@@ -17,7 +19,12 @@ describe('NotAuthenticatedPageComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ NotAuthenticatedPageComponent, EbiHeaderComponent ],
+      imports: [HttpModule],
+      declarations: [
+        NotAuthenticatedPageComponent,
+        EbiHeaderComponent,
+        UserLoginPageComponent
+       ],
       providers: [
         {provide: Router, useClass: MockRouter},
         AuthService,

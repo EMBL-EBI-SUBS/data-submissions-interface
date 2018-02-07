@@ -1,12 +1,12 @@
 <div id="content">
-  <ebi-header title="New Submission"></ebi-header>
+  <ebi-header></ebi-header>
 
   <section id="main-content-area" class="row padding-top-xsmall padding-bottom-xsmall" role="main">
     <h2 class="padding-top-xlarge">New data submission</h2>
 
     <ul class="tabs" id="example-tabs">
       <li *ngFor="let link of tabLinks" routerLinkActive="active is-active" class="tabs-title">
-        <a class="disabled" [routerLink]="link.href" routerLinkActive="active">{{link.title}}</a>
+        <a [routerLink]="link.href" routerLinkActive="active">{{link.title}}</a>
       </li>
     </ul>
 
@@ -17,36 +17,54 @@
 
         <fieldset class="large-form padding-bottom-large padding-top-large">
           <legend>Is your study on human research subjects?</legend>
-          <input type="radio" name="human" value="1" formControlName="human" id="humanYes"><label for="humanYes">Yes</label>
-          <input type="radio" name="human" value="0" formControlName="human" id="humanNo"><label for="humanNo">No</label>
+          <!-- Display Checkboxes if not data saved in database -->
+          <input *ngIf="!savedHuman" type="radio" name="human" value="1" formControlName="human" id="humanYes">
+            <label *ngIf="!savedHuman"  for="humanYes">Yes</label>
+          <input *ngIf="!savedHuman" type="radio" name="human" value="0" formControlName="human" id="humanNo">
+            <label *ngIf="!savedHuman" for="humanNo">No</label>
+          <div *ngIf="savedHuman">
+            You have selected : <span class="font-weight-bold">{{savedHuman == 1 ? 'Yes' : 'No'}}</span> <a (click)="onChangeField('human')"> (Change)</a>
+          </div>
         </fieldset>
 
 
         <fieldset class="large-form padding-bottom-large padding-top-large">
           <legend>Does it require controlled access once it becomes public?</legend>
-          <input type="radio" name="controlled" value="1" formControlName="controlled" id="controlledYes"><label for="controlledYes">Yes</label>
-          <input type="radio" name="controlled" value="0" formControlName="controlled" id="controlledNo"><label for="controlledNo">No</label>
+          <input type="radio" *ngIf="!savedControlled" name="controlled" value="1" formControlName="controlled" id="controlledYes">
+            <label for="controlledYes" *ngIf="!savedControlled">Yes</label>
+          <input type="radio" *ngIf="!savedControlled" name="controlled" value="0" formControlName="controlled" id="controlledNo">
+            <label for="controlledNo" *ngIf="!savedControlled">No</label>
+          <div *ngIf="savedControlled">
+           You have selected : <span class="font-weight-bold">{{savedControlled == 1 ? 'Yes' : 'No'}}</span> <a (click)="onChangeField('controlled')"> (Change)</a>
+          </div>
         </fieldset>
       </fieldset>
 
+      <input type="hidden" name="dataType" formControlName="dataType" />
+      <input type="hidden" name="dataSubType[]" formControlName="dataSubType" />
 
       <fieldset required class="large-form padding-bottom-large padding-top-large">
         <legend>Data type</legend>
 
         <fieldset class="large-form padding-bottom-large padding-top-large">
           <legend>What type of data are you submitting?</legend>
-          <select name="dataType" formControlName="dataType"  multiple>
-            <option *ngFor="let dataType of dataTypes; let i = index" [value]="dataType.value" [selected]="dataType.selected">
-              {{dataType.label}}
-            </option>
-          </select>
+          <div *ngIf="!savedDataType" class="buttons-wrapper">
+            <button *ngFor="let key of objectKeys(dataTypes)" (click)="onSelectDataType($event, key)" [class.selected]="key == selectedDataType"  class="data-type-button button" >{{key}}</button>
+          </div>
+          <div *ngIf="savedDataType">
+            You have selected: <span class="font-weight-bold">{{savedDataType}}</span> <a (click)="onChangeField('dataType')"> (Change)</a>
+          </div>
 
-          <legend>And more specifically?</legend>
-          <select name="dataSubType" formControlName="dataSubType"  multiple>
-            <option *ngFor="let dataSubType of dataSubTypes; let i = index" [value]="dataSubType.value" [selected]="dataSubType.selected">
-              {{dataSubType.label}}
-            </option>
-          </select>
+          <span *ngIf="(selectedDataType && dataTypes[selectedDataType].length > 0) || savedDataSubType.length > 0">
+            <legend class="margin-bottom-15" >And more specifically?</legend>
+            <div *ngIf="savedDataSubType.length == 0" class="buttons-wrapper">
+              <button *ngFor="let subDataKey of dataTypes[selectedDataType]" (click)="onSelectSubDataType($event, subDataKey)" [class.selected]="isDataSubTypeSelected(subDataKey)"  class="button data-subtype-button">{{subDataKey}}</button>
+            </div>
+            <div *ngIf="savedDataSubType.length > 0">
+                You have selected: <span class="font-weight-bold" >{{savedDataSubType.join(", ")}}</span>
+            </div>
+          </span>
+
         </fieldset>
       </fieldset>
 

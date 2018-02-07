@@ -26,14 +26,19 @@ declare var Choices;
 })
 export class OverviewPageComponent implements OnInit {
   overviewForm: FormGroup;
+  objectKeys = Object.keys;
   token: string;
   activeSubmission: any;
   activeTeam: any;
   dataTypes= [];
+  selectedDataType: any;
+  selectedDataSubType = [];
+  savedDataType: any;
+  savedDataSubType = [];
+  savedHuman: string;
+  savedControlled: string;
   dataSubTypes= [];
   teams = [];
-  dataTypeChoice;
-  dataSubTypeChoice;
 
   tabLinks: any = [
     {'title': 'Overview', 'href': '/submission/overview'},
@@ -59,7 +64,7 @@ export class OverviewPageComponent implements OnInit {
       human: new FormControl(null, Validators.required),
       controlled: new FormControl(null, Validators.required),
       dataType: new FormControl('', Validators.required),
-      dataSubType: new FormControl('', Validators.required),
+      dataSubType: new FormControl(''),
     });
     // Load User Teams.
     this.getUserTeams();
@@ -142,16 +147,20 @@ export class OverviewPageComponent implements OnInit {
       let updateSubmissionUrl = this.activeSubmission._links['self:update'].href;
       this.requestsService.partialUpdate(this.token, updateSubmissionUrl, bodyData).subscribe(
           (data) => {
+
             // Save Updated Submission to the Session.
             this.submissionsService.deleteActiveSubmission();
             this.submissionsService.setActiveSubmission(data);
+            this.setActiveSubmission();
+
+            this.router.navigate(['/submission/project']);
+
           },
           (err) => {
             console.log(err);
           }
       );
 
-      this.router.navigate(['/submission/project']);
     }
     // Create new submission
     // Set it as active submission.
@@ -183,6 +192,11 @@ export class OverviewPageComponent implements OnInit {
   setFormDefaultValue() {
     try {
       if(this.activeSubmission.uiData.overview) {
+        this.savedDataType  = this.activeSubmission.uiData.overview.dataType;
+        this.savedDataSubType = this.activeSubmission.uiData.overview.dataSubType;
+        this.savedHuman = this.activeSubmission.uiData.overview.human;
+        this.savedControlled = this.activeSubmission.uiData.overview.controlled;
+
         this.overviewForm.patchValue({
           human:  this.activeSubmission.uiData.overview.human,
           controlled: this.activeSubmission.uiData.overview.controlled,
@@ -200,68 +214,7 @@ export class OverviewPageComponent implements OnInit {
   getDataTypes() {
     this.submissionsService.getDataTypes(this.token).subscribe (
       (data) => {
-
-        // If no data Types.
-        if (!data.content.hasOwnProperty('Sequencing')) {
-          return false;
-        }
-
-        for (let dataType of data.content.Sequencing) {
-          let optionValue = {
-            value: dataType,
-            label: dataType,
-          };
-
-          // If Option Value Saved before then set it as default value.
-          try {
-            if (this.activeSubmission.uiData.overview.dataType.indexOf(dataType) !== -1) {
-              optionValue['selected'] = true;
-            }
-
-          } catch (e) {}
-
-          this.dataTypes.push(optionValue);
-        }
-
-        this.dataTypeChoice = new Choices('select[name="dataType"]', {
-          delimiter: ',',
-          editItems: true,
-          maxItemCount: -1,
-          removeItemButton: true,
-          choices: this.dataTypes,
-          items: this.dataTypes,
-        });
-
-          // If no data SubTypes.
-        if (!data.content.hasOwnProperty('FunctionalGenomics')) {
-            return false;
-        }
-
-        for (let dataSubType of data.content.FunctionalGenomics) {
-          let optionValue = {
-            value: dataSubType,
-            label: dataSubType,
-          };
-
-          // If Option Value Saved before then set it as default value.
-          try {
-            if (this.activeSubmission.uiData.overview.dataSubType.indexOf(dataSubType) !== -1) {
-              optionValue['selected'] = true;
-            }
-          } catch (e) {}
-
-          this.dataSubTypes.push(optionValue);
-        }
-
-        this.dataSubTypeChoice = new Choices('select[name="dataSubType"]', {
-          delimiter: ',',
-          editItems: true,
-          maxItemCount: -1,
-          removeItemButton: true,
-          choices: this.dataSubTypes,
-          items: this.dataSubTypes,
-        });
-
+        this.dataTypes = data.content;
       },
       (err) => {
         // TODO: Handle Errors.
@@ -338,6 +291,61 @@ export class OverviewPageComponent implements OnInit {
         console.log(err);
       }
     );
+  }
 
+  isDataSubTypeSelected(dataSubTypeKey) {
+    if(this.selectedDataSubType.indexOf(dataSubTypeKey) > -1) {
+      return true;
+    }
+
+    return false;
+  }
+
+  onSelectDataType(event, dataType) {
+    this.selectedDataSubType = [];
+    this.selectedDataType = dataType;
+
+    this.overviewForm.patchValue({
+      dataType: this.selectedDataType,
+      dataSubType: this.selectedDataSubType,
+    });
+  }
+
+  onSelectSubDataType(event, dataSubType) {
+    let itemIndex = this.selectedDataSubType.indexOf(dataSubType);
+
+    if(itemIndex > -1) {
+      this.selectedDataSubType.splice(itemIndex, 1);
+    }
+    else {
+      this.selectedDataSubType.push(dataSubType);
+    }
+
+    this.overviewForm.patchValue({
+      dataType: this.selectedDataType,
+      dataSubType: this.selectedDataSubType,
+    });
+  }
+
+  onChangeField(fieldName: string) {
+    let message = "You might loss uploaded data and samples if you have changed this field value. Are you sure?";
+    if(!confirm(message)) {
+      return;
+    }
+
+    if(fieldName == 'human') {
+      delete this.savedHuman;
+    }
+
+    if(fieldName == 'controlled') {
+      delete this.savedControlled;
+    }
+
+    if(fieldName == 'dataType') {
+      this.selectedDataType = this.savedDataType;
+      this.savedDataType = "";
+      this.selectedDataSubType = this.savedDataSubType;
+      this.savedDataSubType = [];
+    }
   }
 }

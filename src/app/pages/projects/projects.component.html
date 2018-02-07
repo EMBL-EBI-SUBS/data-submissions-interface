@@ -1,0 +1,59 @@
+<div id="content">
+  <ebi-header></ebi-header>
+
+  <section id="main-content-area" class="row padding-top-xsmall padding-bottom-xsmall" role="main">
+    <h2 class="padding-top-xlarge">Hi {{authService.getName()}}</h2>
+
+    <div class="row">
+      <div class="columns small-9">
+        <p>
+          This is where you keep your projects and teams.
+        </p>
+      </div>
+    </div>
+
+    <table class="stack" *ngIf="projects?._embedded?.projects?.length > 0">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Name</th>
+          <th>Alias</th>
+          <th>Team</th>
+          <th>Status</th>
+          <th></th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let projectItem of projects._embedded.projects">
+          <td class="col-date">{{projectItem.lastModifiedDate | date: 'd-MMM-yy' }}</td>
+          <td class="col-title">{{projectItem?.title}}</td>
+          <td class="col-alias">{{projectItem?.alias}}</td>
+          <td class="col-team">{{projectItem?.team.name}}</td>
+          <td class="col-status status-{{projectItem.processingStatus | lowercase}}">{{projectItem.processingStatus}}</td>
+          <td>
+            <a (click)="onDeleteProject(projectItem)">Delete ></a>
+            <!-- <a *ngIf="submissionItem.submissionStatus == 'Draft'" (click)="onEditDraftSubmission(submissionItem)">Edit ></a>
+            <a *ngIf="submissionItem.submissionStatus == 'Submitted'" (click)="onEditSubmittedSubmission(submissionItem)">Edit ></a>
+            <a *ngIf="submissionItem.submissionStatus == 'Completed'" (click)="onViewCompletedSubmission(submissionItem)">Public ></a> -->
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <ul class="pagination" *ngIf="projects && projects.page.totalPages > 0">
+      <li class="arrow">
+        <a (click)="onPagerClick('first')" *ngIf="!(projects.page.number == 0)">&laquo; First</a>
+      </li>
+      <li class="arrow">
+        <a (click)="onPagerClick('prev')" *ngIf="projects._links.prev">&laquo; Previous</a>
+      </li>
+      <li class="arrow">
+        <a (click)="onPagerClick('next')" *ngIf="projects._links.next">Next &raquo;</a>
+      </li>
+      <li class="arrow">
+        <a (click)="onPagerClick('last')" *ngIf="(projects.page.totalPages - projects.page.number) > 1">Last &raquo;</a>
+      </li>
+    </ul>
+  </section>
+</div>

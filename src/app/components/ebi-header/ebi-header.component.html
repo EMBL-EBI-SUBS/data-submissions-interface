@@ -3,33 +3,29 @@
     <div class="masthead-inner row">
       <!-- local-title -->
       <div class="columns medium-12" id="local-title">
-        <h1><a href="{{href}}" title="{{title}}">{{title}}</a></h1>
+        <h1>Data Submission</h1>
       </div>
       <!-- /local-title -->
 
       <!-- local-nav -->
       <nav>
         <ul id="local-nav" class="dropdown menu float-left" data-description="navigational" role="menubar" data-dropdown-menu="x56xdv-dropdown-menu">
-          <li role="menuitem" routerLinkActive="active">
-            <a routerLink="/home" routerLinkActive="active">Home</a>
+          <li role="menuitem" routerLinkActive="active" *ngIf="isLoggedIn()">
+            <a routerLink="/dashboard" routerLinkActive="active">My Data</a>
           </li>
           <li role="menuitem" routerLinkActive="active" *ngIf="isLoggedIn()">
-            <a routerLink="/submission" routerLinkActive="active">New Submission</a>
-          </li>
-          <li role="menuitem" routerLinkActive="active" *ngIf="isLoggedIn()">
-            <a routerLink="/dashboard" routerLinkActive="active">My Dashboard</a>
-          </li>
-          <li role="menuitem" routerLinkActive="active" *ngIf="isLoggedIn()">
-            <a routerLink="/library" routerLinkActive="active">My Library</a>
+            <a routerLink="/projects" routerLinkActive="active">Projects</a>
           </li>
           <li role="menuitem" routerLinkActive="active">
-            <a routerLink="/help" routerLinkActive="active">About & Help</a>
+            <a routerLink="/faq" routerLinkActive="active">FAQ</a>
+          </li>
+          <li role="menuitem" routerLinkActive="active">
+            <a routerLink="/helpdesk" routerLinkActive="active">Helpdesk</a>
           </li>
         </ul>
 
         <ul id="secondary-menu-user-links" class="float-right menu">
           <li class="disable" *ngIf="isLoggedIn()"><a routerLink="/user">Hi {{authService.getName()}}</a></li>
-          <li class="menu" *ngIf="isLoggedIn()"><a routerLink="/dashboard">My dashboard</a></li>
           <li class="menu" *ngIf="!isLoggedIn()"><a routerLink="/user/login">Login</a></li>
           <li class="menu" *ngIf="isLoggedIn()" (click)="onLogout()"><a (click)="onLogout()">Logout</a></li>
         </ul>

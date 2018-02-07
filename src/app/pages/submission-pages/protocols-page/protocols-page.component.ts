@@ -16,7 +16,7 @@ export class ProtocolsPageComponent implements OnInit {
     {"title": "Contacts", "href": "/submission/contacts"},
     {"title": "Submit", "href": "/submission/submit"},
   ];
-  
+
   constructor(private router: Router) { }
 
   ngOnInit() {
@@ -26,7 +26,7 @@ export class ProtocolsPageComponent implements OnInit {
    * On Save and Exit.
    */
   onSaveExit() {
-    this.router.navigate(["/dashboard"]);
+    this.router.navigate(["/"]);
   }
 
  /**

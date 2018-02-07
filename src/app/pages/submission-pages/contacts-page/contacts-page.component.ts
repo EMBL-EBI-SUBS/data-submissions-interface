@@ -109,7 +109,7 @@ export class ContactsPageComponent implements OnInit {
     this.submissionsService.deleteActiveProject();
     this.teamsService.deleteActiveTeam();
 
-    this.router.navigate(['/dashboard'])
+    this.router.navigate(['/'])
   }
 
   onSaveContinue() {

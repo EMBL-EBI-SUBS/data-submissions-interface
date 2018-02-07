@@ -83,7 +83,7 @@ export class SamplesPageComponent implements OnInit {
     this.submissionsService.deleteActiveProject();
     this.teamsService.deleteActiveTeam();
 
-    this.router.navigate(['/dashboard']);
+    this.router.navigate(['/']);
   }
 
   onSaveContinue() {
@@ -93,7 +93,7 @@ export class SamplesPageComponent implements OnInit {
 
     this.activeSubmission['uiData']['samples'] = samplesData;
     let submissionUpdateUrl = this.activeSubmission._links['self:update'].href;
- 
+
 
     // Update the submission.
     this.requestsService.update(this.token, submissionUpdateUrl, this.activeSubmission).subscribe (
@@ -105,7 +105,7 @@ export class SamplesPageComponent implements OnInit {
         console.log(err);
       }
     );
-    
+
     this.router.navigate(['/submission/protocols']);
   }
 
@@ -169,7 +169,7 @@ export class SamplesPageComponent implements OnInit {
         (err) => {
           // TODO: Handle Errors.
           console.log(err);
-        }  
+        }
       );
     };
     reader.readAsDataURL(event.target.files[0]);

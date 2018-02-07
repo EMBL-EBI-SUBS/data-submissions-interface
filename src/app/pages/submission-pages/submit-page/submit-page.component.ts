@@ -50,7 +50,7 @@ export class SubmitPageComponent implements OnInit {
       (data) => {
         // If updating status successfully done. redirect to dashboard.
         this.submissionsService.deleteActiveSubmission();
-        this.router.navigate(['/dashboard']);
+        this.router.navigate(['/']);
       },
       (err) => {
         // TODO: Handle Errors.
