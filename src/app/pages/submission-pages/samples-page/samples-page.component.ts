@@ -29,7 +29,7 @@ export class SamplesPageComponent implements OnInit {
   activeSubmission: any;
   token: String;
   templatesList: any;
-  selectedTemplate: any;
+  selectedTemplate: any = {};
 
 
   tabLinks: any = [

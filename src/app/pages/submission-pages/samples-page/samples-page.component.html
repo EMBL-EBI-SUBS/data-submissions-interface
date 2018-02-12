@@ -49,14 +49,14 @@
         <p>
           Based on your selection above, you might find the following community sample templates helpful:
         </p>
-        <select name="template" (change)="onSelectTemplate($event)">
+        <select name="template" (change)="onSelectTemplate($event)" *ngIf="templatesList">
           <option value="_none"> - Select Template - </option>
           <option *ngFor="let template of templatesList" value="{{template?.name}}" attr.data-href="{{template._links['spreadsheet-csv-download'].href}}">
               {{template?.name}}
           </option>
         </select>
 
-        <div *ngIf="selectedTemplate.name">
+        <div *ngIf="selectedTemplate?.name">
 
           <a href="{{selectedTemplate.href}}" target="_blank">Download The Template</a>
           <br>

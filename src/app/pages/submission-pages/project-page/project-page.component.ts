@@ -190,8 +190,11 @@ export class ProjectPageComponent implements OnInit {
     if (!this.activeProject) {
       this.submissionsService.getActiveSubmissionProject(this.token).subscribe(
         (data) => {
-          this.activeProject = data;
-          this.updateProjectForm(this.activeProject.alias, this.activeProject.title, this.activeProject.description);
+          if(data) {
+            this.activeProject = data;
+            this.updateProjectForm(this.activeProject.alias, this.activeProject.title, this.activeProject.description);
+          }
+
         },
         (error) =>  {
         }

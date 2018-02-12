@@ -358,4 +358,12 @@ export class OverviewPageComponent implements OnInit {
       this.savedControlled = this.overviewForm.value[fieldName];
     }
   }
+
+  isTabsDisabled() {
+    if(!this.activeSubmission) {
+      return true;
+    }
+
+    return false;
+  }
 }

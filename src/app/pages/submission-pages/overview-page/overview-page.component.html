@@ -6,7 +6,7 @@
 
     <ul class="tabs" id="example-tabs">
       <li *ngFor="let link of tabLinks" routerLinkActive="active is-active" class="tabs-title">
-        <a [routerLink]="link.href" routerLinkActive="active">{{link.title}}</a>
+        <a [class.disabled]="isTabsDisabled()" [routerLink]="link.href" routerLinkActive="active">{{link.title}}</a>
       </li>
     </ul>
 
