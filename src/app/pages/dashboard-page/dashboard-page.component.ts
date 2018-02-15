@@ -7,6 +7,7 @@ import { TeamsService } from '../../services/teams.service';
 import { SubmissionsService } from '../../services/submissions.service';
 import { RequestsService } from '../../services/requests.service';
 import { UserService } from '../../services/user.service';
+import { SpreadsheetsService } from '../../services/spreadsheets.service';
 
 @Component({
   selector: 'app-dashboard-page',
@@ -19,6 +20,7 @@ import { UserService } from '../../services/user.service';
     SubmissionsService,
     RequestsService,
     UserService,
+    SpreadsheetsService
   ]
 })
 export class DashboardPageComponent implements OnInit {
@@ -29,6 +31,7 @@ export class DashboardPageComponent implements OnInit {
   constructor(
     public authService: AuthService,
     private submissionsService: SubmissionsService,
+    private spreadsheetsService: SpreadsheetsService,
     private teamService: TeamsService,
     private requestsService: RequestsService,
     private userService: UserService,
@@ -40,6 +43,7 @@ export class DashboardPageComponent implements OnInit {
     this.token = this.tokenService.getToken();
     this.submissionsService.deleteActiveProject();
     this.submissionsService.deleteActiveSubmission();
+    this.spreadsheetsService.deleteActiveSpreadsheet();
     this.teamService.deleteActiveTeam();
 
     // Get all submissions.

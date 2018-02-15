@@ -36,6 +36,9 @@ import { EbiFooterComponent } from './components/ebi-footer/ebi-footer.component
 // Import Guards.
 import { LoggedInGuard } from './guards/logged-in/logged-in.guard';
 
+import { LoadingModule, ANIMATION_TYPES } from 'ngx-loading';
+
+
 // Import Tests Classes.
 import { RouterLinkStubDirective, RouterOutletStubComponent } from './testing/router.stubs';
 
@@ -69,7 +72,13 @@ import { RouterLinkStubDirective, RouterOutletStubComponent } from './testing/ro
     FormsModule,
     HttpModule,
     AppRoutingModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    LoadingModule.forRoot({
+      backdropBackgroundColour: 'rgba(0,0,0,0.6)',
+      primaryColour: '#ffffff',
+      secondaryColour: '#ffffff',
+      tertiaryColour: '#ffffff'
+    })
   ],
   providers: [
     LoggedInGuard,

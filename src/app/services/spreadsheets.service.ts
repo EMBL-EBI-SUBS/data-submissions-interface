@@ -47,4 +47,25 @@ export class SpreadsheetsService {
     var response = this.http.post(requestUrl, data, requestOptions).map(res => res.json());
     return response;
   }
+
+  /**
+   * Update active spreadsheet.
+   */
+  setActiveSpreadsheet(spreadsheet: any) {
+    localStorage.setItem("active_spreadsheet", JSON.stringify(spreadsheet));
+  }
+
+  /**
+   * Retrieve active spreadsheet.
+   */
+  getActiveSpreadsheet() {
+    return JSON.parse(localStorage.getItem("active_spreadsheet"));
+  }
+
+  /**
+   * Delete active spreadsheet.
+   */
+  deleteActiveSpreadsheet() {
+    localStorage.removeItem("active_spreadsheet");
+  }
 }

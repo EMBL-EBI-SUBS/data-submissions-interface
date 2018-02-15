@@ -12,6 +12,7 @@
       </li>
     </ul>
 
+    <ngx-loading [show]="loading" [config]=""></ngx-loading>
 
     <form [formGroup]="samplesForm">
       <fieldset required class="large-form padding-bottom-large padding-top-large ">
@@ -64,6 +65,23 @@
           <input type="file" name="csv-template" (change)="previewCSVFile($event)" class="hide" />
         </div>
 
+        <div *ngIf="activeSpreadsheet?.rows?.length > 0">
+          <table class="margin-top-20">
+            <thead>
+              <tr>
+                <td *ngFor="let cell of activeSpreadsheet?.rows[0].cells">{{cell | uppercase}}</td>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr *ngFor="let row of activeSpreadsheet?.rows | slice:1">
+                <td *ngFor="let cell of row.cells">
+                  {{cell}}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
 
       </fieldset>
 

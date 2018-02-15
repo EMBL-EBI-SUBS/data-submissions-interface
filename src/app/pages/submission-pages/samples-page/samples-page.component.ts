@@ -27,9 +27,11 @@ declare var $;
 export class SamplesPageComponent implements OnInit {
   samplesForm: FormGroup;
   activeSubmission: any;
+  activeSpreadsheet: any;
   token: String;
   templatesList: any;
   selectedTemplate: any = {};
+  public loading = false;
 
 
   tabLinks: any = [
@@ -54,6 +56,7 @@ export class SamplesPageComponent implements OnInit {
   ngOnInit() {
     this.token = this.tokenService.getToken();
     this.activeSubmission = this.submissionsService.getActiveSubmission();
+    this.activeSpreadsheet = this.spreadsheetsService.getActiveSpreadsheet();
     this.getTemplatesList();
 
     this.samplesForm = new FormGroup({
@@ -157,16 +160,31 @@ export class SamplesPageComponent implements OnInit {
   }
 
   previewCSVFile(event) {
+    this.loading = true;
+
     let templateUploadLink = this.activeSubmission._links.contents._links['samples:sheetUpload'].href.replace('{templateName}', this.selectedTemplate['name']);
     const reader = new FileReader();
     reader.onload = (e: any) => {
-      let fileResults = window.atob(e.target.result.replace('data:text/csv;base64,', ''));
-      console.log(fileResults);
+      let fileResults: any;
+
+      try {
+        fileResults = window.atob(e.target.result.replace('data:text/csv;base64,', ''));
+      } catch (err) {
+        console.log(err);
+        this.loading = false;
+        return false;
+      }
+
       this.spreadsheetsService.create(this.token, templateUploadLink, fileResults).subscribe (
         (data) => {
+          this.loading = false;
+          this.activeSpreadsheet = data;
+          this.spreadsheetsService.setActiveSpreadsheet(this.activeSpreadsheet);
           console.log(data);
         },
         (err) => {
+          this.loading = false;
+
           // TODO: Handle Errors.
           console.log(err);
         }
