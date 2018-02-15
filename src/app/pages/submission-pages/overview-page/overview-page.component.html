@@ -55,7 +55,7 @@
             You have selected: <span class="font-weight-bold">{{savedDataType}}</span> <a (click)="onChangeField('dataType')"> (Change)</a>
           </div>
 
-          <span *ngIf="(selectedDataType && dataTypes[selectedDataType].length > 0) || savedDataSubType.length > 0">
+          <span *ngIf="(selectedDataType && dataTypes[selectedDataType] && dataTypes[selectedDataType].length > 0) || savedDataSubType.length > 0">
             <legend class="margin-bottom-15" >And more specifically?</legend>
             <div *ngIf="savedDataSubType.length == 0" class="buttons-wrapper">
               <button *ngFor="let subDataKey of dataTypes[selectedDataType]" (click)="onSelectSubDataType($event, subDataKey)" [class.selected]="isDataSubTypeSelected(subDataKey)"  class="button data-subtype-button">{{subDataKey}}</button>
