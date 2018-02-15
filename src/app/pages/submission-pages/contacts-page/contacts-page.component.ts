@@ -75,6 +75,10 @@ export class ContactsPageComponent implements OnInit {
     this.contactForm.reset();
   }
 
+  onCreateProject() {
+    this.router.navigate(['submission/project']);
+  }
+
   onDeleteContact(contactIndex: number) {
     this.activeProject.contacts.splice(contactIndex, 1);
     let projectUpdateUrl = this.activeProject._links['self:update'].href;

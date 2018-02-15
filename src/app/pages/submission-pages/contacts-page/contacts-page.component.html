@@ -10,7 +10,11 @@
       </li>
     </ul>
 
-    <form [formGroup]="contactForm" novalidate class="conditional-form">
+    <div *ngIf="!activeProject" class="row callout notice margin-20">
+      Please <a class="font-weight-bold" (click)="onCreateProject()">select project first</a> to be able to create contacts.
+    </div>
+
+    <form *ngIf="activeProject" [formGroup]="contactForm" novalidate class="conditional-form">
 
       <!-- Print Team Field -->
       <fieldset required class="large-form padding-bottom-large padding-top-large ">
