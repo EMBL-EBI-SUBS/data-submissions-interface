@@ -2,7 +2,7 @@ sudo: required
 dist: trusty
 language: node_js
 node_js:
-  - "8.7.0"
+  - "7.0.0"
 
 addons:
   apt:
@@ -23,7 +23,7 @@ branches:
     - develop
 
 before_script:
-  - npm install -g @angular/cli
+  - npm install -g @angular/cli@1.7.0
   - npm install -g angular-cli-ghpages
   - npm install -g karma
   - npm install
