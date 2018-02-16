@@ -36,7 +36,9 @@ import { EbiFooterComponent } from './components/ebi-footer/ebi-footer.component
 // Import Guards.
 import { LoggedInGuard } from './guards/logged-in/logged-in.guard';
 
+// Imports
 import { LoadingModule, ANIMATION_TYPES } from 'ngx-loading';
+import { DataTablesModule } from 'angular-datatables';
 
 
 // Import Tests Classes.
@@ -78,7 +80,8 @@ import { RouterLinkStubDirective, RouterOutletStubComponent } from './testing/ro
       primaryColour: '#ffffff',
       secondaryColour: '#ffffff',
       tertiaryColour: '#ffffff'
-    })
+    }),
+    DataTablesModule
   ],
   providers: [
     LoggedInGuard,

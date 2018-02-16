@@ -31,6 +31,12 @@ export class SamplesPageComponent implements OnInit {
   token: String;
   templatesList: any;
   selectedTemplate: any = {};
+  dtOptions: DataTables.Settings = {
+    pagingType: 'full_numbers',
+    pageLength: 50,
+    lengthChange: false
+  };
+
   public loading = false;
 
 

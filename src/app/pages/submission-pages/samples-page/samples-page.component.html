@@ -66,7 +66,7 @@
         </div>
 
         <div *ngIf="activeSpreadsheet?.rows?.length > 0">
-          <table class="margin-top-20">
+          <table class="margin-top-20" datatable [dtOptions]="dtOptions">
             <thead>
               <tr>
                 <td *ngFor="let cell of activeSpreadsheet?.rows[0].cells">{{cell | uppercase}}</td>

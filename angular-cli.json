@@ -18,14 +18,16 @@
       "tsconfig": "tsconfig.json",
       "prefix": "app",
       "styles": [
-        "styles/stylesheets.scss"
+        "styles/stylesheets.scss",
+        "../node_modules/datatables.net-dt/css/jquery.dataTables.css"
       ],
       "scripts": [
         "../node_modules/jquery/dist/jquery.min.js",
         "../node_modules/ebi-framework/libraries/foundation-6/js/foundation.js",
         "../node_modules/ebi-framework/js/foundationExtendEBI.js",
         "../node_modules/ebi-framework/libraries/Choices/assets/scripts/dist/choices.min.js",
-        "../node_modules/ebi-framework/js//script.js"
+        "../node_modules/ebi-framework/js//script.js",
+        "../node_modules/datatables.net/js/jquery.dataTables.js"
       ],
       "environmentSource": "environments/environment.ts",
       "environments": {
