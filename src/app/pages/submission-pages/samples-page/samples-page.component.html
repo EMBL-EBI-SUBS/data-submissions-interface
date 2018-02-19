@@ -125,7 +125,7 @@
                 </ul>
             </div>
 
-            <div *ngIf="!submittionSamples?._embedded?.samples.length > 0">
+            <div *ngIf="!(submittionSamples?._embedded?.samples.length > 0)">
               No samples has been uploaded yet. If you just uploaded the spreadsheet then it may take a while to process your sheet.
               <a (click)="activateTab('samples-upload')">click here to upload new samples.</a>
             </div>
