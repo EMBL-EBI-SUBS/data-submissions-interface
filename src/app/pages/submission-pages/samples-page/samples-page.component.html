@@ -19,8 +19,8 @@
         <legend>Samples</legend>
 
 
-          <label>What is the source of your biological samples?
-          <select name="samplesSource" formControlName="samplesSource" class="choices"  required multiple>
+        <label>What is the source of your biological samples?
+          <select name="samplesSource" formControlName="samplesSource" class="choices" required multiple>
             <option value="data-type-1">
               Organism - eukaryote
             </option>
@@ -34,56 +34,104 @@
               Source - metagenome
             </option>
           </select>
-          </label>
+        </label>
 
-          <label class="margin-top-large">Enter species name of Tax ID
-            <input type="text" placeholder="E.g Human .... 9606"  name="samplesSpecies" formControlName="samplesSpecies"/>
-            <span class="form-error">
-        Yo, you had better fill this out, it's required.
-        </span>
-          </label>
-
-      </fieldset>
-
-      <fieldset required class="large-form padding-bottom-large padding-top-large ">
-        <legend>Samples Templates</legend>
-        <p>
-          Based on your selection above, you might find the following community sample templates helpful:
-        </p>
-        <select name="template" (change)="onSelectTemplate($event)" *ngIf="templatesList">
-          <option value="_none"> - Select Template - </option>
-          <option *ngFor="let template of templatesList" value="{{template?.name}}" attr.data-href="{{template._links['spreadsheet-csv-download'].href}}">
-              {{template?.name}}
-          </option>
-        </select>
-
-        <div *ngIf="selectedTemplate?.name">
-
-          <a href="{{selectedTemplate.href}}" target="_blank">Download The Template</a>
-          <br>
-          <a href="#" (click)="triggerUpload()" target="_blank">Upload Filled Template</a>
-          <input type="file" name="csv-template" (change)="previewCSVFile($event)" class="hide" />
-        </div>
-
-        <div *ngIf="activeSpreadsheet?.rows?.length > 0">
-          <table class="margin-top-20" datatable [dtOptions]="dtOptions">
-            <thead>
-              <tr>
-                <td *ngFor="let cell of activeSpreadsheet?.rows[0].cells">{{cell | uppercase}}</td>
-              </tr>
-            </thead>
-
-            <tbody>
-              <tr *ngFor="let row of activeSpreadsheet?.rows | slice:1">
-                <td *ngFor="let cell of row.cells">
-                  {{cell}}
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+        <label class="margin-top-large">Enter species name of Tax ID
+          <input type="text" placeholder="E.g Human .... 9606" name="samplesSpecies" formControlName="samplesSpecies" />
+          <span class="form-error">
+            Yo, you had better fill this out, it's required.
+          </span>
+        </label>
 
       </fieldset>
+
+      <div required class="large-form padding-bottom-large padding-top-large ds-tabs">
+        <ul class="tabs" data-tabs>
+          <li class="tabs-title" [class.is-active]="activeTab == 'samples-upload'">
+            <a (click)="activateTab('samples-upload')">Samples Upload</a>
+          </li>
+          <li class="tabs-title" [class.is-active]="activeTab == 'samples-view'">
+            <a (click)="activateTab('samples-view')">View Samples</a>
+          </li>
+        </ul>
+
+        <div class="tabs-content" data-tabs-content="example-tabs">
+          <!-- Samples upload Tab. -->
+          <div class="tabs-panel" [class.is-active]="activeTab == 'samples-upload'">
+            <h5>Samples Templates</h5>
+            <p>
+              Based on your selection above, you might find the following community sample templates helpful:
+            </p>
+            <select name="template" (change)="onSelectTemplate($event)" *ngIf="templatesList">
+              <option value="_none"> - Select Template - </option>
+              <option *ngFor="let template of templatesList" value="{{template?.name}}" attr.data-href="{{template._links['spreadsheet-csv-download'].href}}">
+                {{template?.name}}
+              </option>
+            </select>
+
+            <div *ngIf="selectedTemplate?.name">
+
+              <a href="{{selectedTemplate.href}}" target="_blank">Download The Template</a>
+              <br>
+              <a href="#" (click)="triggerUpload()" target="_blank">Upload Filled Template</a>
+              <input type="file" name="csv-template" (change)="previewCSVFile($event)" class="hide" />
+            </div>
+          </div>
+
+          <!-- Samples View Tab -->
+          <div class="tabs-panel" [class.is-active]="activeTab == 'samples-view'">
+            <div *ngIf="submittionSamples?._embedded?.samples.length > 0">
+             <div class="row">
+                <div class="small-6 columns text-left">
+                    Page {{submittionSamples?.page?.number + 1}} of {{submittionSamples?.page?.totalPages}}
+                </div>
+
+                <div class="small-6 columns text-right"> {{submittionSamples?.page?.totalElements}} samples</div>
+             </div>
+
+              <table class="margin-top-20">
+                <thead>
+                  <tr>
+                    <th>Alias</th>
+                    <th>Title</th>
+                    <th>Last Update</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  <tr *ngFor="let sample of submittionSamples?._embedded?.samples">
+                    <td>{{sample.alias}}</td>
+                    <td>{{sample.title}}</td>
+                    <td>{{sample.lastModifiedDate | date: 'd-MMM-yy' }}</td>
+                    <td>{{sample.processingStatus}}</td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <ul class="pagination" *ngIf="submittionSamples && submittionSamples.page.totalPages > 0">
+                  <li class="arrow">
+                    <a (click)="onPagerClick('first')" *ngIf="!(submittionSamples.page.number == 0)">&laquo; First</a>
+                  </li>
+                  <li class="arrow">
+                    <a (click)="onPagerClick('prev')" *ngIf="submittionSamples._links.prev">&laquo; Previous</a>
+                  </li>
+                  <li class="arrow">
+                    <a (click)="onPagerClick('next')" *ngIf="submittionSamples._links.next">Next &raquo;</a>
+                  </li>
+                  <li class="arrow">
+                    <a (click)="onPagerClick('last')" *ngIf="(submittionSamples.page.totalPages - submittionSamples.page.number) > 1">Last &raquo;</a>
+                  </li>
+                </ul>
+            </div>
+
+            <div *ngIf="!submittionSamples?._embedded?.samples.length > 0">
+              No samples has been uploaded yet. If you just uploaded the spreadsheet then it may take a while to process your sheet.
+              <a (click)="activateTab('samples-upload')">click here to upload new samples.</a>
+            </div>
+          </div>
+        </div>
+      </div>
 
       <div>
         <button class="button secondary-color white-background" (click)="onSaveExit()" [disabled]="samplesForm.invalid">Save &amp; exit</button>

@@ -265,6 +265,29 @@ fieldset {
   }
 }
 
+.tabs-panel.is-active {
+  display: block;
+}
+
+div.ds-tabs {
+  .tabs {
+    li.tabs-title a {
+      padding: 15px;
+      background: $tabs-inactive;
+      margin: 0 5px 0 0;
+    }
+
+    li.is-active a {
+      background: $tabs-active;
+      color: $white;
+    }
+  }
+
+  .tabs-content {
+    border: 1px solid $tabs-inactive;
+  }
+}
+
 .margin-20 {
   margin: 20px;
 }
