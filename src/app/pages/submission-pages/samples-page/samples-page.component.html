@@ -71,9 +71,9 @@
 
             <div *ngIf="selectedTemplate?.name">
 
-              <a href="{{selectedTemplate.href}}" target="_blank">Download The Template</a>
-              <br>
-              <a href="#" (click)="triggerUpload()" target="_blank">Upload Filled Template</a>
+              <a href="{{selectedTemplate.href}}" target="_blank" class="hollow button uppercase margin-right-10">Download The Template</a>
+
+              <a href="#" (click)="triggerUpload()" target="_blank" class="button primary uppercase">Upload Filled Template</a>
               <input type="file" name="csv-template" (change)="previewCSVFile($event)" class="hide" />
             </div>
           </div>
@@ -126,8 +126,8 @@
             </div>
 
             <div *ngIf="!(submittionSamples?._embedded?.samples.length > 0)">
-              No samples has been uploaded yet. If you just uploaded the spreadsheet then it may take a while to process your sheet.
-              <a (click)="activateTab('samples-upload')">click here to upload new samples.</a>
+              No samples has been uploaded yet. If you just uploaded the spreadsheet then it may take a while to appears.
+              <a (click)="activateTab('samples-upload')">click here to upload a new samples.</a>
             </div>
           </div>
         </div>

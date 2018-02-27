@@ -174,7 +174,7 @@ export class SamplesPageComponent implements OnInit {
   previewCSVFile(event) {
     this.loading = true;
 
-    let templateUploadLink = this.activeSubmission._links.contents._links['samples:sheetUpload'].href.replace('{templateName}', this.selectedTemplate['name']);
+    let templateUploadLink = this.activeSubmission._links.contents._links['sheetUpload'].href.replace('{templateName}', this.selectedTemplate['name']);
     const reader = new FileReader();
     reader.onload = (e: any) => {
       let fileResults: any;
