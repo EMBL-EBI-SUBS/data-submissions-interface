@@ -81,48 +81,71 @@
           <!-- Samples View Tab -->
           <div class="tabs-panel" [class.is-active]="activeTab == 'samples-view'">
             <div *ngIf="submittionSamples?._embedded?.samples.length > 0">
-             <div class="row">
+              <div class="row">
+                <div *ngIf="errors.length > 0">
+                  <div *ngFor="let error of errors" class="callout alert">
+                      {{ error }}
+                  </div>
+                </div>
                 <div class="small-6 columns text-left">
-                    Page {{submittionSamples?.page?.number + 1}} of {{submittionSamples?.page?.totalPages}}
+                  Page {{submittionSamples?.page?.number + 1}} of {{submittionSamples?.page?.totalPages}}
                 </div>
 
                 <div class="small-6 columns text-right"> {{submittionSamples?.page?.totalElements}} samples</div>
-             </div>
+              </div>
+              <form ngNoForm>
+                <table class="margin-top-20 samples-table">
+                  <thead>
+                    <tr>
+                      <th></th>
+                      <th>Alias</th>
+                      <th>Title</th>
+                      <th>Last Update</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
 
-              <table class="margin-top-20">
-                <thead>
-                  <tr>
-                    <th>Alias</th>
-                    <th>Title</th>
-                    <th>Last Update</th>
-                    <th>Status</th>
-                  </tr>
-                </thead>
+                  <tbody>
+                    <tr *ngFor="let sample of submittionSamples?._embedded?.samples">
+                      <td class="text-center actions">
+                        <i class="icon icon-functional" *ngIf="!sample?.editMode" data-icon="e" (click)="editModeSample(sample)"></i>
+                        <i class="icon icon-functional success" *ngIf="sample?.editMode" data-icon="/" (click)="onUpdateSample(sample)"></i>
+                      </td>
+                      <td>
+                        <div class="info" *ngIf="!sample?.editMode">
+                          {{sample.alias}}
+                        </div>
 
-                <tbody>
-                  <tr *ngFor="let sample of submittionSamples?._embedded?.samples">
-                    <td>{{sample.alias}}</td>
-                    <td>{{sample.title}}</td>
-                    <td>{{sample.lastModifiedDate | date: 'd-MMM-yy' }}</td>
-                    <td>{{sample.processingStatus}}</td>
-                  </tr>
-                </tbody>
-              </table>
+                        <input type="text" value="{{sample.alias}}" *ngIf="sample?.editMode" [(ngModel)]="sample.alias" [ngModelOptions]="{standalone: true}">
+                      </td>
+                      <td>
+                        <div class="info" *ngIf="!sample?.editMode">
+                          {{sample.title}}
+                        </div>
+
+                        <input type="text" value="{{sample.title}}" *ngIf="sample?.editMode" [(ngModel)]="sample.title" [ngModelOptions]="{standalone: true}">
+                      </td>
+                      <td>{{sample.lastModifiedDate | date: 'd-MMM-yy' }}</td>
+                      <td>{{sample.processingStatus}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </form>
 
               <ul class="pagination" *ngIf="submittionSamples && submittionSamples.page.totalPages > 0">
-                  <li class="arrow">
-                    <a (click)="onPagerClick('first')" *ngIf="!(submittionSamples.page.number == 0)">&laquo; First</a>
-                  </li>
-                  <li class="arrow">
-                    <a (click)="onPagerClick('prev')" *ngIf="submittionSamples._links.prev">&laquo; Previous</a>
-                  </li>
-                  <li class="arrow">
-                    <a (click)="onPagerClick('next')" *ngIf="submittionSamples._links.next">Next &raquo;</a>
-                  </li>
-                  <li class="arrow">
-                    <a (click)="onPagerClick('last')" *ngIf="(submittionSamples.page.totalPages - submittionSamples.page.number) > 1">Last &raquo;</a>
-                  </li>
-                </ul>
+                <li class="arrow">
+                  <a (click)="onPagerClick('first')" *ngIf="!(submittionSamples.page.number == 0)">&laquo; First</a>
+                </li>
+                <li class="arrow">
+                  <a (click)="onPagerClick('prev')" *ngIf="submittionSamples._links.prev">&laquo; Previous</a>
+                </li>
+                <li class="arrow">
+                  <a (click)="onPagerClick('next')" *ngIf="submittionSamples._links.next">Next &raquo;</a>
+                </li>
+                <li class="arrow">
+                  <a (click)="onPagerClick('last')" *ngIf="(submittionSamples.page.totalPages - submittionSamples.page.number) > 1">Last &raquo;</a>
+                </li>
+              </ul>
             </div>
 
             <div *ngIf="!(submittionSamples?._embedded?.samples.length > 0)">

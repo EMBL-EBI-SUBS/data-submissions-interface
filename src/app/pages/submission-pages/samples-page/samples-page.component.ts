@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, NgModule } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { TokenService } from 'angular-aap-auth';
@@ -29,6 +29,7 @@ export class SamplesPageComponent implements OnInit {
   activeSubmission: any;
   activeSpreadsheet: any;
   submittionSamples: any = {};
+  errors = [];
   token: String;
   templatesList: any;
   selectedTemplate: any = {};
@@ -97,6 +98,33 @@ export class SamplesPageComponent implements OnInit {
     this.router.navigate(['/']);
   }
 
+  editModeSample(sample) {
+    sample['editMode'] = true;
+  }
+
+  onUpdateSample(sample) {
+    console.log(sample);
+    this.loading = true;
+    let updateLink = sample._links.self.href;
+    let updateData = {
+      title: sample.title,
+      alias: sample.alias
+    }
+
+    this.requestsService.partialUpdate(this.token, updateLink, updateData).subscribe(
+     data => {
+       sample['editMode'] = false;
+       this.loading = false;
+       this.errors = [];
+     },
+     err => {
+       let error = JSON.parse(err['_body']);
+       this.loading = false;
+       this.errors = error.errors;
+     }
+    )
+  }
+
   onSaveContinue() {
     let samplesData = {};
     samplesData['samplesSource'] = this.samplesForm.value.samplesSource;
@@ -104,7 +132,6 @@ export class SamplesPageComponent implements OnInit {
 
     this.activeSubmission['uiData']['samples'] = samplesData;
     let submissionUpdateUrl = this.activeSubmission._links['self:update'].href;
-
 
     // Update the submission.
     this.requestsService.update(this.token, submissionUpdateUrl, this.activeSubmission).subscribe(
