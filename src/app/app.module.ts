@@ -39,6 +39,9 @@ import { LoggedInGuard } from './guards/logged-in/logged-in.guard';
 // Imports
 import { LoadingModule, ANIMATION_TYPES } from 'ngx-loading';
 import { DataTablesModule } from 'angular-datatables';
+import {
+  JsonSchemaFormModule, NoFrameworkModule
+} from 'angular2-json-schema-form';
 
 
 // Import Tests Classes.
@@ -81,7 +84,11 @@ import { RouterLinkStubDirective, RouterOutletStubComponent } from './testing/ro
       secondaryColour: '#ffffff',
       tertiaryColour: '#ffffff'
     }),
-    DataTablesModule
+    DataTablesModule,
+    NoFrameworkModule,
+    JsonSchemaFormModule.forRoot(
+      NoFrameworkModule
+    )
   ],
   providers: [
     LoggedInGuard,
@@ -90,7 +97,7 @@ import { RouterLinkStubDirective, RouterOutletStubComponent } from './testing/ro
     AuthService, {
       provide: 'AAP_CONFIG',
       useValue: {
-        authURL: 'https://explore.api.aap.tsi.ebi.ac.uk'
+        authURL: 'https://explore.api.aai.ebi.ac.uk'
       }
     }
   ],

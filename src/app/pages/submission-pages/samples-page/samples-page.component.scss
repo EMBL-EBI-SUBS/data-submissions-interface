@@ -1,14 +1,25 @@
 .samples-table {
-
-  input {
-    margin: 0;
-  }
-
-  .actions i {
-    cursor: pointer;
-
-    &.success {
-      color: #22BB33;
+    input {
+        margin: 0;
     }
-  }
+    .actions i {
+        cursor: pointer;
+        &.success {
+            color: #22BB33;
+        }
+    }
+}
+
+.sheet-items-wrapper {
+    margin-top: -15px;
+    margin-bottom: 30px;
+}
+
+.sheet-item {
+    padding: 15px;
+    background: #fafafa;
+    border-bottom: 1px solid #eee;
+    &:last-child {
+        border-bottom: none;
+    }
 }

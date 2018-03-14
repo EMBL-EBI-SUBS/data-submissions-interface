@@ -1,4 +1,4 @@
-import { Component, OnInit, NgModule } from '@angular/core';
+import { Component, OnInit, NgModule, ViewChildren, QueryList } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { TokenService } from 'angular-aap-auth';
@@ -25,9 +25,14 @@ declare var $;
   ]
 })
 export class SamplesPageComponent implements OnInit {
+  @ViewChildren('allSamples') samplesRows: QueryList<any>;
+
+  objectKeys = Object.keys;
   samplesForm: FormGroup;
   activeSubmission: any;
   activeSpreadsheet: any;
+  activeSample: any;
+  activeSampleClonned: any;
   submittionSamples: any = {};
   errors = [];
   token: String;
@@ -38,6 +43,48 @@ export class SamplesPageComponent implements OnInit {
     pagingType: 'full_numbers',
     pageLength: 50,
     lengthChange: false
+  };
+  processingSheets = [];
+  blackListSampleFields = [
+    'createdBy',
+    'createdDate',
+    'lastModifiedBy',
+    'lastModifiedDate',
+    'sampleRelationships',
+    'team',
+    'editMode',
+    '_embedded',
+    '_links'
+  ];
+  activeSampleFields = [];
+  activeSampleIndex: number;
+
+  testSampleSchema  = {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Sample Schema",
+    "description": "Default sample template schema.",
+
+    "type": "object",
+    "properties": {
+
+      "alias": {
+        "description": "A sample unique identifier in a submission.",
+        "type": "string"
+      },
+      "taxonId": {
+        "description": "The taxonomy id for the sample species.",
+        "type": "integer"
+      },
+      "taxon": {
+        "description": "The taxonomy name for the sample species.",
+        "type": "string"
+      },
+      "title":{
+        "description": "A sample title",
+        "type": "string"
+      }
+    },
+    "required": ["alias", "taxonId", "taxon"]
   };
 
   public loading = false;
@@ -77,7 +124,6 @@ export class SamplesPageComponent implements OnInit {
     this.getSubmissionContents(this.activeSubmission);
   }
 
-
   /**
    * Initialize the Choices Plugin.
    */
@@ -88,6 +134,10 @@ export class SamplesPageComponent implements OnInit {
       maxItemCount: 5,
       removeItemButton: true,
     });
+
+    this.samplesRows.changes.subscribe(t => {
+      this.ngForSamplesRendred();
+    })
   }
 
   onSaveExit() {
@@ -98,31 +148,95 @@ export class SamplesPageComponent implements OnInit {
     this.router.navigate(['/']);
   }
 
+  ngForSamplesRendred() {
+    $('.reveal-button, .reveal-form').foundation();
+    console.log("Samples rendered");
+  }
+
   editModeSample(sample) {
     sample['editMode'] = true;
   }
 
-  onUpdateSample(sample) {
-    console.log(sample);
+  setActiveSample(sample, index) {
+    this.activeSample = sample;
+    this.activeSampleClonned = sample;
+    this.activeSampleIndex = index;
+  }
+
+  onUpdateSample() {
     this.loading = true;
-    let updateLink = sample._links.self.href;
-    let updateData = {
-      title: sample.title,
-      alias: sample.alias
+    let updateLink = this.activeSample._links.self.href;
+    let updateData = {};
+
+    for (let key of this.activeSampleFields) {
+      updateData[key] = this.activeSampleClonned[key];
     }
+
 
     this.requestsService.partialUpdate(this.token, updateLink, updateData).subscribe(
      data => {
-       sample['editMode'] = false;
        this.loading = false;
        this.errors = [];
+       // Update table data.
+       for (let key in data) {
+        this.submittionSamples._embedded.samples[this.activeSampleIndex][key] = data[key];
+       }
+       // CLose the popup.
+       $('.close-button').click();
      },
      err => {
-       let error = JSON.parse(err['_body']);
+       try {
+        let error = JSON.parse(err['_body']);
+        this.errors = error.errors;
+       } catch (e) {
+
+       }
+
        this.loading = false;
-       this.errors = error.errors;
+
      }
     )
+  }
+
+  addSampleActiveKey(keyName) {
+    if (this.activeSampleFields.indexOf(keyName) < 0) {
+      this.activeSampleFields.push(keyName);
+    }
+    return true;
+  }
+
+  checkProcessingSheets() {
+   let samplesSheets = this.activeSubmission._links.contents._links['samplesSheets'].href;
+
+   this.requestsService.get(this.token, samplesSheets).subscribe(
+     data => {
+      try {
+        if(data['_embedded']['sheets'].length > 0) {
+          let tempProcessingSheets = [];
+
+          for (let processingSheet of data['_embedded']['sheets']) {
+            if (processingSheet['status'] !== "Completed") {
+              tempProcessingSheets.push(processingSheet);
+            }
+          }
+          if (tempProcessingSheets.length == 0) {
+            this.processingSheets = [];
+          } else {
+            this.processingSheets = tempProcessingSheets;
+            let that = this;
+            setTimeout(function(){
+              that.checkProcessingSheets();
+            } ,10000);
+          }
+        }
+      } catch (e) {
+
+      }
+     },
+     err => {
+
+     }
+   )
   }
 
   onSaveContinue() {
@@ -220,6 +334,7 @@ export class SamplesPageComponent implements OnInit {
           this.spreadsheetsService.setActiveSpreadsheet(this.activeSpreadsheet);
           this.getSubmissionSamples();
           event.target.value = null;
+          this.checkProcessingSheets();
         },
         (err) => {
           this.loading = false;
@@ -292,6 +407,8 @@ export class SamplesPageComponent implements OnInit {
         this.submissionsService.setActiveSubmission(submission);
         // Load Samples Data.
         this.getSubmissionSamples();
+        // Get Uploaded Sheets Status.
+        this.checkProcessingSheets();
       },
       (err) => {
         // TODO: Handle Errors.

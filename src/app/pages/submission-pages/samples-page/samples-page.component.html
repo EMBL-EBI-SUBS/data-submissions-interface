@@ -14,6 +14,22 @@
 
     <ngx-loading [show]="loading" [config]=""></ngx-loading>
 
+    <div class="reveal reveal-form" id="exampleModal1" data-reveal>
+      <div *ngIf="errors.length > 0">
+        <div *ngFor="let error of errors" class="callout alert">
+          {{ error }}
+        </div>
+      </div>
+
+      <json-schema-form loadExternalAssets="true" [(ngModel)]="activeSampleClonned" (onSubmit)="onUpdateSample()" [schema]="testSampleSchema">
+      </json-schema-form>
+
+      <button class="close-button" data-close aria-label="Close modal" type="button">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+
+
     <form [formGroup]="samplesForm">
       <fieldset required class="large-form padding-bottom-large padding-top-large ">
         <legend>Samples</legend>
@@ -82,9 +98,9 @@
           <div class="tabs-panel" [class.is-active]="activeTab == 'samples-view'">
             <div *ngIf="submittionSamples?._embedded?.samples.length > 0">
               <div class="row">
-                <div *ngIf="errors.length > 0">
-                  <div *ngFor="let error of errors" class="callout alert">
-                      {{ error }}
+                <div *ngIf="processingSheets.length > 0" class="sheet-items-wrapper">
+                  <div *ngFor="let processingSheet of processingSheets; let i = index" class="sheet-item">
+                    Sheet #{{i + 1}} : Processing {{processingSheet.processedRowCount}} of {{processingSheet.totalRowCount}}
                   </div>
                 </div>
                 <div class="small-6 columns text-left">
@@ -98,20 +114,34 @@
                   <thead>
                     <tr>
                       <th></th>
-                      <th>Alias</th>
+                      <ng-container *ngFor="let keyName of objectKeys(submittionSamples._embedded.samples[0])">
+                        <th *ngIf="blackListSampleFields.indexOf(keyName) < 0 && addSampleActiveKey(keyName)"> {{keyName | uppercase}}</th>
+                      </ng-container>
+                      <!-- <th>Alias</th>
                       <th>Title</th>
                       <th>Last Update</th>
-                      <th>Status</th>
+                      <th>Status</th> -->
                     </tr>
                   </thead>
 
                   <tbody>
-                    <tr *ngFor="let sample of submittionSamples?._embedded?.samples">
+                    <tr #allSamples *ngFor="let sample of submittionSamples?._embedded?.samples; let last = last; let i = index;">
                       <td class="text-center actions">
-                        <i class="icon icon-functional" *ngIf="!sample?.editMode" data-icon="e" (click)="editModeSample(sample)"></i>
-                        <i class="icon icon-functional success" *ngIf="sample?.editMode" data-icon="/" (click)="onUpdateSample(sample)"></i>
+                        <button class=" reveal-button" data-open="exampleModal1" type='button' (click)="setActiveSample(sample, i)">
+                          <i class="icon icon-functional" data-icon="e"></i>
+                        </button>
+
+                        <!-- <i class="icon icon-functional success" *ngIf="sample?.editMode" data-icon="/" (click)="onUpdateSample(sample)"></i> -->
                       </td>
-                      <td>
+
+                      <td *ngFor="let key of activeSampleFields">
+                        <div class="info" *ngIf="!sample?.editMode">
+                          {{sample[key]}}
+                        </div>
+
+                        <input type="text" value="{{sample[key]}}" *ngIf="sample?.editMode" [(ngModel)]="sample[key]" [ngModelOptions]="{standalone: true}">
+                      </td>
+                      <!-- <td>
                         <div class="info" *ngIf="!sample?.editMode">
                           {{sample.alias}}
                         </div>
@@ -126,7 +156,7 @@
                         <input type="text" value="{{sample.title}}" *ngIf="sample?.editMode" [(ngModel)]="sample.title" [ngModelOptions]="{standalone: true}">
                       </td>
                       <td>{{sample.lastModifiedDate | date: 'd-MMM-yy' }}</td>
-                      <td>{{sample.processingStatus}}</td>
+                      <td>{{sample.processingStatus}}</td> -->
                     </tr>
                   </tbody>
                 </table>

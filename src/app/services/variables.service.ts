@@ -2,7 +2,7 @@ import { Headers } from '@angular/http';
 
 export class VariablesService {
   host: string = "https://submission-dev.ebi.ac.uk/api/";
-  authenticationHost: string = "https://explore.api.aap.tsi.ebi.ac.uk/";
+  authenticationHost: string = "https://explore.api.aai.ebi.ac.uk/";
 
   constructor() { }
 

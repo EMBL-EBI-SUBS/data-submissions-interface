@@ -28,7 +28,7 @@ describe('UserLoginPageComponent', () => {
         {
           provide: 'AAP_CONFIG',
           useValue: {
-            authURL: 'https://explore.api.aap.tsi.ebi.ac.uk'
+            authURL: 'https://explore.api.aai.ebi.ac.uk'
           }
         }
       ]
