@@ -40,7 +40,8 @@ import { LoggedInGuard } from './guards/logged-in/logged-in.guard';
 import { LoadingModule, ANIMATION_TYPES } from 'ngx-loading';
 import { DataTablesModule } from 'angular-datatables';
 import {
-  JsonSchemaFormModule, NoFrameworkModule
+  JsonSchemaFormModule, NoFrameworkModule, JsonSchemaFormService,
+  FrameworkLibraryService, WidgetLibraryService, Framework, NoFramework
 } from 'angular2-json-schema-form';
 
 
@@ -86,9 +87,15 @@ import { RouterLinkStubDirective, RouterOutletStubComponent } from './testing/ro
     }),
     DataTablesModule,
     NoFrameworkModule,
-    JsonSchemaFormModule.forRoot(
-      NoFrameworkModule
-    )
+    {
+      ngModule: JsonSchemaFormModule,
+      providers: [
+          JsonSchemaFormService,
+          FrameworkLibraryService,
+          WidgetLibraryService,
+          {provide: Framework, useClass: NoFramework, multi: true}
+      ]
+    }
   ],
   providers: [
     LoggedInGuard,
