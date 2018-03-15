@@ -82,9 +82,13 @@ export class SamplesPageComponent implements OnInit {
       "title":{
         "description": "A sample title",
         "type": "string"
+      },
+      "description":{
+        "description": "A sample description",
+        "type": "string"
       }
     },
-    "required": ["alias", "taxonId", "taxon"]
+    "required": ["alias", "title", "taxonId", "taxon"]
   };
 
   public loading = false;
