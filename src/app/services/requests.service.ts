@@ -51,6 +51,24 @@ export class RequestsService {
     return response;
   }
 
+   /**
+   * Create new record.
+   */
+  createNoAuth(url, data) {
+    let headers = this.variables.buildHeader("");
+
+    let requestOptions = new RequestOptions({
+        headers: headers
+    });
+
+    // Post an Empty object to create submission.
+    let body = JSON.stringify(data);
+
+    let requestUrl =  url;
+    var response = this.http.post(requestUrl, body, requestOptions).map(res => res.json());
+    return response;
+  }
+
   /**
    * Update an existing record.
    */

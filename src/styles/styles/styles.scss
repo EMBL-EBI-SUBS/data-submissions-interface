@@ -269,6 +269,20 @@ fieldset {
   display: block;
 }
 
+.form-wrapper-error {
+  label,
+  &label,
+  .errors {
+    color: $form-error;
+  }
+
+  input,
+  select,
+  textarea{
+    border-color: $form-error;
+  }
+}
+
 div.ds-tabs {
   .tabs {
     li.tabs-title a {
@@ -288,8 +302,17 @@ div.ds-tabs {
   }
 }
 
+.no-horz-padding {
+  padding-right: 0;
+  padding-left: 0;
+}
+
 .margin-20 {
   margin: 20px;
+}
+
+.margin-left-15 {
+  margin-left: 15px;
 }
 
 .margin-top-20 {
@@ -300,9 +323,18 @@ div.ds-tabs {
   margin-right: 10px;
 }
 
+.margin-bottom-0 {
+  margin-bottom: 0;
+}
+
 .margin-bottom-15 {
   margin-bottom: 15px;
 }
+
+.margin-bottom-20 {
+  margin-bottom: 20px;
+}
+
 
 .font-weight-bold {
   font-weight: bold;

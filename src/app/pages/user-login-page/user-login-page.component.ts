@@ -42,21 +42,11 @@ export class UserLoginPageComponent implements OnInit {
 
       this.userService.getUserTeams(this.token).subscribe (
         (data) => {
-          if(data.page.totalElements == 0) {
+            if(data.page.totalElements == 0) {
             this.teamsService.createTeam(this.token).subscribe(
               (data) => {
-                let domainReference = data.domainReference;
-                this.teamsService.addUserToTeam(this.token, domainReference, userData.sub).subscribe(
-                  (data) => {
-                  // New team created. Logout.
-                  // TODO: Change this bahvour to more appropriate one.
-                  this.authService.logOut();
-                  alert("New team has beeen created, you have to login again.");
-                  },
-                  (err) => {
-
-                  }
-                )
+                this.authService.logOut();
+                alert("New team has beeen created, you have to login again.");
               },
               (err) => {
                 console.log(err);

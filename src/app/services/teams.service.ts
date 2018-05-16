@@ -8,9 +8,11 @@ import { VariablesService } from './variables.service';
 export class TeamsService {
   variables = new VariablesService;
   teamEndpoint = this.variables.host + "teams/";
-  createTeamEndPoint = this.variables.authenticationHost + "domains";
+  createTeamEndPoint = this.variables.host + "user/teams";
 
-  constructor(private http: Http) { }
+  constructor(
+    private http: Http
+    ) { }
 
   static get parameters() {
    return [[Http]];
@@ -67,8 +69,8 @@ export class TeamsService {
 
     // Post an Empty object to create submission.
     let body = JSON.stringify({
-      "domainName" : Date.now(),
-      "domainDesc" : Date.now()
+      "description" : "My lab group",
+      "centreName" : "An Institute"
     });
 
     let requestUrl =  this.createTeamEndPoint;

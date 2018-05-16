@@ -1,6 +1,6 @@
 import { Component, OnInit, NgModule, ViewChildren, QueryList } from '@angular/core';
 import { Router } from '@angular/router';
-import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder, FormArray, FormControl, FormControlName, Validators } from '@angular/forms';
 import { TokenService } from 'angular-aap-auth';
 
 // Import Services.
@@ -29,11 +29,17 @@ export class SamplesPageComponent implements OnInit {
 
   objectKeys = Object.keys;
   samplesForm: FormGroup;
+  sampleForm: FormGroup;
+  sampleAttributeForm: FormGroup;
+  sampleRelationsForm: FormGroup;
+  sampleAttributeTerms: FormArray;
+  sampleAttributes: any[] = [];
+  sampleAttribute: any = {};
   activeSubmission: any;
   activeSpreadsheet: any;
   activeSample: any;
-  activeSampleClonned: any;
   submittionSamples: any = {};
+  formPathStringMap: any = {};
   errors = [];
   token: String;
   templatesList: any;
@@ -52,6 +58,8 @@ export class SamplesPageComponent implements OnInit {
     'lastModifiedDate',
     'sampleRelationships',
     'team',
+    'attributes',
+    'accession',
     'editMode',
     '_embedded',
     '_links'
@@ -59,36 +67,92 @@ export class SamplesPageComponent implements OnInit {
   activeSampleFields = [];
   activeSampleIndex: number;
 
-  testSampleSchema  = {
-    "$schema": "http://json-schema.org/draft-07/schema#",
-    "title": "Sample Schema",
-    "description": "Default sample template schema.",
-
-    "type": "object",
-    "properties": {
-
-      "alias": {
-        "description": "A sample unique identifier in a submission.",
-        "type": "string"
+  validationSchemaUrl = "https://usi-json-schema-validator.herokuapp.com/validate";
+  initialValidationSchema = {
+    "schema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "A Sample Schema",
+      "description": "Sample base schema",
+      "type": "object",
+      "properties": {
+          "alias": {
+              "description": "An unique identifier in a submission.",
+              "type": "string",
+              "minLength": 1
+          },
+          "title": {
+              "description": "Title of the sample.",
+              "type": "string",
+              "minLength": 1
+          },
+          "description": {
+              "description": "More extensive free-form description.",
+              "type": "string",
+              "minLength": 1
+          },
+          "attributes": {
+              "description": "Attributes for describing a sample.",
+              "type": "object",
+              "properties": {},
+              "patternProperties": {
+                  "^.*$": {
+                      "type": "array",
+                      "minItems": 1,
+                      "items": {
+                          "properties": {
+                              "value": { "type": "string", "minLength": 1 },
+                              "units": { "type": "string", "minLength": 1 },
+                              "terms": {
+                                  "type": "array",
+                                  "items": {
+                                      "type": "object",
+                                      "properties": {
+                                          "url": {"type": "string", "format": "uri" }
+                                      },
+                                      "required": ["url"]
+                                  }
+                              }
+                          },
+                          "required": ["value"]
+                      }
+                  }
+              }
+          },
+          "sampleRelationships": {
+              "type": "array",
+              "items": {
+                  "type": "object",
+                  "properties": {
+                      "alias": { "type": "string", "minLength": 1 },
+                      "accession": { "type": "string", "minLength": 1 },
+                      "team": { "type": "string", "minLength": 1 },
+                      "nature": {
+                          "type": "string",
+                          "enum": [ "derived from", "child of", "same as", "recurated from" ]
+                      }
+                  },
+                  "oneOf": [
+                      { "required": ["alias", "team", "nature"] },
+                      { "required": ["accession", "nature"] }
+                  ]
+              }
+          },
+          "taxonomy": {
+              "type": "object",
+              "properties": {
+                  "taxonId": { "type": "integer" },
+                  "taxonName": { "type": "string", "minLength": 1 }
+              },
+              "required": ["taxonId"]
+          },
+          "releaseDate": {
+              "type": "string",
+              "format": "date"
+          }
       },
-      "taxonId": {
-        "description": "The taxonomy id for the sample species.",
-        "type": "integer"
-      },
-      "taxon": {
-        "description": "The taxonomy name for the sample species.",
-        "type": "string"
-      },
-      "title":{
-        "description": "A sample title",
-        "type": "string"
-      },
-      "description":{
-        "description": "A sample description",
-        "type": "string"
-      }
+      "required": [ "alias", "taxonomy", "releaseDate" ]
     },
-    "required": ["alias", "title", "taxonId", "taxon"]
+    "object": {}
   };
 
   public loading = false;
@@ -110,7 +174,8 @@ export class SamplesPageComponent implements OnInit {
     private teamsService: TeamsService,
     private requestsService: RequestsService,
     private tokenService: TokenService,
-    private spreadsheetsService: SpreadsheetsService
+    private spreadsheetsService: SpreadsheetsService,
+    private fb: FormBuilder
   ) { }
 
   ngOnInit() {
@@ -122,6 +187,33 @@ export class SamplesPageComponent implements OnInit {
     this.samplesForm = new FormGroup({
       samplesSource: new FormControl('', Validators.required),
       samplesSpecies: new FormControl('', Validators.required),
+    });
+
+    this.sampleAttributeForm = this.fb.group({
+      name: ['', Validators.required],
+      value: ['', Validators.required],
+      unit: [''],
+      terms: this.fb.array([])
+    });
+    this.addSampleAttrTerm();
+
+    this.sampleRelationsForm = this.fb.group({
+      method: ['using-alias', Validators.required],
+      alias: [''],
+      team: [''],
+      accession: [''],
+      nature: ['', Validators.required],
+    });
+
+
+    this.sampleForm = this.fb.group({
+      accession: [''],
+      alias: ['', Validators.required],
+      title: ['', Validators.required],
+      description: [''],
+      taxonId: ['', Validators.required],
+      taxon: ['', Validators.required],
+      releaseDate: ['', Validators.required],
     });
 
     this.setFormDefaultValues();
@@ -142,6 +234,16 @@ export class SamplesPageComponent implements OnInit {
     this.samplesRows.changes.subscribe(t => {
       this.ngForSamplesRendred();
     })
+
+    let thisVar = this;
+
+    $('[data-reveal].add-attribute-form').on('closed.zf.reveal', function () {
+      thisVar.onCloseSampleAttributeModal();
+    });
+
+    $('[data-reveal].add-samples-form').on('closed.zf.reveal', function () {
+      thisVar.onCloseSampleRelationsModal();
+    });
   }
 
   onSaveExit() {
@@ -154,7 +256,6 @@ export class SamplesPageComponent implements OnInit {
 
   ngForSamplesRendred() {
     $('.reveal-button, .reveal-form').foundation();
-    console.log("Samples rendered");
   }
 
   editModeSample(sample) {
@@ -163,42 +264,111 @@ export class SamplesPageComponent implements OnInit {
 
   setActiveSample(sample, index) {
     this.activeSample = sample;
-    this.activeSampleClonned = sample;
     this.activeSampleIndex = index;
+
+    //  Set form default values.
+    this.sampleForm.controls['accession'].setValue(sample['accession']);
+    this.sampleForm.controls['alias'].setValue(sample['alias']);
+    this.sampleForm.controls['title'].setValue(sample['title']);
+    this.sampleForm.controls['description'].setValue(sample['description']);
+    this.sampleForm.controls['taxonId'].setValue(sample['taxonId']);
+    this.sampleForm.controls['taxon'].setValue(sample['taxon']);
+    this.sampleForm.controls['releaseDate'].setValue(sample['releaseDate']);
   }
 
   onUpdateSample() {
     this.loading = true;
     let updateLink = this.activeSample._links.self.href;
     let updateData = {};
+    this.loading = false;
 
-    for (let key of this.activeSampleFields) {
-      updateData[key] = this.activeSampleClonned[key];
+    let sampleValidationObject = this.initialValidationSchema;
+    sampleValidationObject['object']['taxonomy'] = {};
+    delete sampleValidationObject['object']['attributes'];
+    delete sampleValidationObject['object']['attributes'];
+
+
+    for (let key in this.sampleForm.value) {
+      if (typeof this.sampleForm.value[key] !== "undefined") {
+        updateData[key] = this.sampleForm.value[key];
+
+        if (key == "taxonId" || key == "taxonName") {
+          sampleValidationObject['object']['taxonomy'][key] = this.sampleForm.value[key];
+          this.formPathStringMap['.taxonomy.' + key] = this.sampleForm.get(key);
+        } else {
+          sampleValidationObject['object'][key] = this.sampleForm.value[key];
+          this.formPathStringMap['.' + key] = this.sampleForm.get(key);
+        }
+      }
     }
 
+    this.loading = true;
+    this.requestsService.createNoAuth(this.validationSchemaUrl, sampleValidationObject).subscribe(
+      data => {
+        if(data.length == 0) {
+          // TODO: Clean This!
+          this.requestsService.partialUpdate(this.token, updateLink, updateData).subscribe(
+            data => {
+              this.loading = false;
+              this.errors = [];
+              // Update table data.
+              for (let key in updateData) {
+                this.submittionSamples._embedded.samples[this.activeSampleIndex][key] = data[key];
+              }
+              // CLose the popup.
+              $('.close-button').click();
+            },
+            err => {
+              try {
+                let error = JSON.parse(err['_body']);
+                this.errors = error.errors;
+              } catch (e) {
 
-    this.requestsService.partialUpdate(this.token, updateLink, updateData).subscribe(
-     data => {
-       this.loading = false;
-       this.errors = [];
-       // Update table data.
-       for (let key in data) {
-        this.submittionSamples._embedded.samples[this.activeSampleIndex][key] = data[key];
-       }
-       // CLose the popup.
-       $('.close-button').click();
-     },
-     err => {
-       try {
-        let error = JSON.parse(err['_body']);
-        this.errors = error.errors;
-       } catch (e) {
+              }
 
-       }
+              this.loading = false;
 
-       this.loading = false;
+            }
+          )
 
-     }
+          // this.onUpdateSampleAttributes();
+          // Close the reveal.
+          $(".sample-attribute-close-button").click();
+        } else {
+          for(let formItemError of data) {
+            this.formPathStringMap[formItemError['dataPath']].setErrors({
+              'errors': formItemError['errors']
+            });
+          }
+
+          // console.log(this.sampleAttributeForm);
+          this.loading = false;
+        }
+
+      },
+      err => {
+        console.log(err);
+        this.loading = false;
+      }
+    )
+  }
+
+  onUpdateSampleAttributes() {
+    let updateLink = this.activeSample._links.self.href;
+    this.loading = true;
+
+    this.requestsService.update(this.token, updateLink, this.activeSample).subscribe(
+      data => {
+        this.loading = false;
+      },
+      err => {
+        try {
+          let error = JSON.parse(err['_body']);
+          this.errors = error.errors;
+        } catch (e) { }
+
+        this.loading = false;
+      }
     )
   }
 
@@ -210,37 +380,38 @@ export class SamplesPageComponent implements OnInit {
   }
 
   checkProcessingSheets() {
-   let samplesSheets = this.activeSubmission._links.contents._links['samplesSheets'].href;
+    let samplesSheets = this.activeSubmission._links.contents._links['samplesSheets'].href;
 
-   this.requestsService.get(this.token, samplesSheets).subscribe(
-     data => {
-      try {
-        if(data['_embedded']['sheets'].length > 0) {
-          let tempProcessingSheets = [];
+    this.requestsService.get(this.token, samplesSheets).subscribe(
+      data => {
+        try {
+          if (data['_embedded']['sheets'].length > 0) {
+            let tempProcessingSheets = [];
 
-          for (let processingSheet of data['_embedded']['sheets']) {
-            if (processingSheet['status'] !== "Completed") {
-              tempProcessingSheets.push(processingSheet);
+            for (let processingSheet of data['_embedded']['sheets']) {
+              if (processingSheet['status'] !== "Completed") {
+                tempProcessingSheets.push(processingSheet);
+              }
+            }
+            if (tempProcessingSheets.length == 0) {
+              this.processingSheets = [];
+              this.getSubmissionSamples();
+            } else {
+              this.processingSheets = tempProcessingSheets;
+              let that = this;
+              setTimeout(function () {
+                that.checkProcessingSheets();
+              }, 10000);
             }
           }
-          if (tempProcessingSheets.length == 0) {
-            this.processingSheets = [];
-          } else {
-            this.processingSheets = tempProcessingSheets;
-            let that = this;
-            setTimeout(function(){
-              that.checkProcessingSheets();
-            } ,10000);
-          }
+        } catch (e) {
+
         }
-      } catch (e) {
+      },
+      err => {
 
       }
-     },
-     err => {
-
-     }
-   )
+    )
   }
 
   onSaveContinue() {
@@ -358,6 +529,7 @@ export class SamplesPageComponent implements OnInit {
       data => {
         this.submittionSamples = data;
         this.loading = false;
+
         try {
           if (data._embedded.samples && data._embedded.samples.length > 0) {
             this.activateTab("samples-view");
@@ -384,7 +556,7 @@ export class SamplesPageComponent implements OnInit {
   }
 
   getUserSubmissionsSamplesByUrl(serviceUrl) {
-    this.requestsService.get(this.token, serviceUrl).subscribe (
+    this.requestsService.get(this.token, serviceUrl).subscribe(
       (data) => {
         // Store active submission in a local variable.
         this.submittionSamples = data;
@@ -419,5 +591,237 @@ export class SamplesPageComponent implements OnInit {
         console.log(err);
       }
     );
+  }
+
+  createSampleAttrTerm() {
+    return this.fb.group({
+      term: ''
+    })
+  }
+
+  addSampleAttrTerm() {
+    const control = <FormArray>this.sampleAttributeForm.controls['terms'];
+    control.push(this.createSampleAttrTerm());
+  }
+
+  removeSampleAttrTerm(i) {
+    const control = <FormArray>this.sampleAttributeForm.controls['terms'];
+    control.removeAt(i);
+  }
+
+  onAddSampleAttribute() {
+    if (this.sampleAttributeForm.valid) {
+      let sampleAttributeValidationObject = this.initialValidationSchema;
+      delete sampleAttributeValidationObject['schema']['required'];
+      sampleAttributeValidationObject['object']['attributes'] = {};
+      sampleAttributeValidationObject['object']['attributes'][this.sampleAttributeForm.value['name']] = [];
+
+      // If Attribute is not initialized then initialize it.
+      if (!this.activeSample['attributes']) {
+        this.activeSample['attributes'] = {};
+      }
+
+      try {
+        this.sampleAttribute["value"] = this.sampleAttributeForm.value['value'];
+        this.formPathStringMap['.attributes[\'' + this.sampleAttributeForm.value['name'] + '\'][0].value'] = this.sampleAttributeForm.get('value');
+        this.formPathStringMap['.attributes[\'' + this.sampleAttributeForm.value['name'] + '\'][0].name'] = this.sampleAttributeForm.get('name');
+
+        if (this.sampleAttributeForm.value['unit'] && this.sampleAttributeForm.value['unit'] !== "") {
+          this.sampleAttribute["units"] = this.sampleAttributeForm.value['unit'];
+          this.formPathStringMap['.attributes[\'' + this.sampleAttributeForm.value['name'] + '\'][0].units'] = this.sampleAttributeForm.get('unit');
+        }
+
+        if (this.sampleAttributeForm.value['terms'] && this.sampleAttributeForm.value['terms'].length > 0) {
+          this.sampleAttribute["terms"] = [];
+
+          for (let term of this.sampleAttributeForm.value['terms']) {
+            if (term['term']) {
+              let termObj = {};
+              termObj['url'] = term['term'];
+              this.formPathStringMap['.attributes[\'' + this.sampleAttributeForm.value['name'] + '\'][0].terms[' + this.sampleAttribute["terms"].length + '].url'] = this.sampleAttributeForm.get('terms').get(String(this.sampleAttribute["terms"].length));
+              this.sampleAttribute["terms"].push(termObj);
+            }
+          }
+          if (this.sampleAttribute["terms"].length == 0) {
+            delete this.sampleAttribute["terms"];
+          }
+        }
+
+
+        sampleAttributeValidationObject['object']['attributes'][this.sampleAttributeForm.value['name']].push(this.sampleAttribute);
+        this.loading = true;
+        this.requestsService.createNoAuth(this.validationSchemaUrl, sampleAttributeValidationObject).subscribe(
+          data => {
+            if(data.length == 0) {
+              this.activeSample['attributes'][this.sampleAttributeForm.value['name']] = [];
+              this.activeSample['attributes'][this.sampleAttributeForm.value['name']].push(this.sampleAttribute);
+
+              this.onUpdateSampleAttributes();
+              // Close the reveal.
+              $(".sample-attribute-close-button").click();
+            } else {
+              for(let formItemError of data) {
+                this.formPathStringMap[formItemError['dataPath']].setErrors({
+                  'errors': formItemError['errors']
+                });
+              }
+
+              console.log(this.sampleAttributeForm);
+              this.loading = false;
+            }
+
+          },
+          err => {
+            console.log(err);
+            this.loading = false;
+          }
+        )
+
+      } catch (err) { }
+    }
+  }
+
+  onAddSampleRelations() {
+    if (this.sampleRelationsForm.valid) {
+      let sampleRelationValidationObject = this.initialValidationSchema;
+      delete sampleRelationValidationObject['schema']['required'];
+      sampleRelationValidationObject['object']['sampleRelationships'] = [];
+
+      let sampleRelationSingle = {};
+
+      this.formPathStringMap['.sampleRelationships[0].alias'] = this.sampleRelationsForm.get('alias');
+      this.formPathStringMap['.sampleRelationships[0].team'] = this.sampleRelationsForm.get('team');
+      this.formPathStringMap['.sampleRelationships[0].nature'] = this.sampleRelationsForm.get('nature');
+      this.formPathStringMap['.sampleRelationships[0].accession'] = this.sampleRelationsForm.get('accession');
+
+      // If Attribute is not initialized then initialize it.
+      if (!this.activeSample['sampleRelationships']) {
+        this.activeSample['sampleRelationships'] = [];
+      }
+
+      if (this.sampleRelationsForm.value['method'] == "using-alias") {
+        sampleRelationSingle['alias'] = this.sampleRelationsForm.get('alias').value;
+        sampleRelationSingle['team'] = this.sampleRelationsForm.get('team').value;
+        sampleRelationSingle['nature'] = this.sampleRelationsForm.get('nature').value;
+      }
+
+      if (this.sampleRelationsForm.value['method'] == "using-accession") {
+        sampleRelationSingle['accession'] = this.sampleRelationsForm.get('accession').value;
+        sampleRelationSingle['nature'] = this.sampleRelationsForm.get('nature').value;
+      }
+
+      sampleRelationValidationObject['object']['sampleRelationships'].push(sampleRelationSingle);
+      this.loading = true;
+      console.log(sampleRelationValidationObject);
+      this.requestsService.createNoAuth(this.validationSchemaUrl, sampleRelationValidationObject).subscribe(
+        data => {
+          if(data.length == 0) {
+            this.activeSample['sampleRelationships'].push(sampleRelationSingle);
+
+            this.onUpdateSampleAttributes();
+            // Close the reveal.
+            $(".sample-relations-close-button").click();
+          } else {
+            for(let formItemError of data) {
+              console.log(formItemError['dataPath']);
+              console.log(data);
+              console.log(this.formPathStringMap);
+              this.formPathStringMap[formItemError['dataPath']].setErrors({
+                'errors': formItemError['errors']
+              });
+            }
+
+            this.loading = false;
+          }
+
+        },
+        err => {
+          console.log(err);
+          this.loading = false;
+        }
+      )
+    }
+  }
+
+  onDeleteSampleAttribute(attributeKey) {
+    delete this.activeSample['attributes'][attributeKey];
+    this.onUpdateSampleAttributes();
+  }
+
+  onDeleteSampleRelation(relationKey) {
+    this.activeSample['sampleRelationships'].splice(relationKey, 1);
+    this.onUpdateSampleAttributes();
+  }
+
+  onEditSampleAttribute(attributeKey) {
+    this.resetSampleAttributesForm();
+    let sampleTerms = [];
+    try {
+      if (this.activeSample['attributes'][attributeKey][0]['terms'].length > 0) {
+        for (let term of this.activeSample['attributes'][attributeKey][0]['terms']) {
+          if (term['url'] && term['url'] !== "") {
+            sampleTerms.push({ "term": term['url'] });
+            this.addSampleAttrTerm();
+          }
+        }
+      }
+    } catch (e) { }
+
+    this.sampleAttributeForm.patchValue({
+      name: attributeKey,
+      value: this.activeSample['attributes'][attributeKey][0]['value'],
+      unit: this.activeSample['attributes'][attributeKey][0]['units'],
+      // terms: sampleTerms
+    });
+    this.sampleAttributeForm.controls['terms'].patchValue(sampleTerms);
+  }
+
+  resetSampleAttributesForm() {
+    // Reset Form Values.
+    this.sampleAttributeForm = this.fb.group({
+      name: ['', Validators.required],
+      value: ['', Validators.required],
+      unit: [''],
+      terms: this.fb.array([])
+    });
+    this.addSampleAttrTerm();
+  }
+
+  onCloseSampleAttributeModal() {
+    this.resetSampleAttributesForm();
+  }
+
+  onCloseSampleRelationsModal() {
+    this.sampleRelationsForm.reset();
+    this.sampleRelationsForm.patchValue({
+      'method': 'using-alias'
+    });
+  }
+
+  onChangeRelationMethod() {
+    if (this.sampleRelationsForm.value['method'] == "using-alias") {
+      this.sampleRelationsForm.get('alias').setValidators([Validators.required]);
+      this.sampleRelationsForm.get('team').setValidators([Validators.required]);
+      this.sampleRelationsForm.get('accession').clearValidators();
+
+      this.sampleRelationsForm.get('alias').updateValueAndValidity();
+      this.sampleRelationsForm.get('team').updateValueAndValidity();
+      this.sampleRelationsForm.get('accession').updateValueAndValidity();
+    }
+
+    if (this.sampleRelationsForm.value['method'] == "using-accession") {
+      this.sampleRelationsForm.get('alias').clearValidators();
+      this.sampleRelationsForm.get('team').clearValidators();
+      this.sampleRelationsForm.get('accession').setValidators([Validators.required]);
+
+
+      this.sampleRelationsForm.get('alias').updateValueAndValidity();
+      this.sampleRelationsForm.get('team').updateValueAndValidity();
+      this.sampleRelationsForm.get('accession').updateValueAndValidity();
+    }
+  }
+
+  getValueByDotNotation(obj, path) {
+    return new Function('_', 'return _.' + path)(obj);
   }
 }
