@@ -354,3 +354,17 @@ div.ds-tabs {
     opacity: 1;
   }
 }
+
+.inline-editing-table .editable {
+  cursor: pointer;
+  max-width: 100px;
+
+  .info {
+    min-width: 100px;
+    min-height: 20px;
+  }
+
+  textarea {
+    margin: 0;
+  }
+}

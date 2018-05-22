@@ -52,6 +52,7 @@ export class SamplesPageComponent implements OnInit {
   };
   processingSheets = [];
   blackListSampleFields = [
+    'fields',
     'createdBy',
     'createdDate',
     'lastModifiedBy',
@@ -276,9 +277,14 @@ export class SamplesPageComponent implements OnInit {
     this.sampleForm.controls['releaseDate'].setValue(sample['releaseDate']);
   }
 
-  onUpdateSample() {
+  onUpdateSample(sample = null) {
     this.loading = true;
-    let updateLink = this.activeSample._links.self.href;
+    let updateLink = "";
+    if (sample) {
+      updateLink = sample._links.self.href;
+    } else {
+      updateLink = this.activeSample._links.self.href;
+    }
     let updateData = {};
     this.loading = false;
 
@@ -291,6 +297,10 @@ export class SamplesPageComponent implements OnInit {
     for (let key in this.sampleForm.value) {
       if (typeof this.sampleForm.value[key] !== "undefined") {
         updateData[key] = this.sampleForm.value[key];
+
+        if (sample && this.sampleForm.value[key] == "") {
+          updateData[key] = sample[key];
+        }
 
         if (key == "taxonId" || key == "taxonName") {
           sampleValidationObject['object']['taxonomy'][key] = this.sampleForm.value[key];
@@ -341,7 +351,91 @@ export class SamplesPageComponent implements OnInit {
             });
           }
 
-          // console.log(this.sampleAttributeForm);
+          this.loading = false;
+        }
+
+      },
+      err => {
+        console.log(err);
+        this.loading = false;
+      }
+    )
+  }
+
+  onUpdateSampleTableCell(sample, fieldKey) {
+    this.loading = true;
+    let updateLink = sample._links.self.href;;
+    let updateData = {};
+    let sampleValidationObject = this.initialValidationSchema;
+
+    updateData[fieldKey] = (this.sampleForm.get(fieldKey).value !== "") ? this.sampleForm.get(fieldKey).value : sample[fieldKey];
+    sampleValidationObject['object'][fieldKey] = (this.sampleForm.get(fieldKey).value !== "") ? this.sampleForm.get(fieldKey).value : sample[fieldKey];
+    this.formPathStringMap['.' + fieldKey] = this.sampleForm.get(fieldKey);
+    this.loading = false;
+
+    sampleValidationObject['object']['taxonomy'] = {};
+    delete sampleValidationObject['object']['attributes'];
+    delete sampleValidationObject['object']['attributes'];
+
+    for (let key in this.sampleForm.value) {
+      if (typeof this.sampleForm.value[key] !== "undefined" && typeof sample[key] !== "undefined" && key !== fieldKey) {
+        updateData[key] = sample[key];
+
+        if (key == "taxonId" || key == "taxonName") {
+          sampleValidationObject['object']['taxonomy'][key] = sample[key];
+          this.formPathStringMap['.taxonomy.' + key] = this.sampleForm.get(key);
+        } else {
+          sampleValidationObject['object'][key] = sample[key];
+          this.formPathStringMap['.' + key] = this.sampleForm.get(key);
+        }
+      }
+    }
+
+    if (fieldKey == "taxonId" || fieldKey == "taxonName") {
+      sampleValidationObject['object']['taxonomy'][fieldKey] = (this.sampleForm.get(fieldKey).value !== "") ? this.sampleForm.get(fieldKey).value : sample[fieldKey];
+      this.formPathStringMap['.taxonomy.' + fieldKey] = this.sampleForm.get(fieldKey);
+    }
+
+
+    this.loading = true;
+    this.requestsService.createNoAuth(this.validationSchemaUrl, sampleValidationObject).subscribe(
+      data => {
+        if(data.length == 0) {
+          // TODO: Clean This!
+          this.requestsService.partialUpdate(this.token, updateLink, updateData).subscribe(
+            data => {
+              this.loading = false;
+              this.errors = [];
+              // Update table data.
+              for (let key in updateData) {
+                sample[key] = data[key];
+              }
+
+              // Hide the input.
+              this.onSampleTableClickCell(sample, fieldKey, false);
+            },
+            err => {
+              try {
+                let error = JSON.parse(err['_body']);
+                this.sampleForm.get(fieldKey).setErrors({
+                  'errors': error.errors
+                });
+                console.log(this.errors);
+              } catch (e) {
+
+              }
+
+              this.loading = false;
+
+            }
+          )
+        } else {
+          for(let formItemError of data) {
+            this.formPathStringMap[formItemError['dataPath']].setErrors({
+              'errors': formItemError['errors']
+            });
+          }
+
           this.loading = false;
         }
 
@@ -666,7 +760,6 @@ export class SamplesPageComponent implements OnInit {
                 });
               }
 
-              console.log(this.sampleAttributeForm);
               this.loading = false;
             }
 
@@ -712,7 +805,7 @@ export class SamplesPageComponent implements OnInit {
 
       sampleRelationValidationObject['object']['sampleRelationships'].push(sampleRelationSingle);
       this.loading = true;
-      console.log(sampleRelationValidationObject);
+
       this.requestsService.createNoAuth(this.validationSchemaUrl, sampleRelationValidationObject).subscribe(
         data => {
           if(data.length == 0) {
@@ -723,9 +816,6 @@ export class SamplesPageComponent implements OnInit {
             $(".sample-relations-close-button").click();
           } else {
             for(let formItemError of data) {
-              console.log(formItemError['dataPath']);
-              console.log(data);
-              console.log(this.formPathStringMap);
               this.formPathStringMap[formItemError['dataPath']].setErrors({
                 'errors': formItemError['errors']
               });
@@ -823,5 +913,22 @@ export class SamplesPageComponent implements OnInit {
 
   getValueByDotNotation(obj, path) {
     return new Function('_', 'return _.' + path)(obj);
+  }
+
+  onSampleTableClickCell(sample, key , show) {
+    if(!sample['fields']) {
+      sample['fields'] = {};
+    }
+
+    if(!sample['fields'][key]) {
+      sample['fields'][key] = {};
+    }
+
+    if (show) {
+      sample['fields'][key]['editMode'] = true;
+    } else {
+      sample['fields'][key]['editMode'] = false;
+    }
+
   }
 }

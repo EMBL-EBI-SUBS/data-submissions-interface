@@ -285,8 +285,6 @@
           <button data-close aria-label="Close modal" class="button secondary-color white-background" type="button">Cancel</button>
         </div>
       </form>
-      <!-- <json-schema-form loadExternalAssets="true" [(ngModel)]="activeSampleClonned" (onSubmit)="onUpdateSample()" [schema]="testSampleSchema">
-      </json-schema-form> -->
 
       <button class="close-button" data-close aria-label="Close modal" type="button">
         <span aria-hidden="true">&times;</span>
@@ -373,18 +371,14 @@
 
                 <div class="small-6 columns text-right"> {{submittionSamples?.page?.totalElements}} samples</div>
               </div>
-              <form ngNoForm>
-                <table class="margin-top-20 samples-table">
+              <form [formGroup]="sampleForm">
+                <table class="margin-top-20 samples-table inline-editing-table">
                   <thead>
                     <tr>
                       <th></th>
                       <ng-container *ngFor="let keyName of objectKeys(submittionSamples._embedded.samples[0])">
                         <th *ngIf="blackListSampleFields.indexOf(keyName) < 0 && addSampleActiveKey(keyName)"> {{keyName | uppercase}}</th>
                       </ng-container>
-                      <!-- <th>Alias</th>
-                      <th>Title</th>
-                      <th>Last Update</th>
-                      <th>Status</th> -->
                     </tr>
                   </thead>
 
@@ -398,29 +392,109 @@
                         <!-- <i class="icon icon-functional success" *ngIf="sample?.editMode" data-icon="/" (click)="onUpdateSample(sample)"></i> -->
                       </td>
 
-                      <td *ngFor="let key of activeSampleFields">
-                        <div class="info" *ngIf="!sample?.editMode">
+                      <td *ngFor="let key of activeSampleFields" [class.editable]="sampleForm.controls[key]">
+                        <div class="info" *ngIf="!sample?.fields || !sample['fields'][key] || (sample['fields'] && sample['fields'][key] && !sample['fields'][key]['editMode'])" (click)="onSampleTableClickCell(sample, key, true)">
                           {{sample[key]}}
                         </div>
 
-                        <input type="text" value="{{sample[key]}}" *ngIf="sample?.editMode" [(ngModel)]="sample[key]" [ngModelOptions]="{standalone: true}">
-                      </td>
-                      <!-- <td>
-                        <div class="info" *ngIf="!sample?.editMode">
-                          {{sample.alias}}
-                        </div>
+                        <label *ngIf="sample?.accession && key == 'accession' && (sample['fields'] && sample['fields'][key] && sample['fields'][key]['editMode'])">
 
-                        <input type="text" value="{{sample.alias}}" *ngIf="sample?.editMode" [(ngModel)]="sample.alias" [ngModelOptions]="{standalone: true}">
-                      </td>
-                      <td>
-                        <div class="info" *ngIf="!sample?.editMode">
-                          {{sample.title}}
-                        </div>
+                          <input type="text" [value]="sample?.accession" name="sample-accession" formControlName="accession" />
 
-                        <input type="text" value="{{sample.title}}" *ngIf="sample?.editMode" [(ngModel)]="sample.title" [ngModelOptions]="{standalone: true}">
+                          <i class="icon icon-functional cancel" data-icon="x" (click)="onSampleTableClickCell(sample, key, false)"></i>
+                          <i class="icon icon-functional success" data-icon="/" (click)="onUpdateSampleTableCell(sample, key)"></i>
+
+                          <div class="errors" *ngIf="sampleForm.get('accession').errors && sampleForm.get('accession').errors['errors']">
+                            <div *ngFor="let error of sampleForm.get('accession').errors['errors']">
+                              {{error}}
+                            </div>
+                          </div>
+                        </label>
+
+                        <label *ngIf="key == 'alias' && (sample['fields'] && sample['fields'][key] && sample['fields'][key]['editMode'])">
+
+                          <input type="text" [value]="sample?.alias" name="sample-alias" formControlName="alias" />
+
+                          <i class="icon icon-functional cancel" data-icon="x" (click)="onSampleTableClickCell(sample, key, false)"></i>
+                          <i class="icon icon-functional success" data-icon="/" (click)="onUpdateSampleTableCell(sample, key)"></i>
+
+                          <div class="errors" *ngIf="sampleForm.get('alias').errors && sampleForm.get('alias').errors['errors']">
+                            <div *ngFor="let error of sampleForm.get('alias').errors['errors']">
+                              {{error}}
+                            </div>
+                          </div>
+                        </label>
+
+                        <label *ngIf="key == 'title' && (sample['fields'] && sample['fields'][key] && sample['fields'][key]['editMode'])">
+
+                          <input type="text" [value]="sample?.title" name="sample-title" formControlName="title" />
+
+                          <i class="icon icon-functional cancel" data-icon="x" (click)="onSampleTableClickCell(sample, key, false)"></i>
+                          <i class="icon icon-functional success" data-icon="/" (click)="onUpdateSampleTableCell(sample, key)"></i>
+
+                          <div class="errors" *ngIf="sampleForm.get('title').errors && sampleForm.get('title').errors['errors']">
+                            <div *ngFor="let error of sampleForm.get('title').errors['errors']">
+                              {{error}}
+                            </div>
+                          </div>
+                        </label>
+
+                        <label *ngIf="key == 'description' && (sample['fields'] && sample['fields'][key] && sample['fields'][key]['editMode'])">
+
+                          <textarea name="sample-description" [value]="sample?.description" formControlName="description"></textarea>
+
+                          <i class="icon icon-functional cancel" data-icon="x" (click)="onSampleTableClickCell(sample, key, false)"></i>
+                          <i class="icon icon-functional success" data-icon="/" (click)="onUpdateSampleTableCell(sample, key)"></i>
+
+                          <div class="errors" *ngIf="sampleForm.get('description').errors && sampleForm.get('description').errors['errors']">
+                            <div *ngFor="let error of sampleForm.get('description').errors['errors']">
+                              {{error}}
+                            </div>
+                          </div>
+                        </label>
+
+                        <label *ngIf="key == 'taxonId' && (sample['fields'] && sample['fields'][key] && sample['fields'][key]['editMode'])">
+
+                          <input type="number" [value]="sample?.taxonId" name="sample-taxonid" formControlName="taxonId" />
+
+                          <i class="icon icon-functional cancel" data-icon="x" (click)="onSampleTableClickCell(sample, key, false)"></i>
+                          <i class="icon icon-functional success" data-icon="/" (click)="onUpdateSampleTableCell(sample, key)"></i>
+
+                          <div class="errors" *ngIf="sampleForm.get('taxonId').errors && sampleForm.get('taxonId').errors['errors']">
+                            <div *ngFor="let error of sampleForm.get('taxonId').errors['errors']">
+                              {{error}}
+                            </div>
+                          </div>
+                        </label>
+
+                        <label *ngIf="key == 'taxon' && (sample['fields'] && sample['fields'][key] && sample['fields'][key]['editMode'])">
+
+                          <input type="text" [value]="sample?.taxon" name="sample-taxon" formControlName="taxon" />
+
+                          <i class="icon icon-functional cancel" data-icon="x" (click)="onSampleTableClickCell(sample, key, false)"></i>
+                          <i class="icon icon-functional success" data-icon="/" (click)="onUpdateSampleTableCell(sample, key)"></i>
+
+                          <div class="errors" *ngIf="sampleForm.get('taxon').errors && sampleForm.get('taxon').errors['errors']">
+                            <div *ngFor="let error of sampleForm.get('taxon').errors['errors']">
+                              {{error}}
+                            </div>
+                          </div>
+                        </label>
+
+                        <label *ngIf="key == 'releaseDate' && (sample['fields'] && sample['fields'][key] && sample['fields'][key]['editMode'])">
+
+                          <input type="date" name="sample-release-date" [value]="sample?.releaseDate" formControlName="releaseDate" />
+
+                          <i class="icon icon-functional cancel" data-icon="x" (click)="onSampleTableClickCell(sample, key, false)"></i>
+                          <i class="icon icon-functional success" data-icon="/" (click)="onUpdateSampleTableCell(sample, key)"></i>
+
+                          <div class="errors" *ngIf="sampleForm.get('releaseDate').errors && sampleForm.get('releaseDate').errors['errors']">
+                            <div *ngFor="let error of sampleForm.get('releaseDate').errors['errors']">
+                              {{error}}
+                            </div>
+                          </div>
+                        </label>
                       </td>
-                      <td>{{sample.lastModifiedDate | date: 'd-MMM-yy' }}</td>
-                      <td>{{sample.processingStatus}}</td> -->
                     </tr>
                   </tbody>
                 </table>
