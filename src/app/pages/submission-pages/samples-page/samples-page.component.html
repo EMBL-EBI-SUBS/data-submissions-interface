@@ -55,10 +55,10 @@
 
           <label>
             Terms
-            <div formArrayName="terms"  *ngFor="let attributeTerm of sampleAttributeForm.get('terms').controls; let i = index;">
-                <div [formGroupName]="i" [class.form-wrapper-error]="sampleAttributeForm.get('terms').controls[i].invalid">
+            <div formArrayName="terms"  *ngFor="let attributeTerm of sampleAttributeForm.get('terms')?.controls; let i = index;">
+                <div [formGroupName]="i" [class.form-wrapper-error]="sampleAttributeForm.get('terms')?.controls[i].invalid">
                   <input type="url" class="margin-bottom-0" formControlName="term" placeholder="">
-                  <span class="icon icon-functional float-right margin-bottom-20" data-icon="d" *ngIf="sampleAttributeForm.get('terms').controls.length > 1" (click)="removeSampleAttrTerm(i)">Remove</span>
+                  <span class="icon icon-functional float-right margin-bottom-20" data-icon="d" *ngIf="sampleAttributeForm.get('terms')?.controls.length > 1" (click)="removeSampleAttrTerm(i)">Remove</span>
 
                   <div class="errors" *ngIf="sampleAttributeForm.get('terms').controls[i].errors && sampleAttributeForm.get('terms').controls[i].errors['errors'].length > 0">
                       <div *ngFor="let error of sampleAttributeForm.get('terms').controls[i].errors['errors']">
@@ -164,9 +164,9 @@
       </div>
 
       <form [formGroup]="sampleForm" (ngSubmit)="onUpdateSample()">
-        <label [class.form-wrapper-error]="sampleForm.get('accession').invalid && (sampleForm.get('accession').touched || sampleForm.get('accession').dirty)" *ngIf="activeSampleClonned?.accession">
+        <label [class.form-wrapper-error]="sampleForm.get('accession').invalid && (sampleForm.get('accession').touched || sampleForm.get('accession').dirty)" *ngIf="activeSample?.accession">
           Accession
-          <input type="text" [value]="activeSampleClonned?.accession" name="sample-accession" formControlName="accession"/>
+          <input type="text" [value]="activeSample?.accession" name="sample-accession" formControlName="accession"/>
 
           <div class="errors" *ngIf="sampleForm.get('accession').errors && sampleForm.get('accession').errors['errors']">
             <div *ngFor="let error of sampleForm.get('accession').errors['errors']">
@@ -177,7 +177,7 @@
 
         <label [class.form-wrapper-error]="sampleForm.get('alias').invalid && (sampleForm.get('alias').touched || sampleForm.get('alias').dirty)">
           Alias
-          <input type="text" [value]="activeSampleClonned?.alias" name="sample-alias" formControlName="alias"/>
+          <input type="text" [value]="activeSample?.alias" name="sample-alias" formControlName="alias"/>
 
           <div class="errors" *ngIf="sampleForm.get('alias').errors && sampleForm.get('alias').errors['errors']">
             <div *ngFor="let error of sampleForm.get('alias').errors['errors']">
@@ -188,7 +188,7 @@
 
         <label [class.form-wrapper-error]="sampleForm.get('title').invalid && (sampleForm.get('title').touched || sampleForm.get('title').dirty)">
           Title
-          <input type="text" [value]="activeSampleClonned?.title" name="sample-title" formControlName="title"/>
+          <input type="text" [value]="activeSample?.title" name="sample-title" formControlName="title"/>
 
           <div class="errors" *ngIf="sampleForm.get('title').errors && sampleForm.get('title').errors['errors']">
             <div *ngFor="let error of sampleForm.get('title').errors['errors']">
@@ -199,7 +199,7 @@
 
         <label [class.form-wrapper-error]="sampleForm.get('description').invalid && (sampleForm.get('description').touched || sampleForm.get('description').dirty)">
           Description
-          <textarea name="sample-description" [value]="activeSampleClonned?.description" formControlName="description"></textarea>
+          <textarea name="sample-description" [value]="activeSample?.description" formControlName="description"></textarea>
 
           <div class="errors" *ngIf="sampleForm.get('description').errors && sampleForm.get('description').errors['errors']">
             <div *ngFor="let error of sampleForm.get('description').errors['errors']">
@@ -210,7 +210,7 @@
 
         <label [class.form-wrapper-error]="sampleForm.get('taxonId').invalid && (sampleForm.get('taxonId').touched || sampleForm.get('taxonId').dirty)">
           Taxonid
-          <input type="number" [value]="activeSampleClonned?.taxonId" name="sample-taxonid" formControlName="taxonId"/>
+          <input type="number" [value]="activeSample?.taxonId" name="sample-taxonid" formControlName="taxonId"/>
 
           <div class="errors" *ngIf="sampleForm.get('taxonId').errors && sampleForm.get('taxonId').errors['errors']">
             <div *ngFor="let error of sampleForm.get('taxonId').errors['errors']">
@@ -221,7 +221,7 @@
 
         <label [class.form-wrapper-error]="sampleForm.get('taxon').invalid && (sampleForm.get('taxon').touched || sampleForm.get('taxon').dirty)">
           Taxon
-          <input type="text" [value]="activeSampleClonned?.taxon" name="sample-taxon" formControlName="taxon"/>
+          <input type="text" [value]="activeSample?.taxon" name="sample-taxon" formControlName="taxon"/>
 
           <div class="errors" *ngIf="sampleForm.get('taxon').errors && sampleForm.get('taxon').errors['errors']">
             <div *ngFor="let error of sampleForm.get('taxon').errors['errors']">
@@ -266,7 +266,7 @@
         <label>
           <div class="row">
               <h3>Related Samples</h3>
-              <div *ngIf="!activeSample?.sampleRelationships?.length > 0" class="columns small-12 no-horz-padding">
+              <div *ngIf="!(activeSample?.sampleRelationships?.length > 0)" class="columns small-12 no-horz-padding">
                   No related samples added.
               </div>
               <div *ngIf="activeSample?.sampleRelationships?.length > 0" class="columns small-12 no-horz-padding">
