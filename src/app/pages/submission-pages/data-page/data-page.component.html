@@ -35,27 +35,15 @@
       </tr>
       </thead>
       <tbody>
-      <tr>
-        <td>D1001011MN.fastq</td>
-        <td>11-Oct-17</td>
-        <td>180 MB</td>
-        <td class="text-center"><i class="icon icon-functional" data-icon="/"></i></td>
-        <td class="text-center"><i class="icon icon-functional" data-icon="d"></i></td>
-      </tr>
-      <tr>
-        <td>D1001012MN.fastq</td>
-        <td>11-Oct-17</td>
-        <td>150 MB</td>
-        <td class="text-center"><i class="icon icon-functional" data-icon="/"></i></td>
-        <td class="text-center"><i class="icon icon-functional" data-icon="d"></i></td>
-      </tr>
-      <tr>
-        <td>D1001013MN.fastq</td>
-        <td>11-Oct-17</td>
-        <td>120 MB</td>
-        <td class="text-center"><i class="icon icon-functional" data-icon="x"></i></td>
-        <td class="text-center"><i class="icon icon-functional" data-icon="d"></i></td>
-      </tr>
+        <tr *ngFor="let file of files">
+          <td>{{file.fileName}}</td>
+          <td>{{file.uploadStartDate}}</td>
+          <td>{{file.totalSize}} bytes</td>
+          <td>
+              <div *ngIf=”file.status == 'READY_FOR_ARCHIVE'; else elseBlock”><i class="icon icon-functional" data-icon="/"></div>
+              <ng-template #elseBlock>?</ng-template>
+          </td>
+        </tr>
       </tbody>
     </table>
 
