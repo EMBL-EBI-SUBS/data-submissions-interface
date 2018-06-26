@@ -27,9 +27,9 @@ declare var $;
 export class DataPageComponent implements OnInit {
   activeSubmission: any;
 
-  uploadEndpoint  = "http://mac-subs-008:1080/files/";
+  uploadEndpoint  = "https://submission-dev.ebi.ac.uk/files/";
   uploadUppy : any;
-
+  files: any;
   userHasTeam = true;
   token: string;
   tabLinks: any = [
@@ -52,6 +52,11 @@ export class DataPageComponent implements OnInit {
   ngOnInit() {
     this.activeSubmission = this.submissionsService.getActiveSubmission();
     this.token = this.tokenService.getToken();
+    this.submissionsService.getActiveSubmissionsFiles(this.token).subscribe(
+      (data) => {
+        this.files = data._embedded.files;
+      }
+    );
 
     this.uploadUppy = Uppy({
       id :this.convertToSlug(this.activeSubmission.name + "-" + this.activeSubmission.projectName + "-data"),

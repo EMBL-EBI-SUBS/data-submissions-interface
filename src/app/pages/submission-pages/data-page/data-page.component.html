@@ -19,45 +19,40 @@
     </div>
 
     <form class="uppy-metadata">
-      <input type="hidden" name="submission" value="{{activeSubmission._links['self'].href}}" />
-      <input type="hidden" name="token" value="{{token}}" />
+      <input type="hidden" name="submissionID" value="{{activeSubmission._links['self'].href.split('/').pop()}}" />
+      <input type="hidden" name="jwtToken" value="{{token}}" />
     </form>
 
     <h3>Data Files</h3>
-    <table class="hover">
-      <thead class="fixed">
-      <tr>
-        <th>File Name</th>
-        <th>Date</th>
-        <th>Size</th>
-        <th>Status</th>
-        <th></th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr>
-        <td>D1001011MN.fastq</td>
-        <td>11-Oct-17</td>
-        <td>180 MB</td>
-        <td class="text-center"><i class="icon icon-functional" data-icon="/"></i></td>
-        <td class="text-center"><i class="icon icon-functional" data-icon="d"></i></td>
-      </tr>
-      <tr>
-        <td>D1001012MN.fastq</td>
-        <td>11-Oct-17</td>
-        <td>150 MB</td>
-        <td class="text-center"><i class="icon icon-functional" data-icon="/"></i></td>
-        <td class="text-center"><i class="icon icon-functional" data-icon="d"></i></td>
-      </tr>
-      <tr>
-        <td>D1001013MN.fastq</td>
-        <td>11-Oct-17</td>
-        <td>120 MB</td>
-        <td class="text-center"><i class="icon icon-functional" data-icon="x"></i></td>
-        <td class="text-center"><i class="icon icon-functional" data-icon="d"></i></td>
-      </tr>
-      </tbody>
-    </table>
+
+    <div *ngIf="files.length > 0; then filesBlock else noFilesBlock"></div>
+
+    <ng-template #filesBlock>
+      <table class="hover">
+        <thead class="fixed">
+          <tr>
+            <th>File Name</th>
+            <th>Date</th>
+            <th>Size</th>
+            <th>Status</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let file of files">
+            <td>{{file.filename}}</td>
+            <td>{{file.uploadStartDate}}</td>
+            <td>{{file.totalSize}} bytes</td>
+            <td>{{file.status}}</td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+    </ng-template>
+
+    <ng-template #noFilesBlock>
+      No files uploaded
+    </ng-template>
 
     <div>
       <button class="button secondary-color white-background" (click)="onSaveExit()">Save &amp; exit</button>

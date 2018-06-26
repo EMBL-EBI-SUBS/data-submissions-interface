@@ -67,6 +67,30 @@ export class SubmissionsService {
     return response;
   }
 
+  getActiveSubmissionsFiles(token: String){
+    let activeSubmission = this.getActiveSubmission();
+    let headers = this.variables.buildHeader(token);
+
+    let requestOptions = new RequestOptions({
+      headers: headers
+    });
+
+    let contentsLinks = activeSubmission._links.contents.href;
+    var response = this.http.get(contentsLinks, requestOptions)
+      .map(res => {
+        let response = res.json();
+        return response._links.files.href;
+      })
+      .flatMap((filesUrl) => {
+        return this.http.get(filesUrl, requestOptions);
+      })
+      .map(res => {
+        let response = res.json();
+        return response;
+      });
+      return response;
+  }
+
   /**
    * Get Project for Submission.
    */
