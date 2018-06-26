@@ -26,9 +26,10 @@
     <h3>Data Files</h3>
 
     <div *ngIf="files.length > 0; then filesBlock else noFilesBlock"></div>
+
     <ng-template #filesBlock>
-        <table class="hover">
-          <thead class="fixed">
+      <table class="hover">
+        <thead class="fixed">
           <tr>
             <th>File Name</th>
             <th>Date</th>
@@ -36,24 +37,22 @@
             <th>Status</th>
             <th></th>
           </tr>
-          </thead>
-          <tbody>
-              <tr *ngFor="let file of files">
-                  <td>{{file.filename}}</td>
-                  <td>{{file.uploadStartDate}}</td>
-                  <td>{{file.totalSize}} bytes</td>
-                  <td>{{file.status}}</td>
-                  <td></td>
-                </tr>
-          </tbody>
-        </table>
-      </ng-template>
+        </thead>
+        <tbody>
+          <tr *ngFor="let file of files">
+            <td>{{file.filename}}</td>
+            <td>{{file.uploadStartDate}}</td>
+            <td>{{file.totalSize}} bytes</td>
+            <td>{{file.status}}</td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+    </ng-template>
+
     <ng-template #noFilesBlock>
       No files uploaded
     </ng-template>
-
-
-    
 
     <div>
       <button class="button secondary-color white-background" (click)="onSaveExit()">Save &amp; exit</button>
