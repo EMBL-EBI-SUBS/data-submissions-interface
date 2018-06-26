@@ -19,8 +19,8 @@
     </div>
 
     <form class="uppy-metadata">
-      <input type="hidden" name="submission" value="{{activeSubmission._links['self'].href}}" />
-      <input type="hidden" name="token" value="{{token}}" />
+      <input type="hidden" name="submissionID" value="{{activeSubmission._links['self'].href.split('/').pop()}}" />
+      <input type="hidden" name="jwtToken" value="{{token}}" />
     </form>
 
     <h3>Data Files</h3>
@@ -35,15 +35,13 @@
       </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let file of files">
-          <td>{{file.fileName}}</td>
-          <td>{{file.uploadStartDate}}</td>
-          <td>{{file.totalSize}} bytes</td>
-          <td>
-              <div *ngIf=”file.status == 'READY_FOR_ARCHIVE'; else elseBlock”><i class="icon icon-functional" data-icon="/"></div>
-              <ng-template #elseBlock>?</ng-template>
-          </td>
-        </tr>
+          <tr *ngFor="let file of files">
+              <td>{{file.fileName}}</td>
+              <td>{{file.uploadStartDate}}</td>
+              <td>{{file.totalSize}} bytes</td>
+              <td>{{file.status}}</td>
+              <td></td>
+            </tr>
       </tbody>
     </table>
 
