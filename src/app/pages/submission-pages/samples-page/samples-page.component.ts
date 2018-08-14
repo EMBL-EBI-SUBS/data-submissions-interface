@@ -68,7 +68,7 @@ export class SamplesPageComponent implements OnInit {
   activeSampleFields = [];
   activeSampleIndex: number;
 
-  validationSchemaUrl = "https://usi-json-schema-validator.herokuapp.com/validate";
+  validationSchemaUrl = "https://subs-json-schema-validator.herokuapp.com/validate";
   initialValidationSchema = {
     "schema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
@@ -775,6 +775,8 @@ export class SamplesPageComponent implements OnInit {
   }
 
   onAddSampleRelations() {
+
+
     if (this.sampleRelationsForm.valid) {
       let sampleRelationValidationObject = this.initialValidationSchema;
       delete sampleRelationValidationObject['schema']['required'];
@@ -855,7 +857,10 @@ export class SamplesPageComponent implements OnInit {
           }
         }
       }
-    } catch (e) { }
+    } catch (e) {
+
+      console.log(e);
+    }
 
     this.sampleAttributeForm.patchValue({
       name: attributeKey,

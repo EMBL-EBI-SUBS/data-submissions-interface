@@ -25,7 +25,7 @@
 
     <h3>Data Files</h3>
 
-    <div *ngIf="files.length > 0; then filesBlock else noFilesBlock"></div>
+    <div *ngIf="files?.length && files.length > 0; then filesBlock else noFilesBlock"></div>
 
     <ng-template #filesBlock>
       <table class="hover">
