@@ -3,6 +3,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
+import { HttpClientModule } from '@angular/common/http';
+
 import { AuthService, TokenService } from 'angular-aap-auth';
 import { ReactiveFormsModule } from '@angular/forms';
 import { JwtHelper } from 'angular2-jwt';
@@ -49,6 +51,9 @@ import {
 // Import Tests Classes.
 import { RouterLinkStubDirective, RouterOutletStubComponent } from './testing/router.stubs';
 
+// Import Interceptors.
+import { httpInterceptorProviders } from './http-interceptors/index';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -78,6 +83,7 @@ import { RouterLinkStubDirective, RouterOutletStubComponent } from './testing/ro
     BrowserModule,
     FormsModule,
     HttpModule,
+    HttpClientModule,
     AppRoutingModule,
     ReactiveFormsModule,
     LoadingModule.forRoot({
@@ -107,7 +113,8 @@ import { RouterLinkStubDirective, RouterOutletStubComponent } from './testing/ro
       useValue: {
         authURL: environment.authenticationHost
       }
-    }
+    },
+    httpInterceptorProviders
   ],
   bootstrap: [AppComponent]
 })
