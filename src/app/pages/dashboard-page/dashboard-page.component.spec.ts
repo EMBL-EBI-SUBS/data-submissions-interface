@@ -12,6 +12,7 @@ import { MockRouter } from '../../testing/mockrouter.tests';
 //  Import Components.
 import { DashboardPageComponent } from './dashboard-page.component';
 import { EbiHeaderComponent } from '../../components/ebi-header/ebi-header.component';
+import { environment } from 'environments/environment';
 
 describe('DashboardPageComponent', () => {
   let component: DashboardPageComponent;
@@ -32,7 +33,7 @@ describe('DashboardPageComponent', () => {
         {
           provide: 'AAP_CONFIG',
           useValue: {
-            authURL: 'https://explore.api.aap.tsi.ebi.ac.uk'
+            authURL: environment.authenticationHost
           }
         }
       ]

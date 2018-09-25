@@ -8,6 +8,7 @@ import { SubmissionsService } from '../../../services/submissions.service';
 import { TeamsService } from '../../../services/teams.service';
 import { RequestsService } from 'app/services/requests.service';
 import { SpreadsheetsService } from '../../../services/spreadsheets.service';
+import { environment } from 'environments/environment';
 
 declare var Choices;
 declare var $;
@@ -68,7 +69,7 @@ export class SamplesPageComponent implements OnInit {
   activeSampleFields = [];
   activeSampleIndex: number;
 
-  validationSchemaUrl = "https://usi-json-schema-validator.herokuapp.com/validate";
+  validationSchemaUrl = environment.validationSchemaEndpoint;
   initialValidationSchema = {
     "schema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
@@ -775,6 +776,8 @@ export class SamplesPageComponent implements OnInit {
   }
 
   onAddSampleRelations() {
+
+
     if (this.sampleRelationsForm.valid) {
       let sampleRelationValidationObject = this.initialValidationSchema;
       delete sampleRelationValidationObject['schema']['required'];
@@ -855,7 +858,10 @@ export class SamplesPageComponent implements OnInit {
           }
         }
       }
-    } catch (e) { }
+    } catch (e) {
+
+      console.log(e);
+    }
 
     this.sampleAttributeForm.patchValue({
       name: attributeKey,

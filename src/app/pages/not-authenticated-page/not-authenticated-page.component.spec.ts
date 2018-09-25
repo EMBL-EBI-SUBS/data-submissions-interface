@@ -12,6 +12,7 @@ import { NotAuthenticatedPageComponent } from './not-authenticated-page.componen
 import { EbiHeaderComponent } from '../../components/ebi-header/ebi-header.component';
 import { UserLoginPageComponent } from '../user-login-page/user-login-page.component';
 import { HttpModule } from '@angular/http';
+import { environment } from 'environments/environment';
 
 describe('NotAuthenticatedPageComponent', () => {
   let component: NotAuthenticatedPageComponent;
@@ -33,7 +34,7 @@ describe('NotAuthenticatedPageComponent', () => {
         {
           provide: 'AAP_CONFIG',
           useValue: {
-            authURL: 'https://explore.api.aap.tsi.ebi.ac.uk'
+            authURL: environment.authenticationHost
           }
         }
       ]

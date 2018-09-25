@@ -37,6 +37,7 @@
     "ngx-loading": "^1.0.14",
     "node-sass": "^4.7.2",
     "rxjs": "^6.3.2",
+    "rxjs-tslint": "^0.1.5",
     "ts-helpers": "^1.1.1",
     "tus-js-client": "^1.4.5",
     "uppy": "0.27.4",
