@@ -9,6 +9,7 @@ import { JwtHelper } from 'angular2-jwt';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
+import { environment }  from '../environments/environment';
 
 // Import Pages.
 import { UserPageComponent } from './pages/user-page/user-page.component';
@@ -104,7 +105,7 @@ import { RouterLinkStubDirective, RouterOutletStubComponent } from './testing/ro
     AuthService, {
       provide: 'AAP_CONFIG',
       useValue: {
-        authURL: 'https://explore.api.aai.ebi.ac.uk'
+        authURL: environment.authenticationHost
       }
     }
   ],

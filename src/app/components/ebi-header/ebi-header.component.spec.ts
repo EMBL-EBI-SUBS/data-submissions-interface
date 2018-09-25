@@ -8,6 +8,7 @@ import { MockRouter } from '../../testing/mockrouter.tests';
 
 //  Import Components.
 import { EbiHeaderComponent } from './ebi-header.component';
+import { environment } from 'environments/environment';
 
 
 
@@ -26,7 +27,7 @@ describe('EbiHeaderComponent', () => {
         {
           provide: 'AAP_CONFIG',
           useValue: {
-            authURL: 'https://explore.api.aap.tsi.ebi.ac.uk'
+            authURL: environment.authenticationHost
           }
         }
       ]

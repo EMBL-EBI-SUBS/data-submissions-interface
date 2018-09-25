@@ -10,6 +10,7 @@ import { MockRouter } from '../../testing/mockrouter.tests';
 
 import { NotFoundPageComponent } from './not-found-page.component';
 import { EbiHeaderComponent } from '../../components/ebi-header/ebi-header.component';
+import { environment } from 'environments/environment';
 
 describe('NotFoundPageComponent', () => {
   let component: NotFoundPageComponent;
@@ -26,7 +27,7 @@ describe('NotFoundPageComponent', () => {
         {
           provide: 'AAP_CONFIG',
           useValue: {
-            authURL: 'https://explore.api.aap.tsi.ebi.ac.uk'
+            authURL: environment.authenticationHost
           }
         }
       ]
