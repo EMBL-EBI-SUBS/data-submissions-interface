@@ -1,4 +1,4 @@
-import { Headers } from '@angular/http';
+import { HttpHeaders } from '@angular/common/http';
 
 export class VariablesService {
   host: string = "https://submission-dev.ebi.ac.uk/api/";
@@ -8,7 +8,7 @@ export class VariablesService {
 
   buildHeader(token: String) {
     // Build initial header.
-    let header = new Headers({
+    let header = new HttpHeaders({
       'Content-Type' : 'application/json',
       'Accept' : 'application/hal+json, application/json'
     });
@@ -18,6 +18,6 @@ export class VariablesService {
       header.append("Authorization", "Bearer " + token);
     }
 
-    return header;
+    return {headers: header};
   }
 }

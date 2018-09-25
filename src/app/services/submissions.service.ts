@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Http, RequestOptions } from '@angular/http';
-import 'rxjs/add/operator/map';
-import { Observable } from 'rxjs';
+import { HttpClient} from '@angular/common/http';
+import { Observable, of } from 'rxjs';
+import { map, flatMap } from 'rxjs/operators';
 
 // Import Service Variables.
 import { VariablesService } from './variables.service';
@@ -11,10 +11,10 @@ export class SubmissionsService {
   variables = new VariablesService;
   dataTypesEndpoint = this.variables.host + "studyDataTypes";
 
-  constructor(private http: Http) { }
+  constructor(private http: HttpClient) { }
 
   static get parameters() {
-   return [[Http]];
+   return [[HttpClient]];
   }
 
   /**
@@ -23,15 +23,11 @@ export class SubmissionsService {
   get(token, url) {
     let headers = this.variables.buildHeader(token);
 
-    let requestOptions = new RequestOptions({
-        headers: headers
-    });
-
     // Post an Empty object to create submission.
     let body = JSON.stringify({});
 
     let requestUrl =  url;
-    var response = this.http.get(requestUrl, requestOptions).map(res => res.json());
+    var response = this.http.get(requestUrl, headers);
     return response;
   }
 
@@ -40,15 +36,12 @@ export class SubmissionsService {
    */
   create(token, url, bodyData = {}) {
     let headers = this.variables.buildHeader(token);
-    let requestOptions = new RequestOptions({
-        headers: headers
-    });
 
     // Post an Empty object to create submission.
     let body = JSON.stringify(bodyData);
 
     let requestUrl =  url;
-    var response = this.http.post(requestUrl, body, requestOptions).map(res => res.json());
+    var response = this.http.post(requestUrl, body, headers);
     return response;
   }
 
@@ -58,12 +51,8 @@ export class SubmissionsService {
   getDataTypes(token: String) {
     let headers = this.variables.buildHeader(token);
 
-    let requestOptions = new RequestOptions({
-        headers: headers
-    });
-
     let requestUrl =  this.dataTypesEndpoint;
-    var response = this.http.get(requestUrl, requestOptions).map(res => res.json());
+    var response = this.http.get(requestUrl, headers);
     return response;
   }
 
@@ -71,24 +60,19 @@ export class SubmissionsService {
     let activeSubmission = this.getActiveSubmission();
     let headers = this.variables.buildHeader(token);
 
-    let requestOptions = new RequestOptions({
-      headers: headers
-    });
-
     let contentsLinks = activeSubmission._links.contents.href;
-    var response = this.http.get(contentsLinks, requestOptions)
-      .map(res => {
-        let response = res.json();
+    var response = this.http.get(contentsLinks, headers).pipe(
+      map(res => {
         return response._links.files.href;
-      })
-      .flatMap((filesUrl) => {
-        return this.http.get(filesUrl, requestOptions);
-      })
-      .map(res => {
-        let response = res.json();
+      }),
+      flatMap((filesUrl) => {
+        return this.http.get(filesUrl, headers);
+      }),
+      map(res => {
         return response;
-      });
-      return response;
+      })
+    );
+    return response;
   }
 
   /**
@@ -98,31 +82,26 @@ export class SubmissionsService {
     let activeSubmission = this.getActiveSubmission();
     let headers = this.variables.buildHeader(token);
 
-    let requestOptions = new RequestOptions({
-        headers: headers
-    });
-
     if(!activeSubmission) {
         return ;
     }
     // If Contents links not exist then retrieve it.
     if (!activeSubmission._links.contents.hasOwnProperty("_links")) {
       let contentsLinks = activeSubmission._links.contents.href;
-      var response = this.http.get(contentsLinks, requestOptions)
-        .map(res => {
-          let response = res.json();
+      var response = this.http.get(contentsLinks, headers).pipe(
+        map(res => {
           activeSubmission._links.contents['_links'] = response._links;
           this.setActiveSubmission(activeSubmission);
           return response._links.project.href;
-        })
-        .flatMap((projectsUrl) => {
-          return this.http.get(projectsUrl, requestOptions);
-        })
-        .map(res => {
-          let response = res.json();
+        }),
+        flatMap((projectsUrl) => {
+          return this.http.get(projectsUrl, headers);
+        }),
+        map(res => {
           this.setActiveProject(response);
           return response;
-        });
+        })
+      );
 
       return response;
     }
@@ -130,26 +109,25 @@ export class SubmissionsService {
       try {
         let projectsLinks = activeSubmission._links.contents._links.project.href;
 
-        var response = this.http.get(projectsLinks, requestOptions)
-          .map(res => {
-            let response = res.json();
-            if(response.hasOwnProperty("_embedded") && response._embedded.hasOwnProperty("project")) {
-              let activeProject = response._embedded.project.pop();
+        let response = this.http.get(projectsLinks, headers).pipe(
+          map(response => {
+            if(response.hasOwnProperty("_embedded") && response['_embedded'].hasOwnProperty("project")) {
+              let activeProject = response['._embedded'].project.pop();
               return activeProject._links.self.href;
             }
-          })
-          .flatMap((projectsUrl) => {
-            return this.http.get(projectsUrl, requestOptions);
-          })
-          .map(res => {
-            let project = res.json();
+          }),
+          flatMap((projectsUrl) => {
+            return this.http.get(projectsUrl, headers);
+          }),
+          map(project => {
             this.setActiveProject(project);
             return project;
-          });
+          })
+        );
       } catch (err) {
         // Return empty reponse variable.
         let emptyVariable: any;
-        var response = Observable.of(emptyVariable);
+        response = Observable.of(emptyVariable);
       }
 
 
