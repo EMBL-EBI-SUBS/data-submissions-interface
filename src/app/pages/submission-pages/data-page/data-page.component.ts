@@ -11,6 +11,7 @@ const GoldenRetriever = require('uppy/lib/plugins/GoldenRetriever')
 // Import Services.
 import { SubmissionsService } from '../../../services/submissions.service';
 import { TeamsService } from '../../../services/teams.service';
+import { environment } from 'environments/environment';
 
 declare var $;
 
@@ -27,7 +28,7 @@ declare var $;
 export class DataPageComponent implements OnInit {
   activeSubmission: any;
 
-  uploadEndpoint  = "https://submission-dev.ebi.ac.uk/files/";
+  uploadEndpoint  = environment.uploadEndpoint;
   uploadUppy : any;
   files: any;
   userHasTeam = true;

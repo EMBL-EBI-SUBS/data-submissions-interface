@@ -1,8 +1,9 @@
 import { Headers } from '@angular/http';
+import { environment } from '../../environments/environment';
 
 export class VariablesService {
-  host: string = "https://submission-dev.ebi.ac.uk/api/";
-  authenticationHost: string = "https://explore.api.aai.ebi.ac.uk/";
+  host: string = environment.apiHost;
+  authenticationHost: string = environment.authenticationHost;
 
   constructor() { }
 

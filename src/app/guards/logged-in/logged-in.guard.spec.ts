@@ -6,6 +6,7 @@ import { AuthService, TokenService } from 'angular-aap-auth';
 import { JwtHelper } from 'angular2-jwt';
 
 import { MockRouter } from '../../testing/mockrouter.tests';
+import { environment } from 'environments/environment';
 
 describe('LoggedInGuard', () => {
   beforeEach(() => {
@@ -19,7 +20,7 @@ describe('LoggedInGuard', () => {
         {
           provide: 'AAP_CONFIG',
           useValue: {
-            authURL: 'https://explore.api.aap.tsi.ebi.ac.uk'
+            authURL: environment.authenticationHost
           }
         }
       ]

@@ -11,6 +11,8 @@ import { MockRouter } from '../../testing/mockrouter.tests';
 import { UserPageComponent } from './user-page.component';
 import { EbiHeaderComponent } from '../../components/ebi-header/ebi-header.component';
 
+import { environment } from '../../../environments/environment';
+
 describe('UserPageComponent', () => {
   let component: UserPageComponent;
   let fixture: ComponentFixture<UserPageComponent>;
@@ -26,7 +28,7 @@ describe('UserPageComponent', () => {
         {
           provide: 'AAP_CONFIG',
           useValue: {
-            authURL: 'https://explore.api.aai.ebi.ac.uk'
+            authURL: environment.authenticationHost
           }
         }
       ]
