@@ -1,6 +1,8 @@
+
+import {map} from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { Http, RequestOptions } from '@angular/http';
-import 'rxjs/add/operator/map';
+
 // Import Service Variables.
 import { VariablesService } from './variables.service';
 
@@ -29,7 +31,7 @@ export class UserService {
     });
 
     let requestUrl =  this.userTeamsEndpoint + "?size=" + options.size + "&page=" + options.page;
-    var response = this.http.get(requestUrl, requestOptions).map(res => res.json());
+    var response = this.http.get(requestUrl, requestOptions).pipe(map(res => res.json()));
     return response;
   }
 
@@ -44,7 +46,7 @@ export class UserService {
     });
 
     let requestUrl =  this.userProjectsEndpoint + "?size=" + options.size + "&page=" + options.page;
-    var response = this.http.get(requestUrl, requestOptions).map(res => res.json());
+    var response = this.http.get(requestUrl, requestOptions).pipe(map(res => res.json()));
     return response;
   }
 
@@ -62,7 +64,7 @@ export class UserService {
     let body = JSON.stringify({});
 
     let requestUrl =  this.userSubmissionsEndpoint;
-    var response = this.http.get(requestUrl, requestOptions).map(res => res.json());
+    var response = this.http.get(requestUrl, requestOptions).pipe(map(res => res.json()));
     return response;
   }
 
@@ -80,7 +82,7 @@ export class UserService {
     let body = JSON.stringify({});
 
     let requestUrl =  this.userSubmissionsSummaryEndpoint;
-    var response = this.http.get(requestUrl, requestOptions).map(res => res.json());
+    var response = this.http.get(requestUrl, requestOptions).pipe(map(res => res.json()));
     return response;
   }
 }

@@ -127,7 +127,7 @@ export class SubmissionsService {
       } catch (err) {
         // Return empty reponse variable.
         let emptyVariable: any;
-        response = Observable.of(emptyVariable);
+        response = observableOf(emptyVariable);
       }
 
 

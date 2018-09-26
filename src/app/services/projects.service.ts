@@ -1,6 +1,8 @@
+
+import {map} from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { Http, RequestOptions } from '@angular/http';
-import 'rxjs/add/operator/map';
+
 import { Observable } from 'rxjs';
 
 // Import Service Variables.
@@ -29,7 +31,7 @@ export class ProjectsService {
     });
 
     let requestUrl =  this.projectsListEndpoint;
-    var response = this.http.get(requestUrl, requestOptions).map(res => res.json());
+    var response = this.http.get(requestUrl, requestOptions).pipe(map(res => res.json()));
     return response;
   }
 }
