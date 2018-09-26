@@ -1,6 +1,8 @@
+
+import {map} from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { Http, RequestOptions } from '@angular/http';
-import 'rxjs/add/operator/map';
+
 // Import Service Variables.
 import { VariablesService } from './variables.service';
 
@@ -29,7 +31,7 @@ export class RequestsService {
     let body = JSON.stringify({});
 
     let requestUrl =  url;
-    var response = this.http.get(requestUrl, requestOptions).map(res => res.json());
+    var response = this.http.get(requestUrl, requestOptions).pipe(map(res => res.json()));
     return response;
   }
 
@@ -47,7 +49,7 @@ export class RequestsService {
     let body = JSON.stringify(data);
 
     let requestUrl =  url;
-    var response = this.http.post(requestUrl, body, requestOptions).map(res => res.json());
+    var response = this.http.post(requestUrl, body, requestOptions).pipe(map(res => res.json()));
     return response;
   }
 
@@ -65,7 +67,7 @@ export class RequestsService {
     let body = JSON.stringify(data);
 
     let requestUrl =  url;
-    var response = this.http.post(requestUrl, body, requestOptions).map(res => res.json());
+    var response = this.http.post(requestUrl, body, requestOptions).pipe(map(res => res.json()));
     return response;
   }
 
@@ -83,7 +85,7 @@ export class RequestsService {
     let body = JSON.stringify(data);
 
     let requestUrl =  url;
-    var response = this.http.put(requestUrl, body, requestOptions).map(res => res.json());
+    var response = this.http.put(requestUrl, body, requestOptions).pipe(map(res => res.json()));
     return response;
   }
 
@@ -101,7 +103,7 @@ export class RequestsService {
       let body = JSON.stringify(data);
 
       let requestUrl =  url;
-      var response = this.http.patch(requestUrl, body, requestOptions).map(res => res.json());
+      var response = this.http.patch(requestUrl, body, requestOptions).pipe(map(res => res.json()));
       return response;
   }
 
@@ -119,7 +121,7 @@ export class RequestsService {
     let body = JSON.stringify({});
 
     let requestUrl =  url;
-    var response = this.http.delete(requestUrl, requestOptions).map(res => res.json());
+    var response = this.http.delete(requestUrl, requestOptions).pipe(map(res => res.json()));
     return response;
   }
 }
