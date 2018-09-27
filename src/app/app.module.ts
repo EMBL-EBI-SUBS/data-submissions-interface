@@ -3,6 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
+import { HttpClientModule } from '@angular/common/http';
 import { AuthService, TokenService } from 'angular-aap-auth';
 import { ReactiveFormsModule } from '@angular/forms';
 import { JwtHelper } from 'angular2-jwt';
@@ -45,6 +46,8 @@ import {
   FrameworkLibraryService, WidgetLibraryService, Framework, NoFramework
 } from 'angular2-json-schema-form';
 
+import { EndpointService } from './services/endpoint.service';
+
 
 // Import Tests Classes.
 import { RouterLinkStubDirective, RouterOutletStubComponent } from './testing/router.stubs';
@@ -78,6 +81,7 @@ import { RouterLinkStubDirective, RouterOutletStubComponent } from './testing/ro
     BrowserModule,
     FormsModule,
     HttpModule,
+    HttpClientModule,
     AppRoutingModule,
     ReactiveFormsModule,
     LoadingModule.forRoot({
@@ -107,7 +111,8 @@ import { RouterLinkStubDirective, RouterOutletStubComponent } from './testing/ro
       useValue: {
         authURL: environment.authenticationHost
       }
-    }
+    },
+    EndpointService
   ],
   bootstrap: [AppComponent]
 })
