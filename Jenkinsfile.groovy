@@ -7,6 +7,7 @@ node {
     stage('Build') {
         // Run the gradle assemble
         echo 'Building'
+        sh 'source /opt/rh/rh-nodejs8/enable'
         sh 'npm install -g ng-cli'
         sh "ng build --prod"
     }
