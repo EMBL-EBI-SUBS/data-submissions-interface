@@ -10,7 +10,7 @@ node {
         sh "ng build --prod"
     }
     stage('Deploy') {
-        sh 'scp -r dist/* sub_adm@wp-np2-58:/data/www/content/in'
+        sh 'rsync -azp --delete dist/ sub_adm@wp-np2-58:/data/www/content/in'
         cleanWs()
     }
 }
