@@ -7,9 +7,7 @@ node {
     stage('Build') {
         // Run the gradle assemble
         echo 'Building'
-        sh 'source /opt/rh/rh-nodejs8/enable'
-        sh 'npm install -g ng-cli'
-        sh "ng build --prod"
+        sh 'source /opt/rh/rh-nodejs8/enable && npm install -g ng-cli && ng build --prod'
     }
     stage('Deploy') {
         sh 'rsync -azp --delete dist/ sub_adm@wp-np2-58:/data/www/content/in'
