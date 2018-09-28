@@ -7,6 +7,7 @@ node {
     stage('Build') {
         // Run the gradle assemble
         echo 'Building'
+        sh 'npm install -g ng-cli'
         sh "ng build --prod"
     }
     stage('Deploy') {
