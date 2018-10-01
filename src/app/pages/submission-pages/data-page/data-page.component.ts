@@ -7,15 +7,14 @@ import { SubmissionsService } from '../../../services/submissions.service';
 import { TeamsService } from '../../../services/teams.service';
 import { environment } from '../../../../environments/environment';
 
+import Uppy  from '@uppy/core';
+import Dashboard from '@uppy/Dashboard';
+import Tus from '@uppy/Tus';
+import Form from '@uppy/Form';
+import GoldenRetriever from '@uppy/golden-retriever';
+
 declare var $;
 declare var require: any;
-
-const Uppy = require('@uppy/core')
-const Dashboard = require('@uppy/Dashboard')
-const Tus = require('@uppy/Tus')
-const Form = require('@uppy/Form')
-const GoldenRetriever = require('@uppy/golden-retriever')
-
 
 @Component({
   selector: 'app-data-page',
@@ -60,15 +59,12 @@ export class DataPageComponent implements OnInit {
         this.files = data['_embedded']['files'];
       }
     );
-
     this.uploadUppy = Uppy({
       id :this.convertToSlug(this.activeSubmission.name + "-" + this.activeSubmission.projectName + "-data"),
       autoProceed: true,
-      restrictions: {
-        // allowedFileTypes: ['text/csv']
-      }
-    })
-    .use(Dashboard, {
+    });
+
+    this.uploadUppy.use(Dashboard, {
       trigger: '.UppyModalOpenerBtn',
       inline: true,
       target: '.uppy-drag-drop',
