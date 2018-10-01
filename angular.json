@@ -73,6 +73,17 @@
               "extractLicenses": true,
               "vendorChunk": false,
               "buildOptimizer": true
+            },
+            "dev": {
+              "optimization": false,
+              "outputHashing": "all",
+              "sourceMap": true,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true
             }
           }
         },
@@ -87,6 +98,9 @@
             },
             "staging": {
               "browserTarget": "data-submissions-interface:build:staging"
+            },
+            "dev": {
+              "browserTarget": "data-submissions-interface:build:dev"
             }
           }
         },
