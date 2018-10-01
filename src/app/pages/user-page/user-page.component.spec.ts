@@ -4,7 +4,6 @@ import { DebugElement } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { AuthService, TokenService } from 'angular-aap-auth';
-import { JwtHelper } from 'angular2-jwt';
 
 import { MockRouter } from '../../testing/mockrouter.tests';
 
@@ -24,7 +23,6 @@ describe('UserPageComponent', () => {
         {provide: Router, useClass: MockRouter},
         AuthService,
         TokenService,
-        JwtHelper,
         {
           provide: 'AAP_CONFIG',
           useValue: {

@@ -25,8 +25,9 @@
     "@angular/platform-browser": "6.1.8",
     "@angular/platform-browser-dynamic": "6.1.8",
     "@angular/router": "6.1.8",
+    "@auth0/angular-jwt": "^2.0.0",
     "angular-aap-auth": "^1.0.0-alpha.11",
-    "angular-datatables": "^5.0.0",
+    "angular-datatables": "^6.0.0",
     "angular2-json-schema-form": "^0.7.0-alpha.1",
     "angular2-jwt": "^0.2.3",
     "core-js": "^2.5.3",
@@ -39,7 +40,7 @@
     "rxjs": "^6.3.2",
     "ts-helpers": "^1.1.1",
     "tus-js-client": "^1.4.5",
-    "uppy": "0.27.4",
+    "uppy": "0.27.3",
     "zone.js": "^0.8.26"
   },
   "devDependencies": {

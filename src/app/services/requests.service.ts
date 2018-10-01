@@ -1,7 +1,7 @@
 
 import {map} from 'rxjs/operators';
 import { Injectable } from '@angular/core';
-import { Http, RequestOptions } from '@angular/http';
+import { HttpClient } from '@angular/common/http';
 
 // Import Service Variables.
 import { VariablesService } from './variables.service';
@@ -11,27 +11,17 @@ export class RequestsService {
   variables = new VariablesService;
 
 
-  constructor(private http: Http) { }
-
-  static get parameters() {
-   return [[Http]];
-  }
+  constructor(private http: HttpClient) { }
 
   /**
    * Get record.
    */
   get(token, url) {
-    let headers = this.variables.buildHeader(token);
-
-    let requestOptions = new RequestOptions({
-        headers: headers
-    });
-
     // Post an Empty object to create submission.
     let body = JSON.stringify({});
 
     let requestUrl =  url;
-    var response = this.http.get(requestUrl, requestOptions).pipe(map(res => res.json()));
+    var response = this.http.get(requestUrl);
     return response;
   }
 
@@ -39,17 +29,11 @@ export class RequestsService {
    * Create new record.
    */
   create(token, url, data) {
-    let headers = this.variables.buildHeader(token);
-
-    let requestOptions = new RequestOptions({
-        headers: headers
-    });
-
     // Post an Empty object to create submission.
     let body = JSON.stringify(data);
 
     let requestUrl =  url;
-    var response = this.http.post(requestUrl, body, requestOptions).pipe(map(res => res.json()));
+    var response = this.http.post(requestUrl, body);
     return response;
   }
 
@@ -57,17 +41,11 @@ export class RequestsService {
    * Create new record.
    */
   createNoAuth(url, data) {
-    let headers = this.variables.buildHeader("");
-
-    let requestOptions = new RequestOptions({
-        headers: headers
-    });
-
     // Post an Empty object to create submission.
     let body = JSON.stringify(data);
 
     let requestUrl =  url;
-    var response = this.http.post(requestUrl, body, requestOptions).pipe(map(res => res.json()));
+    var response = this.http.post(requestUrl, body);
     return response;
   }
 
@@ -75,17 +53,11 @@ export class RequestsService {
    * Update an existing record.
    */
   update(token, url, data) {
-      let headers = this.variables.buildHeader(token);
-
-    let requestOptions = new RequestOptions({
-        headers: headers
-    });
-
     // Post an Empty object to create submission.
     let body = JSON.stringify(data);
 
     let requestUrl =  url;
-    var response = this.http.put(requestUrl, body, requestOptions).pipe(map(res => res.json()));
+    var response = this.http.put(requestUrl, body);
     return response;
   }
 
@@ -93,17 +65,11 @@ export class RequestsService {
    * Partially update an existing record.
    */
   partialUpdate(token, url, data) {
-      let headers = this.variables.buildHeader(token);
-
-      let requestOptions = new RequestOptions({
-          headers: headers
-      });
-
       // Post an Empty object to create submission.
       let body = JSON.stringify(data);
 
       let requestUrl =  url;
-      var response = this.http.patch(requestUrl, body, requestOptions).pipe(map(res => res.json()));
+      var response = this.http.patch(requestUrl, body);
       return response;
   }
 
@@ -111,17 +77,11 @@ export class RequestsService {
    * Delete an existing record.
    */
   delete(token, url) {
-    let headers = this.variables.buildHeader(token);
-
-    let requestOptions = new RequestOptions({
-        headers: headers
-    });
-
     // Post an Empty object to create submission.
     let body = JSON.stringify({});
 
     let requestUrl =  url;
-    var response = this.http.delete(requestUrl, requestOptions).pipe(map(res => res.json()));
+    var response = this.http.delete(requestUrl);
     return response;
   }
 }

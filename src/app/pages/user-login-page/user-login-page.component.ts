@@ -2,12 +2,12 @@ import { Component, OnInit, Renderer } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from 'angular-aap-auth';
 import { TokenService } from 'angular-aap-auth';
-import { JwtHelper } from 'angular2-jwt';
-
 
 // Import Services.
 import { UserService } from '../../services/user.service';
 import { TeamsService } from '../../services/teams.service';
+import { Observable, of } from 'rxjs';
+import { map, catchError } from 'rxjs/operators';
 
 @Component({
   selector: 'app-login-page',
@@ -17,32 +17,28 @@ import { TeamsService } from '../../services/teams.service';
     AuthService,
     UserService,
     TeamsService,
-    JwtHelper
   ]
 })
 export class UserLoginPageComponent implements OnInit {
   private tokenListener: Function;
   token: string;
-
   constructor(
       public renderer: Renderer,
       private userService: UserService,
       private teamsService: TeamsService,
       private authService: AuthService,
       private tokenService: TokenService,
-      private jwtHelper: JwtHelper,
       private router: Router,
   ) {}
 
   ngOnInit() {
     // TODO: Improve this nested calls. maybe using flatMap
-    this.authService.getTokenListenerRemover(this.renderer, () => {
+    this.authService.addLogInEventListener(() => {
       this.token = this.tokenService.getToken();
-      let userData  = this.jwtHelper.decodeToken(this.token);
 
       this.userService.getUserTeams(this.token).subscribe (
         (data) => {
-            if(data.page.totalElements == 0) {
+            if(data['page']['totalElements'] == 0) {
             this.teamsService.createTeam(this.token).subscribe(
               (data) => {
                 this.authService.logOut();
@@ -63,9 +59,4 @@ export class UserLoginPageComponent implements OnInit {
       );
     });
   }
-
-  isLoggedIn() {
-    return this.authService.loggedIn();
-  }
-
 }

@@ -2,18 +2,20 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { TokenService } from 'angular-aap-auth';
 
-const Uppy = require('uppy/lib/core')
-const Dashboard = require('uppy/lib/plugins/Dashboard')
-const Tus = require('uppy/lib/plugins/Tus')
-const Form = require('uppy/lib/plugins/Form')
-const GoldenRetriever = require('uppy/lib/plugins/GoldenRetriever')
-
 // Import Services.
 import { SubmissionsService } from '../../../services/submissions.service';
 import { TeamsService } from '../../../services/teams.service';
-import { environment } from 'environments/environment';
+import { environment } from '../../../../environments/environment';
 
 declare var $;
+declare var require: any;
+
+const Uppy = require('@uppy/core')
+const Dashboard = require('@uppy/Dashboard')
+const Tus = require('@uppy/Tus')
+const Form = require('@uppy/Form')
+const GoldenRetriever = require('@uppy/golden-retriever')
+
 
 @Component({
   selector: 'app-data-page',
@@ -55,7 +57,7 @@ export class DataPageComponent implements OnInit {
     this.token = this.tokenService.getToken();
     this.submissionsService.getActiveSubmissionsFiles(this.token).subscribe(
       (data) => {
-        this.files = data._embedded.files;
+        this.files = data['_embedded']['files'];
       }
     );
 

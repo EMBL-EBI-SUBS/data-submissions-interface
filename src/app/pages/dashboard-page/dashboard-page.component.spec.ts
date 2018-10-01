@@ -1,11 +1,10 @@
 /* tslint:disable:no-unused-variable */
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
-import { HttpModule } from '@angular/http';
+import { HttpClientModule } from '@angular/common/http';
 import { Router } from '@angular/router';
 
 import { AuthService, TokenService } from 'angular-aap-auth';
-import { JwtHelper } from 'angular2-jwt';
 
 import { MockRouter } from '../../testing/mockrouter.tests';
 
@@ -20,7 +19,7 @@ describe('DashboardPageComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [HttpModule],
+      imports: [HttpClientModule],
       declarations: [
         DashboardPageComponent,
         EbiHeaderComponent
@@ -29,7 +28,6 @@ describe('DashboardPageComponent', () => {
         {provide: Router, useClass: MockRouter},
         AuthService,
         TokenService,
-        JwtHelper,
         {
           provide: 'AAP_CONFIG',
           useValue: {

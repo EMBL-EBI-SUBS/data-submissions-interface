@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient} from '@angular/common/http';
-import { Observable, of } from 'rxjs';
 import { map, flatMap } from 'rxjs/operators';
 
 // Import Service Variables.
 import { VariablesService } from './variables.service';
+import { of } from 'rxjs';
 
 @Injectable()
 export class SubmissionsService {
@@ -13,21 +13,15 @@ export class SubmissionsService {
 
   constructor(private http: HttpClient) { }
 
-  static get parameters() {
-   return [[HttpClient]];
-  }
-
   /**
    * Get record.
    */
   get(token, url) {
-    let headers = this.variables.buildHeader(token);
-
     // Post an Empty object to create submission.
     let body = JSON.stringify({});
 
     let requestUrl =  url;
-    var response = this.http.get(requestUrl, headers);
+    var response = this.http.get(requestUrl);
     return response;
   }
 
@@ -35,13 +29,11 @@ export class SubmissionsService {
    * Create new record.
    */
   create(token, url, bodyData = {}) {
-    let headers = this.variables.buildHeader(token);
-
     // Post an Empty object to create submission.
     let body = JSON.stringify(bodyData);
 
     let requestUrl =  url;
-    var response = this.http.post(requestUrl, body, headers);
+    var response = this.http.post(requestUrl, body);
     return response;
   }
 
@@ -49,29 +41,26 @@ export class SubmissionsService {
    * List Projects for Current Logged in user.
    */
   getDataTypes(token: String) {
-    let headers = this.variables.buildHeader(token);
-
     let requestUrl =  this.dataTypesEndpoint;
-    var response = this.http.get(requestUrl, headers);
+    var response = this.http.get(requestUrl);
     return response;
   }
 
   getActiveSubmissionsFiles(token: String){
     let activeSubmission = this.getActiveSubmission();
-    let headers = this.variables.buildHeader(token);
-
-    let contentsLinks = activeSubmission._links.contents.href;
-    var response = this.http.get(contentsLinks, headers).pipe(
+    let contentsLinks = activeSubmission['_links']['contents']['href'];
+    var response = this.http.get(contentsLinks).pipe(
       map(res => {
-        return response._links.files.href;
+        return res['_links']['files']['href'];
       }),
       flatMap((filesUrl) => {
-        return this.http.get(filesUrl, headers);
+        return this.http.get(filesUrl);
       }),
       map(res => {
-        return response;
+        return res;
       })
     );
+
     return response;
   }
 
@@ -80,22 +69,21 @@ export class SubmissionsService {
    */
   getActiveSubmissionProject(token: String) {
     let activeSubmission = this.getActiveSubmission();
-    let headers = this.variables.buildHeader(token);
 
     if(!activeSubmission) {
         return ;
     }
     // If Contents links not exist then retrieve it.
     if (!activeSubmission._links.contents.hasOwnProperty("_links")) {
-      let contentsLinks = activeSubmission._links.contents.href;
-      var response = this.http.get(contentsLinks, headers).pipe(
+      let contentsLinks = activeSubmission['_links']['contents']['href'];
+      var response = this.http.get(contentsLinks).pipe(
         map(res => {
-          activeSubmission._links.contents['_links'] = response._links;
+          activeSubmission._links.contents['_links'] = response['_links'];
           this.setActiveSubmission(activeSubmission);
-          return response._links.project.href;
+          return response['_links']['project']['href'];
         }),
         flatMap((projectsUrl) => {
-          return this.http.get(projectsUrl, headers);
+          return this.http.get(projectsUrl);
         }),
         map(res => {
           this.setActiveProject(response);
@@ -107,17 +95,17 @@ export class SubmissionsService {
     }
     else {
       try {
-        let projectsLinks = activeSubmission._links.contents._links.project.href;
+        let projectsLinks = activeSubmission['_links']['contents']['_links']['project']['href'];
 
-        let response = this.http.get(projectsLinks, headers).pipe(
+        let response = this.http.get(projectsLinks).pipe(
           map(response => {
             if(response.hasOwnProperty("_embedded") && response['_embedded'].hasOwnProperty("project")) {
               let activeProject = response['._embedded'].project.pop();
-              return activeProject._links.self.href;
+              return activeProject['_links']['self']['href'];
             }
           }),
           flatMap((projectsUrl) => {
-            return this.http.get(projectsUrl, headers);
+            return this.http.get(projectsUrl);
           }),
           map(project => {
             this.setActiveProject(project);

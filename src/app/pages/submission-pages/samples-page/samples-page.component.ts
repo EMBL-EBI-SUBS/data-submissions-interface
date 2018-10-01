@@ -6,9 +6,9 @@ import { TokenService } from 'angular-aap-auth';
 // Import Services.
 import { SubmissionsService } from '../../../services/submissions.service';
 import { TeamsService } from '../../../services/teams.service';
-import { RequestsService } from 'app/services/requests.service';
+import { RequestsService } from '../../../services/requests.service';
 import { SpreadsheetsService } from '../../../services/spreadsheets.service';
-import { environment } from 'environments/environment';
+import { environment } from '../../../../environments/environment';
 
 declare var Choices;
 declare var $;
@@ -46,11 +46,7 @@ export class SamplesPageComponent implements OnInit {
   templatesList: any;
   selectedTemplate: any = {};
   activeTab: string = 'samples-upload';
-  dtOptions: DataTables.Settings = {
-    pagingType: 'full_numbers',
-    pageLength: 50,
-    lengthChange: false
-  };
+
   processingSheets = [];
   blackListSampleFields = [
     'fields',
@@ -316,7 +312,7 @@ export class SamplesPageComponent implements OnInit {
     this.loading = true;
     this.requestsService.createNoAuth(this.validationSchemaUrl, sampleValidationObject).subscribe(
       data => {
-        if(data.length == 0) {
+       if(data['length'] == 0) {
           // TODO: Clean This!
           this.requestsService.partialUpdate(this.token, updateLink, updateData).subscribe(
             data => {
@@ -346,7 +342,7 @@ export class SamplesPageComponent implements OnInit {
           // Close the reveal.
           $(".sample-attribute-close-button").click();
         } else {
-          for(let formItemError of data) {
+          for(let formItemError in data) {
             this.formPathStringMap[formItemError['dataPath']].setErrors({
               'errors': formItemError['errors']
             });
@@ -401,7 +397,7 @@ export class SamplesPageComponent implements OnInit {
     this.loading = true;
     this.requestsService.createNoAuth(this.validationSchemaUrl, sampleValidationObject).subscribe(
       data => {
-        if(data.length == 0) {
+        if(data['length'] == 0) {
           // TODO: Clean This!
           this.requestsService.partialUpdate(this.token, updateLink, updateData).subscribe(
             data => {
@@ -431,7 +427,7 @@ export class SamplesPageComponent implements OnInit {
             }
           )
         } else {
-          for(let formItemError of data) {
+          for(let formItemError in data) {
             this.formPathStringMap[formItemError['dataPath']].setErrors({
               'errors': formItemError['errors']
             });
@@ -480,7 +476,7 @@ export class SamplesPageComponent implements OnInit {
     this.requestsService.get(this.token, samplesSheets).subscribe(
       data => {
         try {
-          if (data['_embedded']['sheets'].length > 0) {
+          if (data['_embedded']['sheets']['length'] > 0) {
             let tempProcessingSheets = [];
 
             for (let processingSheet of data['_embedded']['sheets']) {
@@ -488,7 +484,7 @@ export class SamplesPageComponent implements OnInit {
                 tempProcessingSheets.push(processingSheet);
               }
             }
-            if (tempProcessingSheets.length == 0) {
+            if (tempProcessingSheets['length'] == 0) {
               this.processingSheets = [];
               this.getSubmissionSamples();
             } else {
@@ -556,7 +552,7 @@ export class SamplesPageComponent implements OnInit {
     this.spreadsheetsService.getTemplatesList(this.token).subscribe(
       (data) => {
         try {
-          this.templatesList = data._embedded.templates;
+          this.templatesList = data['_embedded']['templates'];
         } catch (e) {
           console.log(e);
         }
@@ -626,7 +622,7 @@ export class SamplesPageComponent implements OnInit {
         this.loading = false;
 
         try {
-          if (data._embedded.samples && data._embedded.samples.length > 0) {
+          if (data['_embedded']['samples'] && data['_embedded']['samples']['length'] > 0) {
             this.activateTab("samples-view");
           }
         } catch (e) {
@@ -674,7 +670,7 @@ export class SamplesPageComponent implements OnInit {
     const submissionLinksRequestUrl = submission._links.contents.href;
     this.submissionsService.get(this.token, submissionLinksRequestUrl).subscribe(
       (data) => {
-        submission._links.contents['_links'] = data._links;
+        submission._links.contents['_links'] = data['_links'];
         this.submissionsService.setActiveSubmission(submission);
         // Load Samples Data.
         this.getSubmissionSamples();
@@ -726,14 +722,14 @@ export class SamplesPageComponent implements OnInit {
           this.formPathStringMap['.attributes[\'' + this.sampleAttributeForm.value['name'] + '\'][0].units'] = this.sampleAttributeForm.get('unit');
         }
 
-        if (this.sampleAttributeForm.value['terms'] && this.sampleAttributeForm.value['terms'].length > 0) {
+        if (this.sampleAttributeForm.value['terms'] && this.sampleAttributeForm.value['terms']['length'] > 0) {
           this.sampleAttribute["terms"] = [];
 
           for (let term of this.sampleAttributeForm.value['terms']) {
             if (term['term']) {
               let termObj = {};
               termObj['url'] = term['term'];
-              this.formPathStringMap['.attributes[\'' + this.sampleAttributeForm.value['name'] + '\'][0].terms[' + this.sampleAttribute["terms"].length + '].url'] = this.sampleAttributeForm.get('terms').get(String(this.sampleAttribute["terms"].length));
+              this.formPathStringMap['.attributes[\'' + this.sampleAttributeForm.value['name'] + '\'][0].terms[' + this.sampleAttribute["terms"]['length'] + '].url'] = this.sampleAttributeForm.get('terms').get(String(this.sampleAttribute["terms"]['length']));
               this.sampleAttribute["terms"].push(termObj);
             }
           }
@@ -747,7 +743,7 @@ export class SamplesPageComponent implements OnInit {
         this.loading = true;
         this.requestsService.createNoAuth(this.validationSchemaUrl, sampleAttributeValidationObject).subscribe(
           data => {
-            if(data.length == 0) {
+            if (data['length'] == 0) {
               this.activeSample['attributes'][this.sampleAttributeForm.value['name']] = [];
               this.activeSample['attributes'][this.sampleAttributeForm.value['name']].push(this.sampleAttribute);
 
@@ -755,7 +751,7 @@ export class SamplesPageComponent implements OnInit {
               // Close the reveal.
               $(".sample-attribute-close-button").click();
             } else {
-              for(let formItemError of data) {
+              for(let formItemError in data) {
                 this.formPathStringMap[formItemError['dataPath']].setErrors({
                   'errors': formItemError['errors']
                 });
@@ -811,14 +807,14 @@ export class SamplesPageComponent implements OnInit {
 
       this.requestsService.createNoAuth(this.validationSchemaUrl, sampleRelationValidationObject).subscribe(
         data => {
-          if(data.length == 0) {
+          if(data['length'] == 0) {
             this.activeSample['sampleRelationships'].push(sampleRelationSingle);
 
             this.onUpdateSampleAttributes();
             // Close the reveal.
             $(".sample-relations-close-button").click();
           } else {
-            for(let formItemError of data) {
+            for (let formItemError in data) {
               this.formPathStringMap[formItemError['dataPath']].setErrors({
                 'errors': formItemError['errors']
               });

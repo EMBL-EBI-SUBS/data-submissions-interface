@@ -124,7 +124,7 @@ export class DashboardPageComponent implements OnInit {
     this.requestsService.get(this.token, submissionLinkEndpoint).subscribe (
       (data) => {
         this.submissionsService.setActiveSubmission(data);
-        this.teamService.setActiveTeam(data.team);
+        this.teamService.setActiveTeam(data['team']);
         this.router.navigate(['/submission/overview']);
       },
       (err) => {

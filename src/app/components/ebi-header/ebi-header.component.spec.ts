@@ -2,8 +2,6 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 
 import { AuthService, TokenService } from 'angular-aap-auth';
-import { JwtHelper } from 'angular2-jwt';
-
 import { MockRouter } from '../../testing/mockrouter.tests';
 
 //  Import Components.
@@ -23,7 +21,6 @@ describe('EbiHeaderComponent', () => {
         {provide: Router, useClass: MockRouter},
         AuthService,
         TokenService,
-        JwtHelper,
         {
           provide: 'AAP_CONFIG',
           useValue: {

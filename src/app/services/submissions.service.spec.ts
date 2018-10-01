@@ -1,11 +1,11 @@
 import { TestBed, inject } from '@angular/core/testing';
-import { HttpModule } from '@angular/http';
 import { SubmissionsService } from './submissions.service';
+import { HttpClientModule } from '@angular/common/http';
 
 describe('SubmissionsService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpModule],
+      imports: [HttpClientModule],
       providers: [SubmissionsService]
     });
   });
