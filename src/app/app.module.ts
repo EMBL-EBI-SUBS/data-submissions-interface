@@ -35,14 +35,6 @@ import { EbiHeaderComponent } from './components/ebi-header/ebi-header.component
 import { EbiNavbarComponent } from './components/ebi-navbar/ebi-navbar.component';
 import { EbiFooterComponent } from './components/ebi-footer/ebi-footer.component';
 
-// Import Services.
-import { UserService } from './services/user.service';
-import { ProjectsService } from './services/projects.service';
-import { RequestsService } from './/services/requests.service';
-import { SpreadsheetsService } from './services/spreadsheets.service';
-import { SubmissionsService } from './services/submissions.service';
-import { TeamsService } from './services/teams.service';
-
 // Import Guards.
 import { LoggedInGuard } from './guards/logged-in/logged-in.guard';
 
@@ -54,7 +46,6 @@ import { RouterLinkStubDirective, RouterOutletStubComponent } from './testing/ro
 
 // Import Interceptors.
 import { httpInterceptorProviders } from './http-interceptors/index';
-
 
 export function getToken(): string {
   return localStorage.getItem('jwt_token') || '';

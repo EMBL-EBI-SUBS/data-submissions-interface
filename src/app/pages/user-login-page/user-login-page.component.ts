@@ -24,9 +24,9 @@ export class UserLoginPageComponent implements OnInit {
   token: string;
   constructor(
       public renderer: Renderer,
+      public authService: AuthService,
       private userService: UserService,
       private teamsService: TeamsService,
-      private authService: AuthService,
       private tokenService: TokenService,
       private router: Router,
   ) {}

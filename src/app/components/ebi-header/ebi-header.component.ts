@@ -18,7 +18,7 @@ export class EbiHeaderComponent {
   @Input() color: string = "#091316";
 
   constructor(
-    private authService: AuthService,
+    public authService: AuthService,
     private router: Router
   ) {  }
 
