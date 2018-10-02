@@ -2,10 +2,12 @@ import { RouterModule, PreloadAllModules } from '@angular/router';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+
 import { HttpClientModule } from '@angular/common/http';
 
 import { AuthModule } from 'angular-aap-auth';
 import { JwtModule } from '@auth0/angular-jwt';
+
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
@@ -40,6 +42,8 @@ import { LoggedInGuard } from './guards/logged-in/logged-in.guard';
 
 // Imports
 import { LoadingModule, ANIMATION_TYPES } from 'ngx-loading';
+
+import { EndpointService } from './services/endpoint.service';
 
 // Import Tests Classes.
 import { RouterLinkStubDirective, RouterOutletStubComponent } from './testing/router.stubs';
@@ -109,6 +113,7 @@ export function removeToken(): void {
   ],
   providers: [
     LoggedInGuard,
+    EndpointService,
     httpInterceptorProviders,
   ],
   bootstrap: [AppComponent]
