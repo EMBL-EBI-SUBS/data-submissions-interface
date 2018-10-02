@@ -11,7 +11,7 @@ import { MockRouter } from '../../testing/mockrouter.tests';
 //  Import Components.
 import { DashboardPageComponent } from './dashboard-page.component';
 import { EbiHeaderComponent } from '../../components/ebi-header/ebi-header.component';
-import { environment } from 'environments/environment';
+import { environment } from 'src/environments/environment';
 
 describe('DashboardPageComponent', () => {
   let component: DashboardPageComponent;

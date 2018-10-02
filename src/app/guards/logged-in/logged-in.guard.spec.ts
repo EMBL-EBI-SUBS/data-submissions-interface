@@ -10,8 +10,8 @@ import {
   JwtModule
 } from '@auth0/angular-jwt';
 
-import { MockRouter } from 'app/testing/mockrouter.tests';
-import { environment } from 'environments/environment';
+import { MockRouter } from 'src/app/testing/mockrouter.tests';
+import { environment } from 'src/environments/environment';
 
 export function getToken(): string {
   return localStorage.getItem('jwt_token') || '';

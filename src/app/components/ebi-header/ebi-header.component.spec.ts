@@ -6,7 +6,7 @@ import { MockRouter } from '../../testing/mockrouter.tests';
 
 //  Import Components.
 import { EbiHeaderComponent } from './ebi-header.component';
-import { environment } from 'environments/environment';
+import { environment } from 'src/environments/environment';
 
 
 

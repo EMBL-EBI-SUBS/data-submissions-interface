@@ -9,7 +9,7 @@ import { MockRouter } from '../../testing/mockrouter.tests';
 
 import { NotFoundPageComponent } from './not-found-page.component';
 import { EbiHeaderComponent } from '../../components/ebi-header/ebi-header.component';
-import { environment } from 'environments/environment';
+import { environment } from 'src/environments/environment';
 
 describe('NotFoundPageComponent', () => {
   let component: NotFoundPageComponent;

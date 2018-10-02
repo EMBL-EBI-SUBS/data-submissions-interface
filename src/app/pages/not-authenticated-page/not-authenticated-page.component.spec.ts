@@ -11,7 +11,7 @@ import { NotAuthenticatedPageComponent } from './not-authenticated-page.componen
 import { EbiHeaderComponent } from '../../components/ebi-header/ebi-header.component';
 import { UserLoginPageComponent } from '../user-login-page/user-login-page.component';
 import { HttpClientModule } from '@angular/common/http';
-import { environment } from 'environments/environment';
+import { environment } from 'src/environments/environment';
 
 describe('NotAuthenticatedPageComponent', () => {
   let component: NotAuthenticatedPageComponent;
