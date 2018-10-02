@@ -8,9 +8,9 @@ import { TeamsService } from '../../../services/teams.service';
 import { environment } from '../../../../environments/environment';
 
 import Uppy  from '@uppy/core';
-import Dashboard from '@uppy/Dashboard';
-import Tus from '@uppy/Tus';
-import Form from '@uppy/Form';
+import Dashboard from '@uppy/dashboard';
+import Tus from '@uppy/tus';
+import Form from '@uppy/form';
 import GoldenRetriever from '@uppy/golden-retriever';
 
 declare var $;
