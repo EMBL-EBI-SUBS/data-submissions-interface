@@ -223,7 +223,7 @@ export class ProjectPageComponent implements OnInit {
           return false;
         }
 
-        this.projects = data._embedded.projects;
+        this.projects = data['_embedded']['projects'];
       },
       (err) => {
         // TODO: Handle Errors.
@@ -258,7 +258,7 @@ export class ProjectPageComponent implements OnInit {
     // Load Submission Content Actions.
     this.requestsService.get(this.token, this.activeSubmission._links.contents.href).subscribe (
       (data) => {
-        this.activeSubmission._links.contents['_links'] = data._links;
+        this.activeSubmission['_links']['contents']['_links'] = data['_links'];
         this.submissionsService.setActiveSubmission(this.activeSubmission);
       },
       (err) => {

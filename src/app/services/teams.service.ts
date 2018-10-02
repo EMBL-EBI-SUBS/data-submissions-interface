@@ -1,6 +1,7 @@
+
 import { Injectable } from '@angular/core';
-import { Http, RequestOptions } from '@angular/http';
-import 'rxjs/add/operator/map';
+import { HttpClient } from '@angular/common/http';
+
 // Import Service Variables.
 import { VariablesService } from './variables.service';
 
@@ -11,12 +12,8 @@ export class TeamsService {
   createTeamEndPoint = this.variables.host + "user/teams";
 
   constructor(
-    private http: Http
+    private http: HttpClient
     ) { }
-
-  static get parameters() {
-   return [[Http]];
-  }
 
   /**
    * Set Teams.
@@ -43,17 +40,11 @@ export class TeamsService {
    * Get Team by name.
    */
   getTeam(token, name) {
-    let headers = this.variables.buildHeader(token);
-
-    let requestOptions = new RequestOptions({
-        headers: headers
-    });
-
     // Post an Empty object to create submission.
     let body = JSON.stringify({});
 
     let requestUrl =  this.teamEndpoint + name;
-    var response = this.http.get(requestUrl, requestOptions).map(res => res.json());
+    var response = this.http.get(requestUrl);
     return response;
   }
 
@@ -61,12 +52,6 @@ export class TeamsService {
    * Create Team for User.
    */
   createTeam(token) {
-    let headers = this.variables.buildHeader(token);
-
-    let requestOptions = new RequestOptions({
-        headers: headers
-    });
-
     // Post an Empty object to create submission.
     let body = JSON.stringify({
       "description" : "My lab group",
@@ -74,7 +59,7 @@ export class TeamsService {
     });
 
     let requestUrl =  this.createTeamEndPoint;
-    var response = this.http.post(requestUrl, body, requestOptions).map(res => res.json());
+    var response = this.http.post(requestUrl, body);
     return response;
   }
 
@@ -82,17 +67,11 @@ export class TeamsService {
    * Add User to Team.
    */
   addUserToTeam(token, teamDomainRef, userRef) {
-    let headers = this.variables.buildHeader(token);
-
-    let requestOptions = new RequestOptions({
-        headers: headers
-    });
-
     // Post an Empty object to create submission.
     let body = JSON.stringify({});
 
     let requestUrl =  this.createTeamEndPoint + "/" + teamDomainRef + "/" +  userRef + "/user";
-    var response = this.http.put(requestUrl, body, requestOptions).map(res => res.json());
+    var response = this.http.put(requestUrl, body);
     return response;
   }
 

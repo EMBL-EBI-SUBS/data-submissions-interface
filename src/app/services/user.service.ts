@@ -1,6 +1,8 @@
+
+import {map} from 'rxjs/operators';
 import { Injectable } from '@angular/core';
-import { Http, RequestOptions } from '@angular/http';
-import 'rxjs/add/operator/map';
+import { HttpClient } from '@angular/common/http';
+
 // Import Service Variables.
 import { VariablesService } from './variables.service';
 
@@ -12,24 +14,14 @@ export class UserService {
   userSubmissionsEndpoint = this.variables.host + "user/submissions";
   userSubmissionsSummaryEndpoint = this.variables.host + "user/submissionStatusSummary";
 
-  constructor(private http: Http) { }
-
-  static get parameters() {
-   return [[Http]];
-  }
+  constructor(private http: HttpClient) { }
 
   /**
    * List Team Members for Current Logged in user.
    */
   getUserTeams(token: String, options: any = { size: 12, page: 0}) {
-    let headers = this.variables.buildHeader(token);
-
-    let requestOptions = new RequestOptions({
-      headers: headers
-    });
-
     let requestUrl =  this.userTeamsEndpoint + "?size=" + options.size + "&page=" + options.page;
-    var response = this.http.get(requestUrl, requestOptions).map(res => res.json());
+    var response = this.http.get(requestUrl);
     return response;
   }
 
@@ -37,14 +29,8 @@ export class UserService {
    * List Projects for Current Logged in user.
    */
   getUserProjects(token: String, options: any = { size: 12, page: 0}) {
-    let headers = this.variables.buildHeader(token);
-
-    let requestOptions = new RequestOptions({
-        headers: headers
-    });
-
     let requestUrl =  this.userProjectsEndpoint + "?size=" + options.size + "&page=" + options.page;
-    var response = this.http.get(requestUrl, requestOptions).map(res => res.json());
+    var response = this.http.get(requestUrl);
     return response;
   }
 
@@ -52,17 +38,8 @@ export class UserService {
    * Get User Submissions.
    */
   geUserSubmissions(token) {
-    let headers = this.variables.buildHeader(token);
-
-    let requestOptions = new RequestOptions({
-        headers: headers
-    });
-
-    // Post an Empty object to create submission.
-    let body = JSON.stringify({});
-
     let requestUrl =  this.userSubmissionsEndpoint;
-    var response = this.http.get(requestUrl, requestOptions).map(res => res.json());
+    var response = this.http.get(requestUrl);
     return response;
   }
 
@@ -70,17 +47,11 @@ export class UserService {
    * Get User Submissions Summary.
    */
   geUserSubmissionsSummary(token) {
-    let headers = this.variables.buildHeader(token);
-
-    let requestOptions = new RequestOptions({
-        headers: headers
-    });
-
     // Post an Empty object to create submission.
     let body = JSON.stringify({});
 
     let requestUrl =  this.userSubmissionsSummaryEndpoint;
-    var response = this.http.get(requestUrl, requestOptions).map(res => res.json());
+    var response = this.http.get(requestUrl);
     return response;
   }
 }

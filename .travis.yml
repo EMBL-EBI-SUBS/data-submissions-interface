@@ -2,7 +2,7 @@ sudo: required
 dist: trusty
 language: node_js
 node_js:
-  - "7.0.0"
+  - "10.11.0"
 
 addons:
   apt:
@@ -23,17 +23,10 @@ branches:
     - develop
 
 before_script:
-  - npm install -g @angular/cli@1.7.0
-  - npm install -g angular-cli-ghpages
-  - npm install -g karma
-  - npm install
-  - ng build --prod --base-href "https://embl-ebi-subs.github.io/data-submissions-interface/"
+  - npm run build:dev
 
 script:
-  - karma start karma.conf.js --single-run
-
-after_success:
-  - angular-cli-ghpages --repo=https://GH_TOKEN@github.com/EMBL-EBI-SUBS/data-submissions-interface.git  --no-silent
+  - npm run test
 
 notifications:
   email:

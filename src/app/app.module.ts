@@ -2,11 +2,13 @@ import { RouterModule, PreloadAllModules } from '@angular/router';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { HttpModule } from '@angular/http';
+
 import { HttpClientModule } from '@angular/common/http';
-import { AuthService, TokenService } from 'angular-aap-auth';
+
+import { AuthModule } from 'angular-aap-auth';
+import { JwtModule } from '@auth0/angular-jwt';
+
 import { ReactiveFormsModule } from '@angular/forms';
-import { JwtHelper } from 'angular2-jwt';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
@@ -40,17 +42,25 @@ import { LoggedInGuard } from './guards/logged-in/logged-in.guard';
 
 // Imports
 import { LoadingModule, ANIMATION_TYPES } from 'ngx-loading';
-import { DataTablesModule } from 'angular-datatables';
-import {
-  JsonSchemaFormModule, NoFrameworkModule, JsonSchemaFormService,
-  FrameworkLibraryService, WidgetLibraryService, Framework, NoFramework
-} from 'angular2-json-schema-form';
 
 import { EndpointService } from './services/endpoint.service';
 
-
 // Import Tests Classes.
 import { RouterLinkStubDirective, RouterOutletStubComponent } from './testing/router.stubs';
+
+// Import Interceptors.
+import { httpInterceptorProviders } from './http-interceptors/index';
+
+export function getToken(): string {
+  return localStorage.getItem('jwt_token') || '';
+}
+export function updateToken(newToken: string): void {
+  return localStorage.setItem('jwt_token', newToken);
+}
+// Optional
+export function removeToken(): void {
+  return localStorage.removeItem('jwt_token');
+}
 
 @NgModule({
   declarations: [
@@ -80,39 +90,31 @@ import { RouterLinkStubDirective, RouterOutletStubComponent } from './testing/ro
   imports: [
     BrowserModule,
     FormsModule,
-    HttpModule,
-    HttpClientModule,
     AppRoutingModule,
     ReactiveFormsModule,
+    AuthModule.forRoot({
+      aapURL: environment.authenticationHost,
+      tokenGetter: getToken,
+      tokenUpdater: updateToken,
+      tokenRemover: removeToken
+    }),
+    JwtModule.forRoot({
+      config: {
+          tokenGetter: getToken,
+      }
+    }),
     LoadingModule.forRoot({
       backdropBackgroundColour: 'rgba(0,0,0,0.6)',
       primaryColour: '#ffffff',
       secondaryColour: '#ffffff',
       tertiaryColour: '#ffffff'
     }),
-    DataTablesModule,
-    NoFrameworkModule,
-    {
-      ngModule: JsonSchemaFormModule,
-      providers: [
-          JsonSchemaFormService,
-          FrameworkLibraryService,
-          WidgetLibraryService,
-          {provide: Framework, useClass: NoFramework, multi: true}
-      ]
-    }
+    HttpClientModule
   ],
   providers: [
     LoggedInGuard,
-    JwtHelper,
-    TokenService,
-    AuthService, {
-      provide: 'AAP_CONFIG',
-      useValue: {
-        authURL: environment.authenticationHost
-      }
-    },
-    EndpointService
+    EndpointService,
+    httpInterceptorProviders,
   ],
   bootstrap: [AppComponent]
 })
