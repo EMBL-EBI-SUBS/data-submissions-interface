@@ -23,7 +23,6 @@ branches:
     - develop
 
 before_script:
-  - npm install
   - npm run build:dev
 
 script:
