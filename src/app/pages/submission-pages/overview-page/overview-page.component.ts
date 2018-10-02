@@ -213,7 +213,7 @@ export class OverviewPageComponent implements OnInit {
   getDataTypes() {
     this.submissionsService.getDataTypes(this.token).subscribe (
       (data) => {
-        this.dataTypes = data.content;
+        this.dataTypes = data['content'];
       },
       (err) => {
         // TODO: Handle Errors.
@@ -241,7 +241,7 @@ export class OverviewPageComponent implements OnInit {
      const submissionLinksRequestUrl = submission._links.contents.href;
      this.submissionsService.get(this.token, submissionLinksRequestUrl).subscribe (
        (data) => {
-         submission._links.contents['_links'] = data._links;
+         submission._links.contents['_links'] = data['_links'];
          this.submissionsService.setActiveSubmission(submission);
        },
        (err) => {
@@ -262,7 +262,7 @@ export class OverviewPageComponent implements OnInit {
           return false;
         }
 
-        this.teams = data._embedded.teams;
+        this.teams = data['_embedded']['teams'];
         // TODO: Currently we set the first team as default one. We have to change this later on.
         if (this.teams[0].name) {
           this.setActiveTeam(this.teams[0].name);

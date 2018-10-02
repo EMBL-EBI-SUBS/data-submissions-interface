@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { TokenService, AuthService } from 'angular-aap-auth';
 import { UserService } from '../../services/user.service';
 import { ProjectsService } from '../../services/projects.service';
-import { RequestsService } from 'app/services/requests.service';
+import { RequestsService } from '../../services/requests.service';
 
 @Component({
   selector: 'projects-page',

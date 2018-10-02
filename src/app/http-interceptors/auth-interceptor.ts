@@ -5,7 +5,7 @@ import {
 
 
 import { TokenService } from 'angular-aap-auth';
-import { environment } from 'environments/environment';
+import { environment } from '../../environments/environment';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
@@ -25,7 +25,7 @@ export class AuthInterceptor implements HttpInterceptor {
       {
         setHeaders: {
           Authorization:  "Bearer " + authToken,
-          ContentType : 'application/json',
+          'Content-Type' : 'application/json',
           Accept : 'application/hal+json, application/json',
         }
       }

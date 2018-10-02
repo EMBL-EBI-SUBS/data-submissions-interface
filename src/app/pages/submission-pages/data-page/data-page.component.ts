@@ -2,18 +2,19 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { TokenService } from 'angular-aap-auth';
 
-const Uppy = require('uppy/lib/core')
-const Dashboard = require('uppy/lib/plugins/Dashboard')
-const Tus = require('uppy/lib/plugins/Tus')
-const Form = require('uppy/lib/plugins/Form')
-const GoldenRetriever = require('uppy/lib/plugins/GoldenRetriever')
-
 // Import Services.
 import { SubmissionsService } from '../../../services/submissions.service';
 import { TeamsService } from '../../../services/teams.service';
-import { environment } from 'environments/environment';
+import { environment } from '../../../../environments/environment';
+
+import Uppy  from '@uppy/core';
+import Dashboard from '@uppy/dashboard';
+import Tus from '@uppy/tus';
+import Form from '@uppy/form';
+import GoldenRetriever from '@uppy/golden-retriever';
 
 declare var $;
+declare var require: any;
 
 @Component({
   selector: 'app-data-page',
@@ -55,18 +56,15 @@ export class DataPageComponent implements OnInit {
     this.token = this.tokenService.getToken();
     this.submissionsService.getActiveSubmissionsFiles(this.token).subscribe(
       (data) => {
-        this.files = data._embedded.files;
+        this.files = data['_embedded']['files'];
       }
     );
-
     this.uploadUppy = Uppy({
       id :this.convertToSlug(this.activeSubmission.name + "-" + this.activeSubmission.projectName + "-data"),
       autoProceed: true,
-      restrictions: {
-        // allowedFileTypes: ['text/csv']
-      }
-    })
-    .use(Dashboard, {
+    });
+
+    this.uploadUppy.use(Dashboard, {
       trigger: '.UppyModalOpenerBtn',
       inline: true,
       target: '.uppy-drag-drop',
