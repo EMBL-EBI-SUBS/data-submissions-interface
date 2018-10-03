@@ -9,7 +9,7 @@ import { VariablesService } from './variables.service';
 @Injectable()
 export class SubmissionsService {
   variables = new VariablesService;
-  dataTypesEndpoint = this.variables.host + "studyDataTypes";
+  SubmissionPlansEndpoint = this.variables.host + "submissionPlans";
 
   constructor(private http: Http) { }
 
@@ -38,10 +38,11 @@ export class SubmissionsService {
   /**
    * Create new record.
    */
-  create(token, url, bodyData = {}) {
+  create(token, url, bodyData = {}, requestParam = {}) {
     let headers = this.variables.buildHeader(token);
     let requestOptions = new RequestOptions({
-        headers: headers
+        headers: headers,
+        params: requestParam
     });
 
     // Post an Empty object to create submission.
@@ -55,16 +56,30 @@ export class SubmissionsService {
   /**
    * List Projects for Current Logged in user.
    */
-  getDataTypes(token: String) {
-    let headers = this.variables.buildHeader(token);
+  getSubmissionPlansResponse(token: String) {
+    const headers = this.variables.buildHeader(token);
 
-    let requestOptions = new RequestOptions({
+    const requestOptions = new RequestOptions({
         headers: headers
     });
 
-    let requestUrl =  this.dataTypesEndpoint;
-    var response = this.http.get(requestUrl, requestOptions).map(res => res.json());
+    const requestUrl =  this.SubmissionPlansEndpoint;
+    const response = this.http.get(requestUrl, requestOptions).map(res => res.json());
     return response;
+  }
+
+  getSubmissionPlansUIData(submissionPlans) {
+    let submissionPlansUIData = [];
+    for (const submissionPlan of submissionPlans) {
+      const submissionPlanUIData = {};
+      submissionPlanUIData['displayName'] = submissionPlan.displayName;
+      submissionPlanUIData['description'] = submissionPlan.description;
+      submissionPlanUIData['id'] = submissionPlan.id;
+
+      submissionPlansUIData.push(submissionPlanUIData);
+    };
+
+    return submissionPlansUIData;
   }
 
   getActiveSubmissionsFiles(token: String){

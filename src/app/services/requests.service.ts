@@ -90,11 +90,12 @@ export class RequestsService {
   /**
    * Partially update an existing record.
    */
-  partialUpdate(token, url, data) {
+  partialUpdate(token, url, data, requestParam = {}) {
       let headers = this.variables.buildHeader(token);
 
       let requestOptions = new RequestOptions({
-          headers: headers
+          headers: headers,
+          params: requestParam
       });
 
       // Post an Empty object to create submission.
