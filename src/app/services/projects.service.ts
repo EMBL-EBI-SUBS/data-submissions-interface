@@ -1,7 +1,6 @@
+
 import { Injectable } from '@angular/core';
-import { Http, RequestOptions } from '@angular/http';
-import 'rxjs/add/operator/map';
-import { Observable } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 
 // Import Service Variables.
 import { VariablesService } from './variables.service';
@@ -11,25 +10,14 @@ export class ProjectsService {
   variables = new VariablesService;
   projectsListEndpoint = this.variables.host + "user/projects";
 
-  constructor(private http: Http) { }
-
-  static get parameters() {
-   return [[Http]];
-  }
-
+  constructor(private http: HttpClient) { }
 
   /**
    * List Projects for Current Logged in user.
    */
   getProjectsList(token: String) {
-    let headers = this.variables.buildHeader(token);
-
-    let requestOptions = new RequestOptions({
-        headers: headers
-    });
-
     let requestUrl =  this.projectsListEndpoint;
-    var response = this.http.get(requestUrl, requestOptions).map(res => res.json());
+    var response = this.http.get(requestUrl);
     return response;
   }
 }

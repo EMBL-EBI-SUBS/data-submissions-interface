@@ -5,14 +5,13 @@ import { DebugElement } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { AuthService, TokenService } from 'angular-aap-auth';
-import { JwtHelper } from 'angular2-jwt';
 
 import { MockRouter } from '../../testing/mockrouter.tests';
 
 // Import Components.
 import { HelpPageComponent } from './help-page.component';
 import { EbiHeaderComponent } from '../../components/ebi-header/ebi-header.component';
-import { environment } from 'environments/environment';
+import { environment } from 'src/environments/environment';
 
 describe('HelpPageComponent', () => {
   let component: HelpPageComponent;
@@ -28,7 +27,6 @@ describe('HelpPageComponent', () => {
        {provide: Router, useClass: MockRouter},
        AuthService,
        TokenService,
-       JwtHelper,
        {
          provide: 'AAP_CONFIG',
          useValue: {

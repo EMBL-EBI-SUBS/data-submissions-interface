@@ -213,7 +213,7 @@ export class OverviewPageComponent implements OnInit {
   getSubmissionPlans() {
     this.submissionsService.getSubmissionPlansResponse(this.token).subscribe (
       (data) => {
-        this.submissionPlans = this.submissionsService.getSubmissionPlansUIData(data._embedded.submissionPlans);
+        this.submissionPlans = this.submissionsService.getSubmissionPlansUIData(data['content']._embedded.submissionPlans);
       },
       (err) => {
         // TODO: Handle Errors.
@@ -237,19 +237,19 @@ export class OverviewPageComponent implements OnInit {
   /**
    * Get Submission Content.
    */
-  getSubmissionContents(submission: any) {
-    const submissionLinksRequestUrl = submission._links.contents.href;
-    this.submissionsService.get(this.token, submissionLinksRequestUrl).subscribe (
-      (data) => {
-        submission._links.contents['_links'] = data._links;
-        this.submissionsService.setActiveSubmission(submission);
-      },
-      (err) => {
-        // TODO: Handle Errors.
-        console.log(err);
-      }
-    );
-  }
+   getSubmissionContents(submission: any) {
+     const submissionLinksRequestUrl = submission._links.contents.href;
+     this.submissionsService.get(this.token, submissionLinksRequestUrl).subscribe (
+       (data) => {
+         submission._links.contents['_links'] = data['_links'];
+         this.submissionsService.setActiveSubmission(submission);
+       },
+       (err) => {
+         // TODO: Handle Errors.
+         console.log(err);
+       }
+     );
+   }
 
   /**
    * Get User Teams.
@@ -262,7 +262,7 @@ export class OverviewPageComponent implements OnInit {
           return false;
         }
 
-        this.teams = data._embedded.teams;
+        this.teams = data['_embedded']['teams'];
         // TODO: Currently we set the first team as default one. We have to change this later on.
         if (this.teams[0].name) {
           this.setActiveTeam(this.teams[0].name);

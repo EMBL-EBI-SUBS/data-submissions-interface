@@ -4,15 +4,14 @@ import { DebugElement } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { AuthService, TokenService } from 'angular-aap-auth';
-import { JwtHelper } from 'angular2-jwt';
 
 import { MockRouter } from '../../testing/mockrouter.tests';
 
 import { NotAuthenticatedPageComponent } from './not-authenticated-page.component';
 import { EbiHeaderComponent } from '../../components/ebi-header/ebi-header.component';
 import { UserLoginPageComponent } from '../user-login-page/user-login-page.component';
-import { HttpModule } from '@angular/http';
-import { environment } from 'environments/environment';
+import { HttpClientModule } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
 
 describe('NotAuthenticatedPageComponent', () => {
   let component: NotAuthenticatedPageComponent;
@@ -20,7 +19,7 @@ describe('NotAuthenticatedPageComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [HttpModule],
+      imports: [HttpClientModule],
       declarations: [
         NotAuthenticatedPageComponent,
         EbiHeaderComponent,
@@ -30,7 +29,6 @@ describe('NotAuthenticatedPageComponent', () => {
         {provide: Router, useClass: MockRouter},
         AuthService,
         TokenService,
-        JwtHelper,
         {
           provide: 'AAP_CONFIG',
           useValue: {

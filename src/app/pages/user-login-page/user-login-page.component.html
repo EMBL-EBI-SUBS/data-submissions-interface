@@ -2,7 +2,7 @@
   <ebi-header></ebi-header>
 
   <section id="main-content-area" class="row padding-top-xsmall padding-bottom-xsmall" role="main">
-    <div class="login-form" *ngIf="!isLoggedIn()">
+    <div class="login-form" *ngIf="!(authService.isAuthenticated() | async)">
       <h2 class="padding-top-xlarge text-center">Log in with you email account</h2>
 
       <form class="login-form">
@@ -22,7 +22,7 @@
       </form>
     </div>
 
-    <div *ngIf="isLoggedIn()" class="text-center padding-top-large">
+    <div *ngIf="authService.isAuthenticated() | async" class="text-center padding-top-large">
       You are already logged in..
       <br><br>
       <a class="button" routerLink="/dashboard">Visit Your Dashboard</a>

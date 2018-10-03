@@ -1,6 +1,8 @@
 import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from 'angular-aap-auth';
+import { Observable, of } from 'rxjs';
+import { map, catchError } from 'rxjs/operators';
 
 @Component({
   selector: 'ebi-header',
@@ -9,7 +11,6 @@ import { AuthService } from 'angular-aap-auth';
   providers: [AuthService]
 })
 export class EbiHeaderComponent {
-  private tokenListener: Function;
 
   @Input() title: string;
   @Input() href: string = "/";
@@ -17,13 +18,9 @@ export class EbiHeaderComponent {
   @Input() color: string = "#091316";
 
   constructor(
-    private authService: AuthService,
+    public authService: AuthService,
     private router: Router
-  ) {}
-
-  isLoggedIn() {
-    return this.authService.loggedIn();
-  }
+  ) {  }
 
   onLogout() {
     this.authService.logOut();
