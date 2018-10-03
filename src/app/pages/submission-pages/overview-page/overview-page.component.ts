@@ -78,21 +78,9 @@ export class OverviewPageComponent implements OnInit {
    * On Save and Exit.
    */
   onSaveExit() {
-    // tslint:disable-next-line:prefer-const
-    let overviewData = {};
-    overviewData['human'] = this.overviewForm.value.human;
-    overviewData['controlled'] = this.overviewForm.value.controlled;
-    overviewData['submissionPlan'] = this.overviewForm.value.submissionPlan;
-
-    const bodyData = {
-      'uiData' : {
-        'overview' : overviewData
-      }
-    };
-
-    const requestParam = {
-      'submissionPlanId': overviewData['submissionPlan']['id']
-    };
+    const bodyAndParam = this.createRequestBodyAndParams();
+    const bodyData = bodyAndParam.body;
+    const requestParam = bodyAndParam.requestparam;
 
     // TODO: Save the data to existing submission.
     if (this.activeSubmission) {
@@ -132,21 +120,9 @@ export class OverviewPageComponent implements OnInit {
    * On Save and continue.
    */
   onSaveContinue() {
-    // tslint:disable-next-line:prefer-const
-    let overviewData = {};
-    overviewData['human'] = this.overviewForm.value.human;
-    overviewData['controlled'] = this.overviewForm.value.controlled;
-    overviewData['submissionPlan'] = this.overviewForm.value.submissionPlan;
-
-    const bodyData = {
-      'uiData' : {
-        'overview' : overviewData
-      }
-    };
-
-    const requestParam = {
-      'submissionPlanId': overviewData['submissionPlan']['id']
-    };
+    const bodyAndParam = this.createRequestBodyAndParams();
+    const bodyData = bodyAndParam.body;
+    const requestParam = bodyAndParam.requestparam;
 
     // If Submission Exist, Update Request.
     if (this.activeSubmission) {
@@ -213,7 +189,7 @@ export class OverviewPageComponent implements OnInit {
   getSubmissionPlans() {
     this.submissionsService.getSubmissionPlansResponse(this.token).subscribe (
       (data) => {
-        this.submissionPlans = this.submissionsService.getSubmissionPlansUIData(data['content']._embedded.submissionPlans);
+        this.submissionPlans = this.submissionsService.getSubmissionPlansUIData(data['_embedded'].submissionPlans);
       },
       (err) => {
         // TODO: Handle Errors.
@@ -337,5 +313,24 @@ export class OverviewPageComponent implements OnInit {
     }
 
     return false;
+  }
+
+  private createRequestBodyAndParams() {
+    // tslint:disable-next-line:prefer-const
+    let overviewData = {};
+    overviewData['human'] = this.overviewForm.value.human;
+    overviewData['controlled'] = this.overviewForm.value.controlled;
+    overviewData['submissionPlan'] = this.overviewForm.value.submissionPlan;
+
+    return {
+      'body' : {
+        'uiData' : {
+          'overview' : overviewData
+        }
+      },
+      'requestparam': {
+        'submissionPlanId': overviewData['submissionPlan']['id']
+      }
+    };
   }
 }
