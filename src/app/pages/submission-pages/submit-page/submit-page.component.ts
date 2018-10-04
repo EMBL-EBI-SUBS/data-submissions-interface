@@ -11,7 +11,6 @@ import { RequestsService } from '../../../services/requests.service';
   templateUrl: './submit-page.component.html',
   styleUrls: ['./submit-page.component.scss'],
   providers: [
-    TokenService,
     SubmissionsService,
     RequestsService
   ]
@@ -30,14 +29,12 @@ export class SubmitPageComponent implements OnInit {
     {"title": "Submit", "href": "/submission/submit"},
   ];
   constructor(
-    private tokenService: TokenService,
     private submissionsService: SubmissionsService,
     private requestsService: RequestsService,
     private router: Router,
   ) { }
 
   ngOnInit() {
-    this.token = this.tokenService.getToken();
     this.activeSubmission = this.submissionsService.getActiveSubmission();
   }
 
@@ -46,7 +43,7 @@ export class SubmitPageComponent implements OnInit {
     let updateObj = {
       "status" : "Submitted",
     }
-    this.requestsService.update(this.token, activeSubmissionUpdateEndpoint, updateObj).subscribe(
+    this.requestsService.update(activeSubmissionUpdateEndpoint, updateObj).subscribe(
       (data) => {
         // If updating status successfully done. redirect to dashboard.
         this.submissionsService.deleteActiveSubmission();

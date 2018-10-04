@@ -19,7 +19,7 @@ export class UserService {
   /**
    * List Team Members for Current Logged in user.
    */
-  getUserTeams(token: String, options: any = { size: 12, page: 0}) {
+  getUserTeams(options: any = { size: 12, page: 0}) {
     let requestUrl =  this.userTeamsEndpoint + "?size=" + options.size + "&page=" + options.page;
     var response = this.http.get(requestUrl);
     return response;
@@ -28,7 +28,7 @@ export class UserService {
   /**
    * List Projects for Current Logged in user.
    */
-  getUserProjects(token: String, options: any = { size: 12, page: 0}) {
+  getUserProjects(options: any = { size: 12, page: 0}) {
     let requestUrl =  this.userProjectsEndpoint + "?size=" + options.size + "&page=" + options.page;
     var response = this.http.get(requestUrl);
     return response;
@@ -37,7 +37,7 @@ export class UserService {
   /**
    * Get User Submissions.
    */
-  geUserSubmissions(token) {
+  geUserSubmissions() {
     let requestUrl =  this.userSubmissionsEndpoint;
     var response = this.http.get(requestUrl);
     return response;
@@ -46,7 +46,7 @@ export class UserService {
   /**
    * Get User Submissions Summary.
    */
-  geUserSubmissionsSummary(token) {
+  geUserSubmissionsSummary() {
     // Post an Empty object to create submission.
     let body = JSON.stringify({});
 

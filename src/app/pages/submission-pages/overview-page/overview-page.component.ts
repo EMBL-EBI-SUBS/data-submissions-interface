@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { TokenService } from 'angular-aap-auth';
 
 // Import Services.
 import { UserService } from '../../../services/user.service';
@@ -20,14 +19,12 @@ declare var Choices;
     UserService,
     TeamsService,
     SubmissionsService,
-    RequestsService,
-    TokenService
+    RequestsService
   ]
 })
 export class OverviewPageComponent implements OnInit {
   overviewForm: FormGroup;
   objectKeys = Object.keys;
-  token: string;
   activeSubmission: any;
   activeTeam: any;
   submissionPlans= [];
@@ -51,12 +48,10 @@ export class OverviewPageComponent implements OnInit {
     private teamsService: TeamsService,
     private submissionsService: SubmissionsService,
     private requestsService: RequestsService,
-    private tokenService: TokenService,
     private router: Router
   ) { }
 
   ngOnInit() {
-    this.token = this.tokenService.getToken();
     this.overviewForm = new FormGroup({
       human: new FormControl(null, Validators.required),
       controlled: new FormControl(null, Validators.required),
@@ -85,7 +80,7 @@ export class OverviewPageComponent implements OnInit {
     // TODO: Save the data to existing submission.
     if (this.activeSubmission) {
       const updateSubmissionUrl = this.activeSubmission._links['self:update'].href;
-      this.requestsService.partialUpdate(this.token, updateSubmissionUrl, bodyData, requestParam).subscribe(
+      this.requestsService.partialUpdate(updateSubmissionUrl, bodyData, requestParam).subscribe(
           (data) => {
             // Save Updated Submission to the Session.
             this.submissionsService.deleteActiveSubmission();
@@ -103,7 +98,7 @@ export class OverviewPageComponent implements OnInit {
       this.router.navigate(['/dashboard']);
     } else {     // Create new submission
       const createSubmissionUrl = this.activeTeam._links['submissions:create'].href;
-      this.submissionsService.create(this.token, createSubmissionUrl, bodyData, requestParam).subscribe (
+      this.submissionsService.create(createSubmissionUrl, bodyData, requestParam).subscribe (
         (data) => {
             // TODO: store overview data in submission.
             this.router.navigate(['/dashboard']);
@@ -127,7 +122,7 @@ export class OverviewPageComponent implements OnInit {
     // If Submission Exist, Update Request.
     if (this.activeSubmission) {
       const updateSubmissionUrl = this.activeSubmission._links['self:update'].href;
-      this.requestsService.partialUpdate(this.token, updateSubmissionUrl, bodyData, requestParam).subscribe(
+      this.requestsService.partialUpdate(updateSubmissionUrl, bodyData, requestParam).subscribe(
           (data) => {
             // Save Updated Submission to the Session.
             this.submissionsService.deleteActiveSubmission();
@@ -144,7 +139,7 @@ export class OverviewPageComponent implements OnInit {
     } else { // Create new submission. Set it as active submission.
       const createSubmissionUrl = this.activeTeam._links['submissions:create'].href;
 
-      this.submissionsService.create(this.token, createSubmissionUrl, bodyData, requestParam).subscribe (
+      this.submissionsService.create(createSubmissionUrl, bodyData, requestParam).subscribe (
         (data) => {
           // TODO: store overview data in submission.
           // Store active submission in a local variable.
@@ -186,7 +181,7 @@ export class OverviewPageComponent implements OnInit {
    * Retrieve list of submission plans.
    */
   getSubmissionPlans() {
-    this.submissionsService.getSubmissionPlansResponse(this.token).subscribe (
+    this.submissionsService.getSubmissionPlansResponse().subscribe (
       (data) => {
         this.submissionPlans = this.submissionsService.getSubmissionPlansUIData(data['_embedded'].submissionPlans);
       },
@@ -214,7 +209,7 @@ export class OverviewPageComponent implements OnInit {
    */
    getSubmissionContents(submission: any) {
      const submissionLinksRequestUrl = submission._links.contents.href;
-     this.submissionsService.get(this.token, submissionLinksRequestUrl).subscribe (
+     this.submissionsService.get(submissionLinksRequestUrl).subscribe (
        (data) => {
          submission._links.contents['_links'] = data['_links'];
          this.submissionsService.setActiveSubmission(submission);
@@ -230,7 +225,7 @@ export class OverviewPageComponent implements OnInit {
    * Get User Teams.
    */
   getUserTeams() {
-    this.userService.getUserTeams(this.token).subscribe (
+    this.userService.getUserTeams().subscribe (
       (data) => {
         // If user has no team assigned to it.
         if (!data.hasOwnProperty('_embedded')) {
@@ -255,7 +250,7 @@ export class OverviewPageComponent implements OnInit {
    * Set active team.
    */
   setActiveTeam(name) {
-    this.teamsService.getTeam(this.token, name).subscribe (
+    this.teamsService.getTeam(name).subscribe (
       (data) => {
         this.activeTeam = data;
         this.teamsService.setActiveTeam(data);

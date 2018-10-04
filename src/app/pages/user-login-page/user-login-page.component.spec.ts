@@ -4,7 +4,6 @@ import { DebugElement } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { Router } from '@angular/router';
 
-import { AuthService, TokenService } from 'angular-aap-auth';
 
 import { MockRouter } from '../../testing/mockrouter.tests';
 
@@ -21,17 +20,6 @@ describe('UserLoginPageComponent', () => {
     TestBed.configureTestingModule({
       imports: [HttpClientModule],
       declarations: [ UserLoginPageComponent, EbiHeaderComponent ],
-      providers: [
-        {provide: Router, useClass: MockRouter},
-        AuthService,
-        TokenService,
-        {
-          provide: 'AAP_CONFIG',
-          useValue: {
-            authURL: environment.authenticationHost
-          }
-        }
-      ]
     })
     .compileComponents();
   }));

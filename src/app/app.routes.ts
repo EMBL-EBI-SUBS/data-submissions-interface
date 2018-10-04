@@ -16,6 +16,7 @@ import { ContactsPageComponent } from './pages/submission-pages/contacts-page/co
 import { OverviewPageComponent } from './pages/submission-pages/overview-page/overview-page.component';
 import { SubmitPageComponent } from './pages/submission-pages/submit-page/submit-page.component';
 import { ProjectCreatePageComponent } from './pages/projects/create/project-create-page.component';
+import { UserTeamPageComponent } from './pages/user-team-page/user-team-page.component';
 
 // Import Guards.
 import { LoggedInGuard } from './guards/logged-in/logged-in.guard';
@@ -37,6 +38,7 @@ export const ROUTES: Routes = [
   { path: 'submission/submit', component: SubmitPageComponent, canActivate: [LoggedInGuard] },
   { path: 'dashboard', component: DashboardPageComponent, canActivate: [LoggedInGuard] },
   { path: 'user/login', component: UserLoginPageComponent },
+  { path: 'user/teams', component: UserTeamPageComponent, canActivate: [LoggedInGuard] },
   { path: 'faq', component: FAQPageComponent},
   { path: 'helpdesk', component: HelpPageComponent },
   { path: '**', component: NotFoundPageComponent },
