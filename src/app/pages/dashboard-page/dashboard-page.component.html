@@ -14,7 +14,7 @@
         </p>
       </div>
 
-      <div class="columns small-3">
+      <div class="columns small-3 text-right">
         <a class="button" (click)="onStartSubmission()">Start a new Submission</a>
       </div>
     </div>
@@ -51,7 +51,7 @@
       </tbody>
     </table>
 
-    <ul class="pagination" *ngIf="submissions && submissions.page.totalPages > 0">
+    <ul class="pagination" *ngIf="submissions && submissions.page.totalPages > 1">
       <li class="arrow">
         <a (click)="onPagerClick('first')" *ngIf="!(submissions.page.number == 0)">&laquo; First</a>
       </li>

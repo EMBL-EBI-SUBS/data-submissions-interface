@@ -1,28 +1,20 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
-import { TokenService } from 'angular-aap-auth';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 
 declare var Choices;
 
 @Component({
   selector: 'project-create-page',
   templateUrl: './project-create-page.component.html',
-  styleUrls: ['./project-create-page.component.scss'],
-  providers: [
-    TokenService
-  ]
+  styleUrls: ['./project-create-page.component.scss']
 })
 export class ProjectCreatePageComponent implements OnInit {
-  token: string;
   projectForm: any;
 
   constructor(
-    private tokenService: TokenService,
   ) { }
 
   ngOnInit() {
-    this.token = this.tokenService.getToken();
-
     this.projectForm = new FormGroup({
       project: new FormControl('_create', Validators.required),
       projectTitle: new FormControl('', Validators.required),
