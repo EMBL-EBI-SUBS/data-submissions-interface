@@ -1,6 +1,5 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { RequestOptions } from '@angular/http';
 // Import Service Variables.
 import { VariablesService } from './variables.service';
 
@@ -63,15 +62,22 @@ export class RequestsService {
    * Partially update an existing record.
    */
   partialUpdate(token, url, data, requestParam = {}) {
-      const requestOptions = new RequestOptions({
-          params: requestParam
-      });
+    const httpParams = new HttpParams();
+    for (const key in requestParam) {
+      if (requestParam.hasOwnProperty(key)) {
+        httpParams.append(key, requestParam[key]);
+      }
+    }
 
-      // Post an Empty object to create submission.
-      const body = JSON.stringify(data);
-      const requestUrl =  url;
+    // Post an Empty object to create submission.
+    const body = JSON.stringify(data);
+    const requestUrl =  url;
 
-      return this.http.patch(requestUrl, body);
+    return this.http.patch(
+        requestUrl,
+        body,
+        { params: httpParams }
+    );
   }
 
   /**

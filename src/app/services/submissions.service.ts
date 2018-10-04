@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { RequestOptions } from '@angular/http';
+import { HttpParams } from '@angular/common/http';
 import { of } from 'rxjs';
 import { flatMap, map } from 'rxjs/operators';
 // Import Service Variables.
@@ -29,16 +29,22 @@ export class SubmissionsService {
    * Create new record.
    */
   create(token, url, bodyData = {}, requestParam = {}) {
-    let requestOptions = new RequestOptions({
-        params: requestParam
-    });
-
+    const httpParams = new HttpParams();
+    for (const key in requestParam) {
+      if (requestParam.hasOwnProperty(key)) {
+        httpParams.append(key, requestParam[key]);
+      }
+    }
 
     // Post an Empty object to create submission.
-    let body = JSON.stringify(bodyData);
+    const body = JSON.stringify(bodyData);
 
-    let requestUrl =  url;
-    var response = this.http.post(requestUrl, body);
+    const requestUrl =  url;
+    const response = this.http.post(
+      requestUrl,
+      body,
+      { params: httpParams }
+    );
     return response;
   }
 

@@ -31,8 +31,8 @@ export class OverviewPageComponent implements OnInit {
   activeSubmission: any;
   activeTeam: any;
   submissionPlans= [];
-  selectedSubmissionPlan: any;
-  savedSubmissionPlan: any;
+  selectedSubmissionPlan: FormControl;
+  savedSubmissionPlan: FormControl;
   savedHuman: string;
   savedControlled: string;
   teams = [];
@@ -129,7 +129,6 @@ export class OverviewPageComponent implements OnInit {
       const updateSubmissionUrl = this.activeSubmission._links['self:update'].href;
       this.requestsService.partialUpdate(this.token, updateSubmissionUrl, bodyData, requestParam).subscribe(
           (data) => {
-
             // Save Updated Submission to the Session.
             this.submissionsService.deleteActiveSubmission();
             this.submissionsService.setActiveSubmission(data);
@@ -293,7 +292,7 @@ export class OverviewPageComponent implements OnInit {
 
     if (fieldName === 'submissionPlan') {
       this.selectedSubmissionPlan = this.savedSubmissionPlan;
-      this.savedSubmissionPlan = '';
+      this.savedSubmissionPlan = null;
     }
   }
 
@@ -316,20 +315,18 @@ export class OverviewPageComponent implements OnInit {
   }
 
   private createRequestBodyAndParams() {
-    // tslint:disable-next-line:prefer-const
-    let overviewData = {};
-    overviewData['human'] = this.overviewForm.value.human;
-    overviewData['controlled'] = this.overviewForm.value.controlled;
-    overviewData['submissionPlan'] = this.overviewForm.value.submissionPlan;
-
     return {
       'body' : {
         'uiData' : {
-          'overview' : overviewData
+          'overview' : {
+            human: this.overviewForm.value.human,
+            controlled: this.overviewForm.value.controlled,
+            submissionPlan: this.overviewForm.value.submissionPlan,
+          }
         }
       },
       'requestparam': {
-        'submissionPlanId': overviewData['submissionPlan']['id']
+        'submissionPlanId': this.overviewForm.value.submissionPlan.id
       }
     };
   }
