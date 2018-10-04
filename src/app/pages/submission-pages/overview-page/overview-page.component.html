@@ -27,7 +27,6 @@
           </div>
         </fieldset>
 
-
         <fieldset class="large-form padding-bottom-large padding-top-large">
           <legend>Does it require controlled access once it becomes public?</legend>
           <input type="radio" *ngIf="!savedControlled" name="controlled" value="1" formControlName="controlled" id="controlledYes" (change)="onUpdateField('controlled')">
@@ -54,34 +53,22 @@
           </div>
           <!-- <button (click)="onMyTest('hello there')" (mouseover)="onMyTest('rollover')" (mouseout)="onMyTest('rollout')">Hi</button> -->
         </fieldset>
-      </fieldset>
 
-      <input type="hidden" name="dataType" formControlName="dataType" />
-      <input type="hidden" name="dataSubType[]" formControlName="dataSubType" />
-
-      <fieldset required class="large-form padding-bottom-large padding-top-large" [disabled]="!savedGDPR">
-        <legend>Data type</legend>
+        <input type="hidden" name="submissionPlan" formControlName="submissionPlan" />
 
         <fieldset class="large-form padding-bottom-large padding-top-large">
           <legend>What type of data are you submitting?</legend>
-          Dataypes: {{dataTypes.length}}
-          <div *ngIf="!savedDataType" class="buttons-wrapper">
-            <button *ngFor="let key of objectKeys(dataTypes)" (click)="onSelectDataType($event, key)" [class.selected]="key == selectedDataType"  class="data-type-button button" [disabled]="!savedGDPR">{{key}}</button>
+          <div *ngIf="!savedSubmissionPlan" class="buttons-wrapper">
+            <ul>
+              <li *ngFor="let subPlan of submissionPlans">
+                  <button (click)="onSelectSubmissionPlan($event, subPlan)" [class.selected]="subPlan == selectedSubmissionPlan"  class="submission-plan-button button" >{{subPlan.displayName}}</button>
+                  <label>{{subPlan.description}}</label>
+              </li>
+            </ul>
           </div>
-          <div *ngIf="savedDataType">
-            You have selected: <span class="font-weight-bold">{{savedDataType}}</span> <a (click)="onChangeField('dataType')"> (Change)</a>
+          <div *ngIf="savedSubmissionPlan">
+            You have selected: <span class="font-weight-bold">{{savedSubmissionPlan.displayName}}</span> <a (click)="onChangeField('submissionPlan')"> (Change)</a>
           </div>
-
-          <span *ngIf="(selectedDataType && dataTypes[selectedDataType] && dataTypes[selectedDataType].length > 0) || savedDataSubType.length > 0">
-            <legend class="margin-bottom-15" >And more specifically?</legend>
-            <div *ngIf="savedDataSubType.length == 0" class="buttons-wrapper">
-              <button *ngFor="let subDataKey of dataTypes[selectedDataType]" (click)="onSelectSubDataType($event, subDataKey)" [class.selected]="isDataSubTypeSelected(subDataKey)"  class="button data-subtype-button">{{subDataKey}}</button>
-            </div>
-            <div *ngIf="savedDataSubType.length > 0">
-                You have selected: <span class="font-weight-bold" >{{savedDataSubType.join(", ")}}</span>
-            </div>
-          </span>
-
         </fieldset>
       </fieldset>
 
