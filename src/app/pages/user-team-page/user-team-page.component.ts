@@ -41,9 +41,7 @@ export class UserTeamPageComponent implements OnInit {
   initializeData() {
     this.requestsService.get(this.userteamsEndpoint).subscribe(
       data => {
-        try {
-          this.teams = data;
-        } catch (e) {}
+        this.teams = data;
       },
       err => {
         // TODO: Handle Errros.
