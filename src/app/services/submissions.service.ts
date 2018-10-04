@@ -16,10 +16,7 @@ export class SubmissionsService {
   /**
    * Get record.
    */
-  get(token, url) {
-    // Post an Empty object to create submission.
-    let body = JSON.stringify({});
-
+  get(url) {
     let requestUrl =  url;
     var response = this.http.get(requestUrl);
     return response;
@@ -28,7 +25,7 @@ export class SubmissionsService {
   /**
    * Create new record.
    */
-  create(token, url, bodyData = {}) {
+  create(url, bodyData = {}) {
     // Post an Empty object to create submission.
     let body = JSON.stringify(bodyData);
 
@@ -40,13 +37,13 @@ export class SubmissionsService {
   /**
    * List Projects for Current Logged in user.
    */
-  getDataTypes(token: String) {
+  getDataTypes() {
     let requestUrl =  this.dataTypesEndpoint;
     var response = this.http.get(requestUrl);
     return response;
   }
 
-  getActiveSubmissionsFiles(token: String){
+  getActiveSubmissionsFiles(){
     let activeSubmission = this.getActiveSubmission();
     let contentsLinks = activeSubmission['_links']['contents']['href'];
     var response = this.http.get(contentsLinks).pipe(
@@ -67,7 +64,7 @@ export class SubmissionsService {
   /**
    * Get Project for Submission.
    */
-  getActiveSubmissionProject(token: String) {
+  getActiveSubmissionProject() {
     let activeSubmission = this.getActiveSubmission();
 
     if(!activeSubmission) {
@@ -78,16 +75,16 @@ export class SubmissionsService {
       let contentsLinks = activeSubmission['_links']['contents']['href'];
       var response = this.http.get(contentsLinks).pipe(
         map(res => {
-          activeSubmission._links.contents['_links'] = response['_links'];
+          activeSubmission._links.contents['_links'] = res['_links'];
           this.setActiveSubmission(activeSubmission);
-          return response['_links']['project']['href'];
+          return res['_links']['project']['href'];
         }),
         flatMap((projectsUrl) => {
           return this.http.get(projectsUrl);
         }),
         map(res => {
-          this.setActiveProject(response);
-          return response;
+          this.setActiveProject(res);
+          return res;
         })
       );
 
@@ -97,7 +94,7 @@ export class SubmissionsService {
       try {
         let projectsLinks = activeSubmission['_links']['contents']['_links']['project']['href'];
 
-        let response = this.http.get(projectsLinks).pipe(
+        this.http.get(projectsLinks).pipe(
           map(response => {
             if(response.hasOwnProperty("_embedded") && response['_embedded'].hasOwnProperty("project")) {
               let activeProject = response['._embedded'].project.pop();

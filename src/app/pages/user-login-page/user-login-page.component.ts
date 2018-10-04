@@ -20,26 +20,22 @@ import { map, catchError } from 'rxjs/operators';
   ]
 })
 export class UserLoginPageComponent implements OnInit {
-  private tokenListener: Function;
-  token: string;
   constructor(
       public renderer: Renderer,
       public authService: AuthService,
       private userService: UserService,
       private teamsService: TeamsService,
-      private tokenService: TokenService,
       private router: Router,
   ) {}
 
   ngOnInit() {
     // TODO: Improve this nested calls. maybe using flatMap
     this.authService.addLogInEventListener(() => {
-      this.token = this.tokenService.getToken();
 
-      this.userService.getUserTeams(this.token).subscribe (
+      this.userService.getUserTeams().subscribe (
         (data) => {
             if(data['page']['totalElements'] == 0) {
-            this.teamsService.createTeam(this.token).subscribe(
+            this.teamsService.createTeam().subscribe(
               (data) => {
                 this.authService.logOut();
                 alert("New team has beeen created, you have to login again.");

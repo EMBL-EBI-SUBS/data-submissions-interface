@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { TokenService } from 'angular-aap-auth';
 
 // Import Services.
 import { SubmissionsService } from '../../../services/submissions.service';
@@ -16,14 +15,12 @@ import { RequestsService } from '../../../services/requests.service';
     SubmissionsService,
     TeamsService,
     RequestsService,
-    TokenService
   ]
 })
 export class ContactsPageComponent implements OnInit {
   contactForm: FormGroup;
   activeSubmission: any;
   activeProject: any;
-  token: string;
 
   tabLinks: any = [
     {"title": "Overview", "href": "/submission/overview"},
@@ -39,13 +36,11 @@ export class ContactsPageComponent implements OnInit {
       private submissionsService: SubmissionsService,
       private requestsService: RequestsService,
       private teamsService: TeamsService,
-      private tokenService: TokenService,
       private router: Router,
   ) { }
 
   ngOnInit() {
     this.activeSubmission = this.submissionsService.getActiveSubmission();
-    this.token = this.tokenService.getToken();
     this.getActiveProject();
 
     this.contactForm = new FormGroup({
@@ -64,7 +59,7 @@ export class ContactsPageComponent implements OnInit {
   onAddContact() {
     this.activeProject.contacts.push(this.contactForm.value);
     let projectUpdateUrl = this.activeProject._links['self:update'].href;
-    this.requestsService.update(this.token, projectUpdateUrl, this.activeProject).subscribe(
+    this.requestsService.update(projectUpdateUrl, this.activeProject).subscribe(
       (project) => {
         this.submissionsService.setActiveProject(project);
       },
@@ -82,7 +77,7 @@ export class ContactsPageComponent implements OnInit {
   onDeleteContact(contactIndex: number) {
     this.activeProject.contacts.splice(contactIndex, 1);
     let projectUpdateUrl = this.activeProject._links['self:update'].href;
-    this.requestsService.update(this.token, projectUpdateUrl, this.activeProject).subscribe(
+    this.requestsService.update(projectUpdateUrl, this.activeProject).subscribe(
       (project) => {
         this.submissionsService.setActiveProject(project);
       },
@@ -97,7 +92,7 @@ export class ContactsPageComponent implements OnInit {
 
     // If there is no active project stored in session.
     if (!this.activeProject) {
-      this.submissionsService.getActiveSubmissionProject(this.token).subscribe(
+      this.submissionsService.getActiveSubmissionProject().subscribe(
         (data) => {
           if(data) {
             this.activeProject = data;

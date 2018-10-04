@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from "../../environments/environment";
-// import { retry } from 'rxjs/operators';
 
 @Injectable()
 export class EndpointService {
@@ -12,11 +11,13 @@ export class EndpointService {
     this._http.get(environment.apiHost).subscribe(response => this.cache = response);
   }
 
-  public find(name: string): string | null{
-    if(this.cache[name]){
-      return this.cache[name]['href'];
+  async find(name: string) {
+    if (this.cache['_links'] && this.cache['_links'][name]) {
+      return this.cache['_links'][name]['href'];
     }
-    return null;
+
+    this.cache = await this._http.get(environment.apiHost).toPromise();
+    return this.cache['_links'][name]['href'];
   }
 
 }

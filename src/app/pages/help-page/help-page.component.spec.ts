@@ -1,10 +1,7 @@
 /* tslint:disable:no-unused-variable */
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
-import { DebugElement } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { AuthService, TokenService } from 'angular-aap-auth';
 
 import { MockRouter } from '../../testing/mockrouter.tests';
 
@@ -25,14 +22,6 @@ describe('HelpPageComponent', () => {
      ],
      providers: [
        {provide: Router, useClass: MockRouter},
-       AuthService,
-       TokenService,
-       {
-         provide: 'AAP_CONFIG',
-         useValue: {
-           authURL: environment.authenticationHost
-         }
-       }
      ]
     })
     .compileComponents();
