@@ -37,6 +37,7 @@ export class OverviewPageComponent implements OnInit {
   savedDataSubType = [];
   savedHuman: string;
   savedControlled: string;
+  savedGDPR: string;
   dataSubTypes= [];
   teams = [];
 
@@ -63,6 +64,7 @@ export class OverviewPageComponent implements OnInit {
     this.overviewForm = new FormGroup({
       human: new FormControl(null, Validators.required),
       controlled: new FormControl(null, Validators.required),
+      gdpr: new FormControl(null, Validators.required),
       dataType: new FormControl('', Validators.required),
       dataSubType: new FormControl(''),
     });
@@ -85,6 +87,7 @@ export class OverviewPageComponent implements OnInit {
     let overviewData = {};
     overviewData['human'] = this.overviewForm.value.human;
     overviewData['controlled'] = this.overviewForm.value.controlled;
+    overviewData['gdpr'] = this.overviewForm.value.gdpr;
     overviewData['dataType'] = this.overviewForm.value.dataType;
     overviewData['dataSubType'] = this.overviewForm.value.dataSubType;
 
@@ -135,6 +138,7 @@ export class OverviewPageComponent implements OnInit {
     let overviewData = {};
     overviewData['human'] = this.overviewForm.value.human;
     overviewData['controlled'] = this.overviewForm.value.controlled;
+    overviewData['gdpr'] = this.overviewForm.value.gdpr;
     overviewData['dataType'] = this.overviewForm.value.dataType;
     overviewData['dataSubType'] = this.overviewForm.value.dataSubType;
 
@@ -195,10 +199,12 @@ export class OverviewPageComponent implements OnInit {
         this.savedDataSubType = this.activeSubmission.uiData.overview.dataSubType;
         this.savedHuman = this.activeSubmission.uiData.overview.human;
         this.savedControlled = this.activeSubmission.uiData.overview.controlled;
+        this.savedGDPR = this.activeSubmission.uiData.overview.gdpr;
 
         this.overviewForm.patchValue({
           human:  this.activeSubmission.uiData.overview.human,
           controlled: this.activeSubmission.uiData.overview.controlled,
+          gdpr: this.activeSubmission.uiData.overview.gdpr,
           dataType: this.activeSubmission.uiData.overview.dataType,
           dataSubType: this.activeSubmission.uiData.overview.dataSubType,
         });
@@ -341,6 +347,10 @@ export class OverviewPageComponent implements OnInit {
       delete this.savedControlled;
     }
 
+    if(fieldName == 'gdpr'){
+      delete this.savedGDPR;
+    }
+
     if(fieldName == 'dataType') {
       this.selectedDataType = this.savedDataType;
       this.savedDataType = "";
@@ -357,6 +367,10 @@ export class OverviewPageComponent implements OnInit {
     if(fieldName == "controlled") {
       this.savedControlled = this.overviewForm.value[fieldName];
     }
+
+    if(fieldName == "gdpr") {
+      this.savedGDPR = this.overviewForm.value[fieldName];
+    }
   }
 
   isTabsDisabled() {
@@ -366,4 +380,8 @@ export class OverviewPageComponent implements OnInit {
 
     return false;
   }
+
+  // onMyTest(msg: string) {
+  //   console.log(msg);
+  // }
 }

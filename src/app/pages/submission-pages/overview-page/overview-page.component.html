@@ -38,18 +38,35 @@
            You have selected : <span class="font-weight-bold">{{savedControlled == 1 ? 'Yes' : 'No'}}</span> <a (click)="onChangeField('controlled')"> (Change)</a>
           </div>
         </fieldset>
+
+
+        <fieldset class="large-form padding-bottom-large padding-top-large">
+          <legend>This service requires limited processing of your personal data in order to function.<br />By using the site you are agreeing to this as outlined in our <a href="https://www.ebi.ac.uk/data-protection/privacy-notice/ebi-wide-submission" target="_blank">Privacy Notice</a> and <a href="https://www.ebi.ac.uk/about/terms-of-use" target="_blank">Terms of Use</a></legend>
+          <!-- TODO: this should be a checkbox rather than radio button, but need to create styles for it match -->
+          <!-- <input type="checkbox" checked="savedGDPR" name="gdpr" value="1" formControlName="gdpr" id="gdprYes" (change)="onUpdateField('gdpr')">
+            <label for="gdprYes">Yes, I agree</label> -->
+          <input type="radio" *ngIf="!savedGDPR" name="gdpr" value="1" formControlName="gdpr" id="gdprYes" (change)="onUpdateField('gdpr')">
+            <label for="gdprYes" *ngIf="!savedGDPR">Yes, I agree</label>
+          <input type="radio" *ngIf="!savedGDPR" name="gdpr" value="0" formControlName="gdpr" id="gdprNo" (change)="onUpdateField('gdpr')">
+            <label for="gdprNo" *ngIf="!savedGDPR">I don't agree</label>
+          <div *ngIf="savedGDPR">
+           You have selected : <span class="font-weight-bold">{{savedGDPR == 1 ? 'Yes' : 'No'}}</span> <a (click)="onChangeField('gdpr')"> (Change)</a>
+          </div>
+          <!-- <button (click)="onMyTest('hello there')" (mouseover)="onMyTest('rollover')" (mouseout)="onMyTest('rollout')">Hi</button> -->
+        </fieldset>
       </fieldset>
 
       <input type="hidden" name="dataType" formControlName="dataType" />
       <input type="hidden" name="dataSubType[]" formControlName="dataSubType" />
 
-      <fieldset required class="large-form padding-bottom-large padding-top-large">
+      <fieldset required class="large-form padding-bottom-large padding-top-large" [disabled]="!savedGDPR">
         <legend>Data type</legend>
 
         <fieldset class="large-form padding-bottom-large padding-top-large">
           <legend>What type of data are you submitting?</legend>
+          Dataypes: {{dataTypes.length}}
           <div *ngIf="!savedDataType" class="buttons-wrapper">
-            <button *ngFor="let key of objectKeys(dataTypes)" (click)="onSelectDataType($event, key)" [class.selected]="key == selectedDataType"  class="data-type-button button" >{{key}}</button>
+            <button *ngFor="let key of objectKeys(dataTypes)" (click)="onSelectDataType($event, key)" [class.selected]="key == selectedDataType"  class="data-type-button button" [disabled]="!savedGDPR">{{key}}</button>
           </div>
           <div *ngIf="savedDataType">
             You have selected: <span class="font-weight-bold">{{savedDataType}}</span> <a (click)="onChangeField('dataType')"> (Change)</a>
