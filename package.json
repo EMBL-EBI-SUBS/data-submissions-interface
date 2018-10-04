@@ -8,10 +8,11 @@
     "start": "ng serve",
     "build": "ng build",
     "test": "ng test",
+    "test:chrome": "ng test --karma-config=src/karma_chrome.conf.js --source-map=false --watch",
     "lint": "ng lint",
     "e2e": "ng e2e",
     "build:dev": "ng build --base-href 'https://submission-dev.ebi.ac.uk/api'",
-    "build:staging": "ng build --staging --base-href 'https://submission-test.ebi.ac.uk/api'",
+    "build:staging": "ng build --configuration=staging --base-href 'https://submission-test.ebi.ac.uk/api'",
     "build:prod": "ng build --prod --base-href 'https://submission.ebi.ac.uk/api'"
   },
   "private": true,

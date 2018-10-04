@@ -344,10 +344,10 @@ div.ds-tabs {
   font-weight: bold;
 }
 
-.data-type-button,
-.data-subtype-button {
+.submission-plan-button {
   background: $button-secondary;
   margin-right: 10px;
+  display: inline;
   opacity: .4;
 
   &.selected,
@@ -370,5 +370,14 @@ div.ds-tabs {
 
   textarea {
     margin: 0;
+  }
+}
+
+.buttons-wrapper {
+  li {
+    list-style-type: none;
+  }
+  label {
+    display: inline;
   }
 }

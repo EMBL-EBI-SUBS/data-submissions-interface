@@ -1,8 +1,5 @@
-
-import {map} from 'rxjs/operators';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-
 // Import Service Variables.
 import { VariablesService } from './variables.service';
 
@@ -64,13 +61,23 @@ export class RequestsService {
   /**
    * Partially update an existing record.
    */
-  partialUpdate(url, data) {
-      // Post an Empty object to create submission.
-      let body = JSON.stringify(data);
+  partialUpdate(url, data, requestParam = {}) {
+    const httpParams = new HttpParams();
+    for (const key in requestParam) {
+      if (requestParam.hasOwnProperty(key)) {
+        httpParams.append(key, requestParam[key]);
+      }
+    }
 
-      let requestUrl =  url;
-      var response = this.http.patch(requestUrl, body);
-      return response;
+    // Post an Empty object to create submission.
+    const body = JSON.stringify(data);
+    const requestUrl =  url;
+
+    return this.http.patch(
+        requestUrl,
+        body,
+        { params: httpParams }
+    );
   }
 
   /**
