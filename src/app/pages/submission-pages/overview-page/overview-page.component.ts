@@ -125,7 +125,6 @@ export class OverviewPageComponent implements OnInit {
     const bodyAndParam = this.createRequestBodyAndParams();
     const bodyData = bodyAndParam.body;
     const requestParam = bodyAndParam.requestparam;
-
     // If Submission Exist, Update Request.
     if (this.activeSubmission) {
       const updateSubmissionUrl = this.activeSubmission._links['self:update'].href;
@@ -313,7 +312,7 @@ export class OverviewPageComponent implements OnInit {
       this.savedControlled = this.overviewForm.value[fieldName];
     }
 
-    if(fieldName == "gdpr") {
+    if(fieldName === "gdpr") {
       this.savedGDPR = this.overviewForm.value[fieldName];
     }
   }
@@ -333,6 +332,7 @@ export class OverviewPageComponent implements OnInit {
           'overview' : {
             human: this.overviewForm.value.human,
             controlled: this.overviewForm.value.controlled,
+            gdpr: this.overviewForm.value.gdpr,
             submissionPlan: this.overviewForm.value.submissionPlan,
           }
         }
