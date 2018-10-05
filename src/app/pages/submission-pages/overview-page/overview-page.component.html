@@ -23,7 +23,7 @@
           <input *ngIf="!savedHuman" type="radio" name="human" value="0" formControlName="human" id="humanNo" (change)="onUpdateField('human')">
             <label *ngIf="!savedHuman" for="humanNo">No</label>
           <div *ngIf="savedHuman">
-            You have selected : <span class="font-weight-bold">{{savedHuman === 1 ? 'Yes' : 'No'}}</span> <a (click)="onChangeField('human')"> (Change)</a>
+            You have selected : <span class="font-weight-bold">{{savedHuman === '1' ? 'Yes' : 'No'}}</span> <a (click)="onChangeField('human')"> (Change)</a>
           </div>
         </fieldset>
 
@@ -34,7 +34,7 @@
           <input type="radio" *ngIf="!savedControlled" name="controlled" value="0" formControlName="controlled" id="controlledNo" (change)="onUpdateField('controlled')">
             <label for="controlledNo" *ngIf="!savedControlled">No</label>
           <div *ngIf="savedControlled">
-           You have selected : <span class="font-weight-bold">{{savedControlled === 1 ? 'Yes' : 'No'}}</span> <a (click)="onChangeField('controlled')"> (Change)</a>
+           You have selected : <span class="font-weight-bold">{{savedControlled === '1' ? 'Yes' : 'No'}}</span> <a (click)="onChangeField('controlled')"> (Change)</a>
           </div>
         </fieldset>
 
@@ -49,7 +49,7 @@
           <input type="radio" *ngIf="!savedGDPR" name="gdpr" value="0" formControlName="gdpr" id="gdprNo" (change)="onUpdateField('gdpr')">
             <label for="gdprNo" *ngIf="!savedGDPR">I don't agree</label>
           <div *ngIf="savedGDPR">
-           You have selected : <span class="font-weight-bold">{{savedGDPR === 1 ? 'Yes' : 'No'}}</span> <a (click)="onChangeField('gdpr')"> (Change)</a>
+           You have selected : <span class="font-weight-bold">{{savedGDPR === '1' ? 'Yes' : 'No'}}</span> <a (click)="onChangeField('gdpr')"> (Change)</a>
           </div>
         </fieldset>
 
