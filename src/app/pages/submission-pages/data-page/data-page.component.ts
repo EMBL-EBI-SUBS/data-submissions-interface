@@ -7,11 +7,12 @@ import { SubmissionsService } from '../../../services/submissions.service';
 import { TeamsService } from '../../../services/teams.service';
 import { environment } from '../../../../environments/environment';
 
-import Uppy  from '@uppy/core';
+import Uppy from '@uppy/core';
 import Dashboard from '@uppy/dashboard';
 import Tus from '@uppy/tus';
 import Form from '@uppy/form';
 import GoldenRetriever from '@uppy/golden-retriever';
+import { FileService } from 'src/app/services/file.service';
 
 declare var $;
 declare var require: any;
@@ -23,14 +24,15 @@ declare var require: any;
   providers: [
     SubmissionsService,
     TeamsService,
-    TokenService
+    TokenService,
+    FileService
   ]
 })
 export class DataPageComponent implements OnInit {
   activeSubmission: any;
 
   uploadEndpoint  = environment.uploadEndpoint;
-  uploadUppy : any;
+  uploadUppy: any;
   files: any;
   userHasTeam = true;
   token: string;
@@ -49,6 +51,7 @@ export class DataPageComponent implements OnInit {
     private submissionsService: SubmissionsService,
     private teamsService: TeamsService,
     private tokenService: TokenService,
+    private fileService: FileService
   ) { }
 
   ngOnInit() {
@@ -91,6 +94,11 @@ export class DataPageComponent implements OnInit {
 
   }
 
+  onDeleteFile(event, file) {
+    const fileHref = file._links.file.href;
+
+    this.fileService.deleteFile(fileHref);
+  }
 
   onSaveExit() {
     this.submissionsService.deleteActiveSubmission();

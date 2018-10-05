@@ -76,8 +76,8 @@ export class ProjectsPageComponent implements OnInit {
   }
 
   onDeleteProject(projectItem: any) {
-    let deleteLinkEndpoint = projectItem._links['self:delete'].href;
-    this.requestsService.delete(this.token, deleteLinkEndpoint).subscribe (
+    const deleteLinkEndpoint = projectItem._links['self:delete'].href;
+    this.requestsService.delete(deleteLinkEndpoint).subscribe (
       (data) => {
         // Update submissions list.
         this.projects._embedded.projects = this.projects._embedded.projects.filter(obj => obj !== projectItem);
