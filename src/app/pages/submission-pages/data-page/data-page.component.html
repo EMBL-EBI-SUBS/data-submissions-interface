@@ -42,7 +42,7 @@
           <tr *ngFor="let file of files">
             <td>{{file.filename}}</td>
             <td>{{file.uploadStartDate}}</td>
-            <td>{{file.totalSize}} bytes</td>
+            <td>{{file.totalSize | filesize}}</td>
             <td>{{file.status}}</td>
             <td></td>
           </tr>
