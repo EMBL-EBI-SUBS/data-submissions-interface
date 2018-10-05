@@ -32,6 +32,7 @@ export class OverviewPageComponent implements OnInit {
   savedSubmissionPlan: FormControl;
   savedHuman: string;
   savedControlled: string;
+  savedGDPR: string;
   teams = [];
 
   tabLinks: any = [
@@ -55,6 +56,7 @@ export class OverviewPageComponent implements OnInit {
     this.overviewForm = new FormGroup({
       human: new FormControl(null, Validators.required),
       controlled: new FormControl(null, Validators.required),
+      gdpr: new FormControl(null, Validators.required),
       submissionPlan: new FormControl('', Validators.required),
     });
     // Load User Teams.
@@ -118,7 +120,6 @@ export class OverviewPageComponent implements OnInit {
     const bodyAndParam = this.createRequestBodyAndParams();
     const bodyData = bodyAndParam.body;
     const requestParam = bodyAndParam.requestparam;
-
     // If Submission Exist, Update Request.
     if (this.activeSubmission) {
       const updateSubmissionUrl = this.activeSubmission._links['self:update'].href;
@@ -167,10 +168,12 @@ export class OverviewPageComponent implements OnInit {
         this.savedSubmissionPlan = this.activeSubmission.uiData.overview.submissionPlan;
         this.savedHuman = this.activeSubmission.uiData.overview.human;
         this.savedControlled = this.activeSubmission.uiData.overview.controlled;
+        this.savedGDPR = this.activeSubmission.uiData.overview.gdpr;
 
         this.overviewForm.patchValue({
           human:  this.activeSubmission.uiData.overview.human,
           controlled: this.activeSubmission.uiData.overview.controlled,
+          gdpr: this.activeSubmission.uiData.overview.gdpr,
           submissionPlan: this.activeSubmission.uiData.overview.submissionPlan,
         });
       }
@@ -285,6 +288,10 @@ export class OverviewPageComponent implements OnInit {
       delete this.savedControlled;
     }
 
+    if (fieldName === 'gdpr') {
+      delete this.savedGDPR;
+    }
+    
     if (fieldName === 'submissionPlan') {
       this.selectedSubmissionPlan = this.savedSubmissionPlan;
       this.savedSubmissionPlan = null;
@@ -298,6 +305,10 @@ export class OverviewPageComponent implements OnInit {
 
     if (fieldName === 'controlled') {
       this.savedControlled = this.overviewForm.value[fieldName];
+    }
+
+    if (fieldName === "gdpr") {
+      this.savedGDPR = this.overviewForm.value[fieldName];
     }
   }
 
@@ -316,6 +327,7 @@ export class OverviewPageComponent implements OnInit {
           'overview' : {
             human: this.overviewForm.value.human,
             controlled: this.overviewForm.value.controlled,
+            gdpr: this.overviewForm.value.gdpr,
             submissionPlan: this.overviewForm.value.submissionPlan,
           }
         }
