@@ -288,7 +288,7 @@ export class OverviewPageComponent implements OnInit {
       delete this.savedControlled;
     }
 
-    if(fieldName === 'gdpr'){
+    if (fieldName === 'gdpr') {
       delete this.savedGDPR;
     }
     
@@ -307,7 +307,7 @@ export class OverviewPageComponent implements OnInit {
       this.savedControlled = this.overviewForm.value[fieldName];
     }
 
-    if(fieldName === "gdpr") {
+    if (fieldName === "gdpr") {
       this.savedGDPR = this.overviewForm.value[fieldName];
     }
   }
