@@ -49,7 +49,7 @@
           <input type="radio" *ngIf="!savedGDPR" name="gdpr" value="0" formControlName="gdpr" id="gdprNo" (change)="onUpdateField('gdpr')">
             <label for="gdprNo" *ngIf="!savedGDPR">I don't agree</label>
           <div *ngIf="savedGDPR">
-           You have selected : <span class="font-weight-bold">{{savedGDPR === '1' ? 'Yes' : 'No'}}</span> <a (click)="onChangeField('gdpr')"> (Change)</a>
+           You have selected : <span class="font-weight-bold">{{savedGDPR === '1' ? 'Yes, I agree' : 'I don\'t agree'}}</span> <a (click)="onChangeField('gdpr')"> (Change)</a>
           </div>
         </fieldset>
 
