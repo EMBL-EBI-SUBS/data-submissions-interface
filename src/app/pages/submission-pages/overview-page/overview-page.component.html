@@ -42,14 +42,12 @@
         <fieldset class="large-form padding-bottom-large padding-top-large">
           <legend>This service requires limited processing of your personal data in order to function.<br />By using the site you are agreeing to this as outlined in our <a href="https://www.ebi.ac.uk/data-protection/privacy-notice/ebi-wide-submission" target="_blank">Privacy Notice</a> and <a href="https://www.ebi.ac.uk/about/terms-of-use" target="_blank">Terms of Use</a></legend>
           <!-- TODO: this should be a checkbox rather than radio button, but need to create styles for it match -->
-          <!-- <input type="checkbox" checked="savedGDPR" name="gdpr" value="1" formControlName="gdpr" id="gdprYes" (change)="onUpdateField('gdpr')">
-            <label for="gdprYes">Yes, I agree</label> -->
           <input type="radio" *ngIf="!savedGDPR" name="gdpr" value="1" formControlName="gdpr" id="gdprYes" (change)="onUpdateField('gdpr')">
-            <label for="gdprYes" *ngIf="!savedGDPR">Yes, I agree</label>
+            <label for="gdprYes" *ngIf="!savedGDPR">I agree</label>
           <input type="radio" *ngIf="!savedGDPR" name="gdpr" value="0" formControlName="gdpr" id="gdprNo" (change)="onUpdateField('gdpr')">
             <label for="gdprNo" *ngIf="!savedGDPR">I don't agree</label>
           <div *ngIf="savedGDPR">
-           You have selected : <span class="font-weight-bold">{{savedGDPR === '1' ? 'Yes, I agree' : 'I don\'t agree'}}</span> <a (click)="onChangeField('gdpr')"> (Change)</a>
+           You have selected : <span class="font-weight-bold">{{savedGDPR === '1' ? 'I agree' : 'I don\'t agree'}}</span> <a (click)="onChangeField('gdpr')"> (Change)</a>
           </div>
         </fieldset>
 
@@ -60,7 +58,7 @@
           <div *ngIf="!savedSubmissionPlan" class="buttons-wrapper">
             <ul>
               <li *ngFor="let subPlan of submissionPlans">
-                  <button (click)="onSelectSubmissionPlan($event, subPlan)" [class.selected]="subPlan == selectedSubmissionPlan"  class="submission-plan-button button" [disabled]="!savedGDPR">{{subPlan.displayName}}</button>
+                  <button (click)="onSelectSubmissionPlan($event, subPlan)" [class.selected]="subPlan == selectedSubmissionPlan"  class="submission-plan-button button" [disabled]="!savedGDPR || savedGDPR==='0'">{{subPlan.displayName}}</button>
                   <label>{{subPlan.description}}</label>
               </li>
             </ul>
@@ -70,10 +68,9 @@
           </div>
         </fieldset>
       </fieldset>
-
       <div>
-        <button class="button secondary-color white-background" (click)="onSaveExit()" [disabled]="overviewForm.invalid">Save & exit</button>
-        <button class="button readmore" (click)="onSaveContinue()" [disabled]="overviewForm.invalid">Save &amp; continue</button>
+        <button class="button secondary-color white-background" (click)="onSaveExit()" [disabled]="overviewForm.invalid || savedGDPR==='0'">Save & exit</button>
+        <button class="button readmore" (click)="onSaveContinue()" [disabled]="overviewForm.invalid || savedGDPR==='0'">Save &amp; continue</button>
       </div>
     </form>
   </section>
