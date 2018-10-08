@@ -139,7 +139,7 @@ export class DashboardPageComponent implements OnInit {
   }
 
   onDeleteSubmission(submissionItem: any) {
-    let deleteLinkEndpoint = submissionItem._links['self:delete'].href;
+    const deleteLinkEndpoint = submissionItem._links['self:delete'].href;
     this.requestsService.delete(deleteLinkEndpoint).subscribe (
       (data) => {
         // Update submissions list.
