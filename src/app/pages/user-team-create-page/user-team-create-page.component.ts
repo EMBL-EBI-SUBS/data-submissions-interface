@@ -9,6 +9,7 @@ import { TeamsService } from "../../services/teams.service";
 import { EndpointService } from "../../services/endpoint.service";
 import { RequestsService } from "../../services/requests.service";
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: "app-user-team-create-page",
@@ -47,6 +48,16 @@ export class UserTeamCreatePageComponent implements OnInit {
   onCreateTeam() {
     this.requestsService.create(this.userteamsEndpoint, this.teamCreateForm.value).subscribe(
       data => {
+        this.doRefreshToken();
+      }
+    );
+  }
+
+  doRefreshToken() {
+    this.requestsService.get(environment.apiTokenRefresh, {responseType: 'text'}).subscribe(
+      (data) => {
+        // Updating the token with a new one.
+        localStorage.setItem('jwt_token', data);
         this.onExit();
       }
     );

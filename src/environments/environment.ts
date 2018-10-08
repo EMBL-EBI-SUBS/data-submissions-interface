@@ -6,6 +6,7 @@
 export const environment = {
   production: false,
   apiHost: "https://submission-dev.ebi.ac.uk/api/",
+  apiTokenRefresh: "https://explore.api.aai.ebi.ac.uk/token",
   authenticationHost: "https://explore.api.aai.ebi.ac.uk/",
   uploadEndpoint: "https://submission-dev.ebi.ac.uk/files/", // this end point can be retrieved from apiHost['tus-upload']
   validationSchemaEndpoint: "https://subs-json-schema-validator.herokuapp.com/validate"
