@@ -1,7 +1,6 @@
 import { Component, OnInit, Renderer } from "@angular/core";
 import { Router } from "@angular/router";
 import { AuthService } from "angular-aap-auth";
-import { TokenService } from "angular-aap-auth";
 
 // Import Services.
 import { UserService } from "../../services/user.service";
