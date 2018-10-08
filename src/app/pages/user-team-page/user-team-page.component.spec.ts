@@ -8,7 +8,7 @@ import { AuthService, TokenService } from 'angular-aap-auth';
 
 import { MockRouter } from '../../testing/mockrouter.tests';
 
-import { UserLoginPageComponent } from './user-login-page.component';
+import { UserLoginPageComponent } from '../user-login-page/user-login-page.component';
 import { EbiHeaderComponent } from '../../components/ebi-header/ebi-header.component';
 
 import { environment } from '../../../environments/environment';
