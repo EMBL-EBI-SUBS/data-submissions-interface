@@ -19,7 +19,7 @@ export class FileService {
                 if (response.status === HttpStatus.NO_CONTENT ) {
                     console.log('File has been succcesfully deleted from the storage.');
                 } else {
-                    console.log('File deletion has failed. The reason: ${response.statusText}');
+                    console.log(`File deletion has failed. The reason: ${response.statusText}`);
                 }
             },
             (err) => {
