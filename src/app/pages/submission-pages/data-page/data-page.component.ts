@@ -101,7 +101,7 @@ export class DataPageComponent implements OnInit {
     this.fileService.deleteFile(fileHref).subscribe(
       (response) => {
           if (response.status === HttpStatus.NO_CONTENT ) {
-              console.log(`File: ${file.filename} has been succcesfully deleted from the storage.`);
+              console.debug(`File: ${file.filename} has been succcesfully deleted from the storage.`);
               this.files = this.files.filter(item => item !== file)
           } else {
               console.log(`File deletion has failed. The reason: ${response.statusText}`);
