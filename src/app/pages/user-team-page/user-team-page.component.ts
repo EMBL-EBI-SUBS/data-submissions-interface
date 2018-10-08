@@ -30,7 +30,8 @@ export class UserTeamPageComponent implements OnInit {
     public renderer: Renderer,
     public authService: AuthService,
     public endpointService: EndpointService,
-    public requestsService: RequestsService
+    public requestsService: RequestsService,
+    public router: Router
   ) {}
 
   async ngOnInit() {
@@ -51,7 +52,9 @@ export class UserTeamPageComponent implements OnInit {
 
   onCreateTeamSubmission(team) {}
 
-  onCreateTeam() {}
+  onCreateTeam() {
+    this.router.navigate(["/user/teams/create"]);
+  }
 
   /**
    * Loop across the teams and get submissions for each team and put it in array.
