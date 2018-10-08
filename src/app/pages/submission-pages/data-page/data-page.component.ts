@@ -12,6 +12,7 @@ import Dashboard from '@uppy/dashboard';
 import Tus from '@uppy/tus';
 import Form from '@uppy/form';
 import GoldenRetriever from '@uppy/golden-retriever';
+import * as HttpStatus from 'http-status-codes';
 import { FileService } from 'src/app/services/file.service';
 
 declare var $;
@@ -97,7 +98,19 @@ export class DataPageComponent implements OnInit {
   onDeleteFile(event, file) {
     const fileHref = file._links.file.href;
 
-    this.fileService.deleteFile(fileHref);
+    this.fileService.deleteFile(fileHref).subscribe(
+      (response) => {
+          if (response.status === HttpStatus.NO_CONTENT ) {
+              console.log(`File: ${file.filename} has been succcesfully deleted from the storage.`);
+              this.files = this.files.filter(item => item !== file)
+          } else {
+              console.log(`File deletion has failed. The reason: ${response.statusText}`);
+          }
+      },
+      (err) => {
+        console.log(`File deletion has failed. The reason: ${err.error.title}, message: ${err.message}`);
+      }
+    );
   }
 
   onSaveExit() {
