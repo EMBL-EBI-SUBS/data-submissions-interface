@@ -82,11 +82,7 @@ export class RequestsService {
   /**
    * Delete an existing record.
    */
-  delete(url) {
-    // Post an Empty object to create submission.
-    const body = JSON.stringify({});
-
-    const requestUrl =  url;
+  delete(requestUrl) {
     const response = this.http.delete(
       requestUrl,
       {
