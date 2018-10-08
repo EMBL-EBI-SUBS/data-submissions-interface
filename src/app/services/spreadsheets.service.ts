@@ -16,7 +16,7 @@ export class SpreadsheetsService {
   /**
    * List of templates that user can use.
    */
-  getTemplatesList(token: String, options: any = { size: 12, page: 0}) {
+  getTemplatesList(options: any = { size: 12, page: 0}) {
     let requestUrl =  this.templatesListEndpoint + "?size=" + options.size + "&page=" + options.page;
     var response = this.http.get(requestUrl);
     return response;
@@ -25,7 +25,7 @@ export class SpreadsheetsService {
    /**
    * Create new record.
    */
-  create(token, url, data) {
+  create(url, data) {
     let header = new HttpHeaders({
       'Content-Type' : 'text/csv',
     });

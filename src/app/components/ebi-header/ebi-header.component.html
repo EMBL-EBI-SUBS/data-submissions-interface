@@ -14,6 +14,9 @@
             <a routerLink="/dashboard" routerLinkActive="active">My Data</a>
           </li>
           <li role="menuitem" routerLinkActive="active" *ngIf="authService.isAuthenticated() | async">
+              <a routerLink="/user/teams" routerLinkActive="active">Teams</a>
+            </li>
+          <li role="menuitem" routerLinkActive="active" *ngIf="authService.isAuthenticated() | async">
             <a routerLink="/projects" routerLinkActive="active">Projects</a>
           </li>
           <li role="menuitem" routerLinkActive="active">

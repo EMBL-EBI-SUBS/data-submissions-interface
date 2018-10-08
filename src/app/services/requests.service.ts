@@ -12,7 +12,7 @@ export class RequestsService {
   /**
    * Get record.
    */
-  get(token, url) {
+  get(url) {
     // Post an Empty object to create submission.
     let body = JSON.stringify({});
 
@@ -24,7 +24,7 @@ export class RequestsService {
   /**
    * Create new record.
    */
-  create(token, url, data) {
+  create(url, data) {
     // Post an Empty object to create submission.
     let body = JSON.stringify(data);
 
@@ -48,7 +48,7 @@ export class RequestsService {
   /**
    * Update an existing record.
    */
-  update(token, url, data) {
+  update(url, data) {
     // Post an Empty object to create submission.
     let body = JSON.stringify(data);
 
@@ -60,7 +60,7 @@ export class RequestsService {
   /**
    * Partially update an existing record.
    */
-  partialUpdate(token, url, data, requestParam = {}) {
+  partialUpdate(url, data, requestParam = {}) {
     const httpParams = new HttpParams();
     for (const key in requestParam) {
       if (requestParam.hasOwnProperty(key)) {

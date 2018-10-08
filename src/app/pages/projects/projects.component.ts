@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { TokenService, AuthService } from 'angular-aap-auth';
-import { UserService } from '../../services/user.service';
+import { AuthService } from 'angular-aap-auth';
 import { ProjectsService } from '../../services/projects.service';
 import { RequestsService } from '../../services/requests.service';
 
@@ -11,7 +10,6 @@ import { RequestsService } from '../../services/requests.service';
   styleUrls: ['./projects.component.scss'],
   providers: [
     ProjectsService,
-    UserService,
     RequestsService
   ]
 })
@@ -23,14 +21,9 @@ export class ProjectsPageComponent implements OnInit {
     public authService: AuthService,
     private projectsService: ProjectsService,
     private requestsService: RequestsService,
-    private userService: UserService,
-    private tokenService: TokenService,
-    private router: Router,
   ) { }
 
   ngOnInit() {
-    this.token = this.tokenService.getToken();
-
     // Get all submissions.
     if(!this.projects) {
       this.getUserProjects();
@@ -38,7 +31,7 @@ export class ProjectsPageComponent implements OnInit {
   }
 
   getUserProjects() {
-    this.projectsService.getProjectsList(this.token).subscribe (
+    this.projectsService.getProjectsList().subscribe (
       (data) => {
         // Store active submission in a local variable.
        this.projects = data;
@@ -54,7 +47,7 @@ export class ProjectsPageComponent implements OnInit {
    * Loop across the teams and get submissions for each team and put it in array.
    */
   getUserProjectsByUrl(serviceUrl) {
-    this.requestsService.get(this.token, serviceUrl).subscribe (
+    this.requestsService.get(serviceUrl).subscribe (
       (data) => {
         // Store active submission in a local variable.
         this.projects = data;

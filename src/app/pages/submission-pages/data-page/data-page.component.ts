@@ -57,7 +57,7 @@ export class DataPageComponent implements OnInit {
   ngOnInit() {
     this.activeSubmission = this.submissionsService.getActiveSubmission();
     this.token = this.tokenService.getToken();
-    this.submissionsService.getActiveSubmissionsFiles(this.token).subscribe(
+    this.submissionsService.getActiveSubmissionsFiles().subscribe(
       (data) => {
         this.files = data['_embedded']['files'];
       }

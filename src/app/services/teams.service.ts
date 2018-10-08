@@ -39,10 +39,7 @@ export class TeamsService {
   /**
    * Get Team by name.
    */
-  getTeam(token, name) {
-    // Post an Empty object to create submission.
-    let body = JSON.stringify({});
-
+  getTeam(name) {
     let requestUrl =  this.teamEndpoint + name;
     var response = this.http.get(requestUrl);
     return response;
@@ -51,7 +48,7 @@ export class TeamsService {
   /**
    * Create Team for User.
    */
-  createTeam(token) {
+  createTeam() {
     // Post an Empty object to create submission.
     let body = JSON.stringify({
       "description" : "My lab group",
@@ -66,7 +63,7 @@ export class TeamsService {
   /**
    * Add User to Team.
    */
-  addUserToTeam(token, teamDomainRef, userRef) {
+  addUserToTeam(teamDomainRef, userRef) {
     // Post an Empty object to create submission.
     let body = JSON.stringify({});
 

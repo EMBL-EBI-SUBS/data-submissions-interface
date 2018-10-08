@@ -15,7 +15,7 @@ export class ProjectsService {
   /**
    * List Projects for Current Logged in user.
    */
-  getProjectsList(token: String) {
+  getProjectsList() {
     let requestUrl =  this.projectsListEndpoint;
     var response = this.http.get(requestUrl);
     return response;
