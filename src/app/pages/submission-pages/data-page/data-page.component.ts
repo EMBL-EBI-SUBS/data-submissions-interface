@@ -96,6 +96,10 @@ export class DataPageComponent implements OnInit {
   }
 
   onDeleteFile(event, file) {
+    if (!confirm(`Are you sure you would like to delete this file: ${file.filename}`)) {
+      return;
+    }
+
     const fileHref = file._links.file.href;
 
     this.fileService.deleteFile(fileHref).subscribe(

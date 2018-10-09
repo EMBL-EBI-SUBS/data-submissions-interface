@@ -54,11 +54,14 @@ a.disabled {
   padding: 1.25rem 0.25rem 0.5rem;
 }
 
+.button:focus {
+  background: $button-primary;
+}
+
 .button.hover,
 .button.primary:focus,
 .button.primary:hover,
 .button:active,
-.button:focus,
 .button:hover,
 .tabs-title > a:hover {
   background: none;
