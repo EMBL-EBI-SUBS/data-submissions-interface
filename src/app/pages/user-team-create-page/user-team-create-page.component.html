@@ -17,9 +17,6 @@
 
         <label>Team Description
           <input type="text" placeholder="Enter description of your team" class="form-control" name="description" formControlName="description"/>
-          <span class="form-error" *ngIf="teamCreateForm.get('description').hasError('required')">
-        Description field is required.
-          </span>
         </label>
       </fieldset>
 
