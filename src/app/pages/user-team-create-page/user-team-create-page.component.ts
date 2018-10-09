@@ -53,10 +53,11 @@ export class UserTeamCreatePageComponent implements OnInit {
   }
 
   doRefreshToken() {
-    this.requestsService.get(environment.apiTokenRefresh, {responseType: 'text'}).subscribe(
+    this.requestsService.get(environment.authenticationHost + "/token", {responseType: 'text'}).subscribe(
       (data) => {
+        let retrievedToken = data.toString();
         // Updating the token with a new one.
-        localStorage.setItem('jwt_token', data);
+        localStorage.setItem('jwt_token', retrievedToken);
         this.onExit();
       }
     );
