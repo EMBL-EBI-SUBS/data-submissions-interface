@@ -12,12 +12,9 @@ export class RequestsService {
   /**
    * Get record.
    */
-  get(url) {
-    // Post an Empty object to create submission.
-    let body = JSON.stringify({});
-
+  get(url, options = {}) {
     let requestUrl =  url;
-    var response = this.http.get(requestUrl);
+    var response = this.http.get(requestUrl, options);
     return response;
   }
 

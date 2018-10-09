@@ -13,7 +13,7 @@ export class AuthInterceptor implements HttpInterceptor {
   constructor(private tokenService: TokenService) {}
 
   intercept(req: HttpRequest<any>, next: HttpHandler) {
-    if (!req.url.startsWith(environment.apiHost)) {
+    if (!req.url.startsWith(environment.apiHost) && !req.url.startsWith(environment.authenticationHost)) {
       return next.handle(req);
     }
 

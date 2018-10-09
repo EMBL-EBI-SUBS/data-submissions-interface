@@ -20,6 +20,7 @@ import { UserTeamPageComponent } from './pages/user-team-page/user-team-page.com
 
 // Import Guards.
 import { LoggedInGuard } from './guards/logged-in/logged-in.guard';
+import { UserTeamCreatePageComponent } from './pages/user-team-create-page/user-team-create-page.component';
 
 export const ROUTES: Routes = [
   { path: '', component: DashboardPageComponent, canActivate: [LoggedInGuard] },
@@ -39,6 +40,7 @@ export const ROUTES: Routes = [
   { path: 'dashboard', component: DashboardPageComponent, canActivate: [LoggedInGuard] },
   { path: 'user/login', component: UserLoginPageComponent },
   { path: 'user/teams', component: UserTeamPageComponent, canActivate: [LoggedInGuard] },
+  { path: 'user/teams/create', component: UserTeamCreatePageComponent, canActivate: [LoggedInGuard] },
   { path: 'faq', component: FAQPageComponent},
   { path: 'helpdesk', component: HelpPageComponent },
   { path: '**', component: NotFoundPageComponent },
