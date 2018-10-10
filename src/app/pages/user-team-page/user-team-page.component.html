@@ -2,7 +2,7 @@
   <ebi-header></ebi-header>
 
   <section id="main-content-area" class="row padding-top-xsmall padding-bottom-xsmall" role="main">
-    <h2 class="padding-top-xlarge">Hi {{authService.realname() | async}}</h2>
+    <h2 class="padding-top-xlarge">Teams</h2>
 
     <div class="row">
       <div class="columns small-9">
@@ -17,7 +17,7 @@
       </div>
     </div>
 
-    <div *ngIf="teams?._embedded?.teams?.length > 0">
+    <div *ngIf="teams['_embedded']?.teams?.length > 0">
       <table class="">
         <thead>
           <tr>
@@ -28,7 +28,7 @@
         </thead>
 
         <tbody>
-          <tr *ngFor="let team of teams._embedded.teams">
+          <tr *ngFor="let team of teams['_embedded'].teams">
             <td class="col-date">{{ team.name }}</td>
             <td class="col-title">{{ team.description }}</td>
 

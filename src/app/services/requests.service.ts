@@ -7,18 +7,14 @@ import { VariablesService } from './variables.service';
 export class RequestsService {
   variables = new VariablesService;
 
-
   constructor(private http: HttpClient) { }
 
   /**
    * Get record.
    */
-  get(url) {
-    // Post an Empty object to create submission.
-    let body = JSON.stringify({});
-
+  get(url, options = {}) {
     let requestUrl =  url;
-    var response = this.http.get(requestUrl);
+    var response = this.http.get(requestUrl, options);
     return response;
   }
 
@@ -83,12 +79,14 @@ export class RequestsService {
   /**
    * Delete an existing record.
    */
-  delete(url) {
-    // Post an Empty object to create submission.
-    let body = JSON.stringify({});
-
-    let requestUrl =  url;
-    var response = this.http.delete(requestUrl);
+  delete(requestUrl) {
+    const response = this.http.delete(
+      requestUrl,
+      {
+        observe: 'response',
+        responseType: 'json'
+       }
+      );
     return response;
   }
 }
