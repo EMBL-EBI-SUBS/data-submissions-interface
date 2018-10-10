@@ -58,6 +58,10 @@ a.disabled {
   background: $button-primary;
 }
 
+a.button:hover {
+  color: #000;
+}
+
 .button.hover,
 .button.primary:focus,
 .button.primary:hover,
