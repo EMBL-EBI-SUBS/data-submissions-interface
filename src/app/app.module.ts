@@ -31,6 +31,8 @@ import { FAQPageComponent } from './pages/faq-page/faq-page.component';
 import { HelpPageComponent } from './pages/help-page/help-page.component';
 import { ProjectsPageComponent } from './pages/projects/projects.component';
 import { ProjectCreatePageComponent } from './pages/projects/create/project-create-page.component';
+import { UserTeamPageComponent } from './pages/user-team-page/user-team-page.component';
+import { UserTeamCreatePageComponent } from './pages/user-team-create-page/user-team-create-page.component';
 
 // Import Components.
 import { EbiHeaderComponent } from './components/ebi-header/ebi-header.component';
@@ -69,6 +71,8 @@ export function removeToken(): void {
     NotAuthenticatedPageComponent,
     UserPageComponent,
     UserLoginPageComponent,
+    UserTeamPageComponent,
+    UserTeamCreatePageComponent,
     EbiHeaderComponent,
     EbiNavbarComponent,
     EbiFooterComponent,

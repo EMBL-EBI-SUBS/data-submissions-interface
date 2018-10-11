@@ -1,7 +1,6 @@
 import { Component, OnInit, NgModule, ViewChildren, QueryList } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, FormArray, FormControl, FormControlName, Validators } from '@angular/forms';
-import { TokenService } from 'angular-aap-auth';
 
 // Import Services.
 import { SubmissionsService } from '../../../services/submissions.service';
@@ -20,7 +19,6 @@ declare var $;
   providers: [
     SubmissionsService,
     TeamsService,
-    TokenService,
     RequestsService,
     SpreadsheetsService,
   ]
@@ -42,7 +40,6 @@ export class SamplesPageComponent implements OnInit {
   submittionSamples: any = {};
   formPathStringMap: any = {};
   errors = [];
-  token: String;
   templatesList: any;
   selectedTemplate: any = {};
   activeTab: string = 'samples-upload';
@@ -171,13 +168,11 @@ export class SamplesPageComponent implements OnInit {
     private submissionsService: SubmissionsService,
     private teamsService: TeamsService,
     private requestsService: RequestsService,
-    private tokenService: TokenService,
     private spreadsheetsService: SpreadsheetsService,
     private fb: FormBuilder
   ) { }
 
   ngOnInit() {
-    this.token = this.tokenService.getToken();
     this.activeSubmission = this.submissionsService.getActiveSubmission();
     this.activeSpreadsheet = this.spreadsheetsService.getActiveSpreadsheet();
     this.getTemplatesList();
@@ -314,7 +309,7 @@ export class SamplesPageComponent implements OnInit {
       data => {
        if(data['length'] == 0) {
           // TODO: Clean This!
-          this.requestsService.partialUpdate(this.token, updateLink, updateData).subscribe(
+          this.requestsService.partialUpdate(updateLink, updateData).subscribe(
             data => {
               this.loading = false;
               this.errors = [];
@@ -399,7 +394,7 @@ export class SamplesPageComponent implements OnInit {
       data => {
         if(data['length'] == 0) {
           // TODO: Clean This!
-          this.requestsService.partialUpdate(this.token, updateLink, updateData).subscribe(
+          this.requestsService.partialUpdate(updateLink, updateData).subscribe(
             data => {
               this.loading = false;
               this.errors = [];
@@ -448,7 +443,7 @@ export class SamplesPageComponent implements OnInit {
     let updateLink = this.activeSample._links.self.href;
     this.loading = true;
 
-    this.requestsService.update(this.token, updateLink, this.activeSample).subscribe(
+    this.requestsService.update(updateLink, this.activeSample).subscribe(
       data => {
         this.loading = false;
       },
@@ -473,7 +468,7 @@ export class SamplesPageComponent implements OnInit {
   checkProcessingSheets() {
     let samplesSheets = this.activeSubmission._links.contents._links['samplesSheets'].href;
 
-    this.requestsService.get(this.token, samplesSheets).subscribe(
+    this.requestsService.get(samplesSheets).subscribe(
       data => {
         try {
           if (data['_embedded']['sheets']['length'] > 0) {
@@ -514,7 +509,7 @@ export class SamplesPageComponent implements OnInit {
     let submissionUpdateUrl = this.activeSubmission._links['self:update'].href;
 
     // Update the submission.
-    this.requestsService.update(this.token, submissionUpdateUrl, this.activeSubmission).subscribe(
+    this.requestsService.update(submissionUpdateUrl, this.activeSubmission).subscribe(
       (data) => {
         this.submissionsService.setActiveSubmission(data);
       },
@@ -549,7 +544,7 @@ export class SamplesPageComponent implements OnInit {
   }
 
   getTemplatesList() {
-    this.spreadsheetsService.getTemplatesList(this.token).subscribe(
+    this.spreadsheetsService.getTemplatesList().subscribe(
       (data) => {
         try {
           this.templatesList = data['_embedded']['templates'];
@@ -594,7 +589,7 @@ export class SamplesPageComponent implements OnInit {
         return false;
       }
 
-      this.spreadsheetsService.create(this.token, templateUploadLink, fileResults).subscribe(
+      this.spreadsheetsService.create(templateUploadLink, fileResults).subscribe(
         (data) => {
           this.activeSpreadsheet = data;
           this.spreadsheetsService.setActiveSpreadsheet(this.activeSpreadsheet);
@@ -616,7 +611,7 @@ export class SamplesPageComponent implements OnInit {
   getSubmissionSamples() {
     let submissionSamplesLink = this.activeSubmission._links.contents._links.samples.href;
 
-    this.requestsService.get(this.token, submissionSamplesLink).subscribe(
+    this.requestsService.get(submissionSamplesLink).subscribe(
       data => {
         this.submittionSamples = data;
         this.loading = false;
@@ -647,7 +642,7 @@ export class SamplesPageComponent implements OnInit {
   }
 
   getUserSubmissionsSamplesByUrl(serviceUrl) {
-    this.requestsService.get(this.token, serviceUrl).subscribe(
+    this.requestsService.get(serviceUrl).subscribe(
       (data) => {
         // Store active submission in a local variable.
         this.submittionSamples = data;
@@ -668,7 +663,7 @@ export class SamplesPageComponent implements OnInit {
 
   getSubmissionContents(submission: any) {
     const submissionLinksRequestUrl = submission._links.contents.href;
-    this.submissionsService.get(this.token, submissionLinksRequestUrl).subscribe(
+    this.submissionsService.get(submissionLinksRequestUrl).subscribe(
       (data) => {
         submission._links.contents['_links'] = data['_links'];
         this.submissionsService.setActiveSubmission(submission);

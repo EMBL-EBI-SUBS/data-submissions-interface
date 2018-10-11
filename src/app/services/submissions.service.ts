@@ -1,25 +1,22 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { HttpClient} from '@angular/common/http';
-import { map, flatMap } from 'rxjs/operators';
-
+import { HttpParams } from '@angular/common/http';
+import { of } from 'rxjs';
+import { flatMap, map } from 'rxjs/operators';
 // Import Service Variables.
 import { VariablesService } from './variables.service';
-import { of } from 'rxjs';
 
 @Injectable()
 export class SubmissionsService {
   variables = new VariablesService;
-  dataTypesEndpoint = this.variables.host + "studyDataTypes";
+  SubmissionPlansEndpoint = this.variables.host + "submissionPlans";
 
   constructor(private http: HttpClient) { }
 
   /**
    * Get record.
    */
-  get(token, url) {
-    // Post an Empty object to create submission.
-    let body = JSON.stringify({});
-
+  get(url) {
     let requestUrl =  url;
     var response = this.http.get(requestUrl);
     return response;
@@ -28,25 +25,50 @@ export class SubmissionsService {
   /**
    * Create new record.
    */
-  create(token, url, bodyData = {}) {
-    // Post an Empty object to create submission.
-    let body = JSON.stringify(bodyData);
+  create(url, bodyData = {}, requestParam = {}) {
+    const httpParams = new HttpParams();
+    for (const key in requestParam) {
+      if (requestParam.hasOwnProperty(key)) {
+        httpParams.append(key, requestParam[key]);
+      }
+    }
 
-    let requestUrl =  url;
-    var response = this.http.post(requestUrl, body);
+    // Post an Empty object to create submission.
+    const body = JSON.stringify(bodyData);
+
+    const requestUrl =  url;
+    const response = this.http.post(
+      requestUrl,
+      body,
+      { params: httpParams }
+    );
     return response;
   }
 
   /**
    * List Projects for Current Logged in user.
    */
-  getDataTypes(token: String) {
-    let requestUrl =  this.dataTypesEndpoint;
-    var response = this.http.get(requestUrl);
+  getSubmissionPlansResponse() {
+    const requestUrl =  this.SubmissionPlansEndpoint;
+    const response = this.http.get(requestUrl);
     return response;
   }
 
-  getActiveSubmissionsFiles(token: String){
+  getSubmissionPlansUIData(submissionPlans) {
+    let submissionPlansUIData = [];
+    for (const submissionPlan of submissionPlans) {
+      const submissionPlanUIData = {};
+      submissionPlanUIData['displayName'] = submissionPlan.displayName;
+      submissionPlanUIData['description'] = submissionPlan.description;
+      submissionPlanUIData['id'] = submissionPlan.id;
+
+      submissionPlansUIData.push(submissionPlanUIData);
+    };
+
+    return submissionPlansUIData;
+  }
+
+  getActiveSubmissionsFiles(){
     let activeSubmission = this.getActiveSubmission();
     let contentsLinks = activeSubmission['_links']['contents']['href'];
     var response = this.http.get(contentsLinks).pipe(
@@ -67,7 +89,7 @@ export class SubmissionsService {
   /**
    * Get Project for Submission.
    */
-  getActiveSubmissionProject(token: String) {
+  getActiveSubmissionProject() {
     let activeSubmission = this.getActiveSubmission();
 
     if(!activeSubmission) {
@@ -78,16 +100,16 @@ export class SubmissionsService {
       let contentsLinks = activeSubmission['_links']['contents']['href'];
       var response = this.http.get(contentsLinks).pipe(
         map(res => {
-          activeSubmission._links.contents['_links'] = response['_links'];
+          activeSubmission._links.contents['_links'] = res['_links'];
           this.setActiveSubmission(activeSubmission);
-          return response['_links']['project']['href'];
+          return res['_links']['project']['href'];
         }),
         flatMap((projectsUrl) => {
           return this.http.get(projectsUrl);
         }),
         map(res => {
-          this.setActiveProject(response);
-          return response;
+          this.setActiveProject(res);
+          return res;
         })
       );
 
@@ -97,7 +119,7 @@ export class SubmissionsService {
       try {
         let projectsLinks = activeSubmission['_links']['contents']['_links']['project']['href'];
 
-        let response = this.http.get(projectsLinks).pipe(
+        this.http.get(projectsLinks).pipe(
           map(response => {
             if(response.hasOwnProperty("_embedded") && response['_embedded'].hasOwnProperty("project")) {
               let activeProject = response['._embedded'].project.pop();

@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { TokenService } from 'angular-aap-auth';
 
 // Import Services.
 import { UserService } from '../../../services/user.service';
@@ -20,24 +19,20 @@ declare var Choices;
     UserService,
     TeamsService,
     SubmissionsService,
-    RequestsService,
-    TokenService
+    RequestsService
   ]
 })
 export class OverviewPageComponent implements OnInit {
   overviewForm: FormGroup;
   objectKeys = Object.keys;
-  token: string;
   activeSubmission: any;
   activeTeam: any;
-  dataTypes= [];
-  selectedDataType: any;
-  selectedDataSubType = [];
-  savedDataType: any;
-  savedDataSubType = [];
+  submissionPlans= [];
+  selectedSubmissionPlan: FormControl;
+  savedSubmissionPlan: FormControl;
   savedHuman: string;
   savedControlled: string;
-  dataSubTypes= [];
+  savedGDPR: string;
   teams = [];
 
   tabLinks: any = [
@@ -54,48 +49,40 @@ export class OverviewPageComponent implements OnInit {
     private teamsService: TeamsService,
     private submissionsService: SubmissionsService,
     private requestsService: RequestsService,
-    private tokenService: TokenService,
     private router: Router
   ) { }
 
   ngOnInit() {
-    this.token = this.tokenService.getToken();
     this.overviewForm = new FormGroup({
       human: new FormControl(null, Validators.required),
       controlled: new FormControl(null, Validators.required),
-      dataType: new FormControl('', Validators.required),
-      dataSubType: new FormControl(''),
+      gdpr: new FormControl(null, Validators.required),
+      submissionPlan: new FormControl('', Validators.required),
     });
     // Load User Teams.
     this.getUserTeams();
     // Get Active Submmission if exist.
     this.setActiveSubmission();
     // Set Form Default Value
-    if(this.activeSubmission) {
+    if (this.activeSubmission) {
       this.setFormDefaultValue();
     }
-    // Get Data Types.
-    this.getDataTypes();
+    // Get Submission Plans.
+    this.getSubmissionPlans();
   }
 
   /**
    * On Save and Exit.
    */
   onSaveExit() {
-    let overviewData = {};
-    overviewData['human'] = this.overviewForm.value.human;
-    overviewData['controlled'] = this.overviewForm.value.controlled;
-    overviewData['dataType'] = this.overviewForm.value.dataType;
-    overviewData['dataSubType'] = this.overviewForm.value.dataSubType;
-
-    let bodyData = {"uiData" : {
-        "overview" : overviewData
-    }};
+    const bodyAndParam = this.createRequestBodyAndParams();
+    const bodyData = bodyAndParam.body;
+    const requestParam = bodyAndParam.requestparam;
 
     // TODO: Save the data to existing submission.
-    if(this.activeSubmission) {
-      let updateSubmissionUrl = this.activeSubmission._links['self:update'].href;
-      this.requestsService.partialUpdate(this.token, updateSubmissionUrl, bodyData).subscribe(
+    if (this.activeSubmission) {
+      const updateSubmissionUrl = this.activeSubmission._links['self:update'].href;
+      this.requestsService.partialUpdate(updateSubmissionUrl, bodyData, requestParam).subscribe(
           (data) => {
             // Save Updated Submission to the Session.
             this.submissionsService.deleteActiveSubmission();
@@ -111,11 +98,9 @@ export class OverviewPageComponent implements OnInit {
       this.teamsService.deleteActiveTeam();
 
       this.router.navigate(['/dashboard']);
-    }
-    // Create new submission
-    else {
-      let createSubmissionUrl = this.activeTeam._links['submissions:create'].href;
-      this.submissionsService.create(this.token, createSubmissionUrl, bodyData).subscribe (
+    } else {     // Create new submission
+      const createSubmissionUrl = this.activeTeam._links['submissions:create'].href;
+      this.submissionsService.create(createSubmissionUrl, bodyData, requestParam).subscribe (
         (data) => {
             // TODO: store overview data in submission.
             this.router.navigate(['/dashboard']);
@@ -132,22 +117,14 @@ export class OverviewPageComponent implements OnInit {
    * On Save and continue.
    */
   onSaveContinue() {
-    let overviewData = {};
-    overviewData['human'] = this.overviewForm.value.human;
-    overviewData['controlled'] = this.overviewForm.value.controlled;
-    overviewData['dataType'] = this.overviewForm.value.dataType;
-    overviewData['dataSubType'] = this.overviewForm.value.dataSubType;
-
-    let bodyData = {"uiData" : {
-        "overview" : overviewData
-    }};
-
+    const bodyAndParam = this.createRequestBodyAndParams();
+    const bodyData = bodyAndParam.body;
+    const requestParam = bodyAndParam.requestparam;
     // If Submission Exist, Update Request.
-    if(this.activeSubmission) {
-      let updateSubmissionUrl = this.activeSubmission._links['self:update'].href;
-      this.requestsService.partialUpdate(this.token, updateSubmissionUrl, bodyData).subscribe(
+    if (this.activeSubmission) {
+      const updateSubmissionUrl = this.activeSubmission._links['self:update'].href;
+      this.requestsService.partialUpdate(updateSubmissionUrl, bodyData, requestParam).subscribe(
           (data) => {
-
             // Save Updated Submission to the Session.
             this.submissionsService.deleteActiveSubmission();
             this.submissionsService.setActiveSubmission(data);
@@ -160,13 +137,10 @@ export class OverviewPageComponent implements OnInit {
           }
       );
 
-    }
-    // Create new submission
-    // Set it as active submission.
-    else {
-      let createSubmissionUrl = this.activeTeam._links['submissions:create'].href;
+    } else { // Create new submission. Set it as active submission.
+      const createSubmissionUrl = this.activeTeam._links['submissions:create'].href;
 
-      this.submissionsService.create(this.token, createSubmissionUrl, bodyData).subscribe (
+      this.submissionsService.create(createSubmissionUrl, bodyData, requestParam).subscribe (
         (data) => {
           // TODO: store overview data in submission.
           // Store active submission in a local variable.
@@ -190,30 +164,29 @@ export class OverviewPageComponent implements OnInit {
    */
   setFormDefaultValue() {
     try {
-      if(this.activeSubmission.uiData.overview) {
-        this.savedDataType  = this.activeSubmission.uiData.overview.dataType;
-        this.savedDataSubType = this.activeSubmission.uiData.overview.dataSubType;
+      if (this.activeSubmission.uiData.overview) {
+        this.savedSubmissionPlan = this.activeSubmission.uiData.overview.submissionPlan;
         this.savedHuman = this.activeSubmission.uiData.overview.human;
         this.savedControlled = this.activeSubmission.uiData.overview.controlled;
+        this.savedGDPR = this.activeSubmission.uiData.overview.gdpr;
 
         this.overviewForm.patchValue({
           human:  this.activeSubmission.uiData.overview.human,
           controlled: this.activeSubmission.uiData.overview.controlled,
-          dataType: this.activeSubmission.uiData.overview.dataType,
-          dataSubType: this.activeSubmission.uiData.overview.dataSubType,
+          gdpr: this.activeSubmission.uiData.overview.gdpr,
+          submissionPlan: this.activeSubmission.uiData.overview.submissionPlan,
         });
       }
-    }
-    catch (e) {}
+    } catch (e) {}
   }
 
   /**
-   * Retrieve list of data types.
+   * Retrieve list of submission plans.
    */
-  getDataTypes() {
-    this.submissionsService.getDataTypes(this.token).subscribe (
+  getSubmissionPlans() {
+    this.submissionsService.getSubmissionPlansResponse().subscribe (
       (data) => {
-        this.dataTypes = data['content'];
+        this.submissionPlans = this.submissionsService.getSubmissionPlansUIData(data['_embedded'].submissionPlans);
       },
       (err) => {
         // TODO: Handle Errors.
@@ -227,7 +200,7 @@ export class OverviewPageComponent implements OnInit {
    */
   setActiveSubmission() {
     // If Submission Already created before then return it.
-    let getActiveSubmission = this.submissionsService.getActiveSubmission();
+    const getActiveSubmission = this.submissionsService.getActiveSubmission();
 
     if (getActiveSubmission) {
       this.activeSubmission = getActiveSubmission;
@@ -239,7 +212,7 @@ export class OverviewPageComponent implements OnInit {
    */
    getSubmissionContents(submission: any) {
      const submissionLinksRequestUrl = submission._links.contents.href;
-     this.submissionsService.get(this.token, submissionLinksRequestUrl).subscribe (
+     this.submissionsService.get(submissionLinksRequestUrl).subscribe (
        (data) => {
          submission._links.contents['_links'] = data['_links'];
          this.submissionsService.setActiveSubmission(submission);
@@ -255,7 +228,7 @@ export class OverviewPageComponent implements OnInit {
    * Get User Teams.
    */
   getUserTeams() {
-    this.userService.getUserTeams(this.token).subscribe (
+    this.userService.getUserTeams().subscribe (
       (data) => {
         // If user has no team assigned to it.
         if (!data.hasOwnProperty('_embedded')) {
@@ -280,7 +253,7 @@ export class OverviewPageComponent implements OnInit {
    * Set active team.
    */
   setActiveTeam(name) {
-    this.teamsService.getTeam(this.token, name).subscribe (
+    this.teamsService.getTeam(name).subscribe (
       (data) => {
         this.activeTeam = data;
         this.teamsService.setActiveTeam(data);
@@ -292,78 +265,76 @@ export class OverviewPageComponent implements OnInit {
     );
   }
 
-  isDataSubTypeSelected(dataSubTypeKey) {
-    if(this.selectedDataSubType.indexOf(dataSubTypeKey) > -1) {
-      return true;
-    }
-
-    return false;
-  }
-
-  onSelectDataType(event, dataType) {
-    this.selectedDataSubType = [];
-    this.selectedDataType = dataType;
+  onSelectSubmissionPlan(event, submissionPlan) {
+    this.selectedSubmissionPlan = submissionPlan;
 
     this.overviewForm.patchValue({
-      dataType: this.selectedDataType,
-      dataSubType: this.selectedDataSubType,
-    });
-  }
-
-  onSelectSubDataType(event, dataSubType) {
-    let itemIndex = this.selectedDataSubType.indexOf(dataSubType);
-
-    if(itemIndex > -1) {
-      this.selectedDataSubType.splice(itemIndex, 1);
-    }
-    else {
-      this.selectedDataSubType.push(dataSubType);
-    }
-
-    this.overviewForm.patchValue({
-      dataType: this.selectedDataType,
-      dataSubType: this.selectedDataSubType,
+      submissionPlan: this.selectedSubmissionPlan
     });
   }
 
   onChangeField(fieldName: string) {
-    let message = "You might loss uploaded data and samples if you have changed this field value. Are you sure?";
+    const message = 'You might loss uploaded data and samples if you have changed this field value. Are you sure?';
 
-    if(this.activeSubmission && !confirm(message)) {
+    if (this.activeSubmission && !confirm(message)) {
       return;
     }
 
-    if(fieldName == 'human') {
+    if (fieldName === 'human') {
       delete this.savedHuman;
     }
 
-    if(fieldName == 'controlled') {
+    if (fieldName === 'controlled') {
       delete this.savedControlled;
     }
 
-    if(fieldName == 'dataType') {
-      this.selectedDataType = this.savedDataType;
-      this.savedDataType = "";
-      this.selectedDataSubType = this.savedDataSubType;
-      this.savedDataSubType = [];
+    if (fieldName === 'gdpr') {
+      delete this.savedGDPR;
+    }
+    
+    if (fieldName === 'submissionPlan') {
+      this.selectedSubmissionPlan = this.savedSubmissionPlan;
+      this.savedSubmissionPlan = null;
     }
   }
 
   onUpdateField(fieldName) {
-    if(fieldName == "human") {
+    if (fieldName === 'human') {
       this.savedHuman = this.overviewForm.value[fieldName];
     }
 
-    if(fieldName == "controlled") {
+    if (fieldName === 'controlled') {
       this.savedControlled = this.overviewForm.value[fieldName];
+    }
+
+    if (fieldName === "gdpr") {
+      this.savedGDPR = this.overviewForm.value[fieldName];
     }
   }
 
   isTabsDisabled() {
-    if(!this.activeSubmission) {
+    if (!this.activeSubmission) {
       return true;
     }
 
     return false;
+  }
+
+  private createRequestBodyAndParams() {
+    return {
+      'body' : {
+        'uiData' : {
+          'overview' : {
+            human: this.overviewForm.value.human,
+            controlled: this.overviewForm.value.controlled,
+            gdpr: this.overviewForm.value.gdpr,
+            submissionPlan: this.overviewForm.value.submissionPlan,
+          }
+        }
+      },
+      'requestparam': {
+        'submissionPlanId': this.overviewForm.value.submissionPlan.id
+      }
+    };
   }
 }

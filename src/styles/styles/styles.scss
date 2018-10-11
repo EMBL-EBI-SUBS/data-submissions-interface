@@ -54,11 +54,14 @@ a.disabled {
   padding: 1.25rem 0.25rem 0.5rem;
 }
 
+.button:focus {
+  background: $button-primary;
+}
+
 .button.hover,
 .button.primary:focus,
 .button.primary:hover,
 .button:active,
-.button:focus,
 .button:hover,
 .tabs-title > a:hover {
   background: none;
@@ -315,6 +318,10 @@ div.ds-tabs {
   margin-left: 15px;
 }
 
+.margin-top-50 {
+  margin-top: 50px;
+}
+
 .margin-top-20 {
   margin-top: 20px;
 }
@@ -340,10 +347,10 @@ div.ds-tabs {
   font-weight: bold;
 }
 
-.data-type-button,
-.data-subtype-button {
+.submission-plan-button {
   background: $button-secondary;
   margin-right: 10px;
+  display: inline;
   opacity: .4;
 
   &.selected,
@@ -366,5 +373,14 @@ div.ds-tabs {
 
   textarea {
     margin: 0;
+  }
+}
+
+.buttons-wrapper {
+  li {
+    list-style-type: none;
+  }
+  label {
+    display: inline;
   }
 }

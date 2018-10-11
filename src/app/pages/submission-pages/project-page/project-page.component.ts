@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { TokenService } from 'angular-aap-auth';
 
 // Import Services.
@@ -78,7 +78,7 @@ export class ProjectPageComponent implements OnInit {
     try {
       // Create new project.
       let submissionProjectUpdateUrl = this.activeSubmission._links.contents._links['projects:create'].href;
-      this.requestsService.create(this.token, submissionProjectUpdateUrl, submissionProjectDataObject).subscribe (
+      this.requestsService.create(submissionProjectUpdateUrl, submissionProjectDataObject).subscribe (
         (data) => {
           this.submissionsService.setActiveProject(data);
         },
@@ -89,7 +89,7 @@ export class ProjectPageComponent implements OnInit {
     } catch (err) {
       // Update existing project.
       let submissionProjectUpdateUrl = this.activeProject._links['self:update'].href;
-      this.requestsService.partialUpdate(this.token, submissionProjectUpdateUrl, submissionProjectDataObject).subscribe (
+      this.requestsService.partialUpdate(submissionProjectUpdateUrl, submissionProjectDataObject).subscribe (
         (data) => {
           this.submissionsService.setActiveProject(data);
         },
@@ -109,7 +109,7 @@ export class ProjectPageComponent implements OnInit {
     };
 
     // Update the submission.
-    this.requestsService.update(this.token, submissionUpdateUrl, submissionUpdateData).subscribe (
+    this.requestsService.update(submissionUpdateUrl, submissionUpdateData).subscribe (
       (data) => {
         this.router.navigate(["/"]);
       },
@@ -137,7 +137,7 @@ export class ProjectPageComponent implements OnInit {
     try {
       // Create new project.
       let submissionProjectUpdateUrl = this.activeSubmission._links.contents._links['projects:create'].href;
-      this.requestsService.create(this.token, submissionProjectUpdateUrl, submissionProjectDataObject).subscribe (
+      this.requestsService.create(submissionProjectUpdateUrl, submissionProjectDataObject).subscribe (
         (data) => {
           this.submissionsService.setActiveProject(data);
         },
@@ -149,7 +149,7 @@ export class ProjectPageComponent implements OnInit {
     } catch (err) {
       // Update existing project.
       let submissionProjectUpdateUrl = this.activeProject._links['self:update'].href;
-      this.requestsService.partialUpdate(this.token, submissionProjectUpdateUrl, submissionProjectDataObject).subscribe (
+      this.requestsService.partialUpdate(submissionProjectUpdateUrl, submissionProjectDataObject).subscribe (
         (data) => {
           this.submissionsService.setActiveProject(data);
         },
@@ -169,7 +169,7 @@ export class ProjectPageComponent implements OnInit {
     };
 
     // Update the submission.
-    this.requestsService.update(this.token, submissionUpdateUrl, submissionUpdateData).subscribe (
+    this.requestsService.update(submissionUpdateUrl, submissionUpdateData).subscribe (
       (data) => {
         this.submissionsService.setActiveSubmission(data);
         this.activeSubmission = data;
@@ -188,7 +188,7 @@ export class ProjectPageComponent implements OnInit {
 
     // If there is no active project stored in session.
     if (!this.activeProject) {
-      this.submissionsService.getActiveSubmissionProject(this.token).subscribe(
+      this.submissionsService.getActiveSubmissionProject().subscribe(
         (data) => {
           if(data) {
             this.activeProject = data;
@@ -256,7 +256,7 @@ export class ProjectPageComponent implements OnInit {
     // Set Active Submission.
     this.activeSubmission = this.submissionsService.getActiveSubmission();
     // Load Submission Content Actions.
-    this.requestsService.get(this.token, this.activeSubmission._links.contents.href).subscribe (
+    this.requestsService.get(this.activeSubmission._links.contents.href).subscribe (
       (data) => {
         this.activeSubmission['_links']['contents']['_links'] = data['_links'];
         this.submissionsService.setActiveSubmission(this.activeSubmission);

@@ -1,0 +1,61 @@
+<div id="content">
+  <ebi-header></ebi-header>
+
+  <section id="main-content-area" class="row padding-top-xsmall padding-bottom-xsmall" role="main">
+    <h2 class="padding-top-xlarge">Teams</h2>
+
+    <div class="row">
+      <div class="columns small-9">
+        <p>
+          This is the list of teams you are involved in. You can create a submission for one of
+          the existing teams.
+        </p>
+      </div>
+
+      <div class="columns small-3 text-right">
+        <a class="button" (click)="onCreateTeam()">Create a new Team</a>
+      </div>
+    </div>
+
+    <div *ngIf="teams['_embedded']?.teams?.length > 0">
+      <table class="">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th></th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let team of teams['_embedded'].teams">
+            <td class="col-date">{{ team.name }}</td>
+            <td class="col-title">{{ team.description }}</td>
+
+            <td class="text-right">
+              <a (click)="onCreateTeamSubmission(team)" class="hollow button no-margin small">
+                <i class="icon icon-functional" data-icon="+"></i> Create Submission
+              </a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <ul class="pagination" *ngIf="teams?.page?.totalPages > 1">
+        <li class="arrow">
+          <a (click)="onPagerClick('first')" *ngIf="!(teams.page.number == 0)">&laquo; First</a>
+        </li>
+        <li class="arrow">
+          <a (click)="onPagerClick('prev')" *ngIf="teams._links.prev">&laquo; Previous</a>
+        </li>
+        <li class="arrow">
+          <a (click)="onPagerClick('next')" *ngIf="teams._links.next">Next &raquo;</a>
+        </li>
+        <li class="arrow">
+          <a (click)="onPagerClick('last')" *ngIf="(teams.page.totalPages - submissions.page.number) > 1">Last
+            &raquo;</a>
+        </li>
+      </ul>
+    </div>
+  </section>
+</div>

@@ -1,8 +1,5 @@
-
-import {map} from 'rxjs/operators';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-
 // Import Service Variables.
 import { VariablesService } from './variables.service';
 
@@ -10,25 +7,21 @@ import { VariablesService } from './variables.service';
 export class RequestsService {
   variables = new VariablesService;
 
-
   constructor(private http: HttpClient) { }
 
   /**
    * Get record.
    */
-  get(token, url) {
-    // Post an Empty object to create submission.
-    let body = JSON.stringify({});
-
+  get(url, options = {}) {
     let requestUrl =  url;
-    var response = this.http.get(requestUrl);
+    var response = this.http.get(requestUrl, options);
     return response;
   }
 
   /**
    * Create new record.
    */
-  create(token, url, data) {
+  create(url, data) {
     // Post an Empty object to create submission.
     let body = JSON.stringify(data);
 
@@ -52,7 +45,7 @@ export class RequestsService {
   /**
    * Update an existing record.
    */
-  update(token, url, data) {
+  update(url, data) {
     // Post an Empty object to create submission.
     let body = JSON.stringify(data);
 
@@ -64,24 +57,36 @@ export class RequestsService {
   /**
    * Partially update an existing record.
    */
-  partialUpdate(token, url, data) {
-      // Post an Empty object to create submission.
-      let body = JSON.stringify(data);
+  partialUpdate(url, data, requestParam = {}) {
+    const httpParams = new HttpParams();
+    for (const key in requestParam) {
+      if (requestParam.hasOwnProperty(key)) {
+        httpParams.append(key, requestParam[key]);
+      }
+    }
 
-      let requestUrl =  url;
-      var response = this.http.patch(requestUrl, body);
-      return response;
+    // Post an Empty object to create submission.
+    const body = JSON.stringify(data);
+    const requestUrl =  url;
+
+    return this.http.patch(
+        requestUrl,
+        body,
+        { params: httpParams }
+    );
   }
 
   /**
    * Delete an existing record.
    */
-  delete(token, url) {
-    // Post an Empty object to create submission.
-    let body = JSON.stringify({});
-
-    let requestUrl =  url;
-    var response = this.http.delete(requestUrl);
+  delete(requestUrl) {
+    const response = this.http.delete(
+      requestUrl,
+      {
+        observe: 'response',
+        responseType: 'json'
+       }
+      );
     return response;
   }
 }

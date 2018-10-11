@@ -7,11 +7,13 @@ import { SubmissionsService } from '../../../services/submissions.service';
 import { TeamsService } from '../../../services/teams.service';
 import { environment } from '../../../../environments/environment';
 
-import Uppy  from '@uppy/core';
+import Uppy from '@uppy/core';
 import Dashboard from '@uppy/dashboard';
 import Tus from '@uppy/tus';
 import Form from '@uppy/form';
 import GoldenRetriever from '@uppy/golden-retriever';
+import * as HttpStatus from 'http-status-codes';
+import { FileService } from 'src/app/services/file.service';
 
 declare var $;
 declare var require: any;
@@ -23,14 +25,15 @@ declare var require: any;
   providers: [
     SubmissionsService,
     TeamsService,
-    TokenService
+    TokenService,
+    FileService
   ]
 })
 export class DataPageComponent implements OnInit {
   activeSubmission: any;
 
   uploadEndpoint  = environment.uploadEndpoint;
-  uploadUppy : any;
+  uploadUppy: any;
   files: any;
   userHasTeam = true;
   token: string;
@@ -49,12 +52,13 @@ export class DataPageComponent implements OnInit {
     private submissionsService: SubmissionsService,
     private teamsService: TeamsService,
     private tokenService: TokenService,
+    private fileService: FileService
   ) { }
 
   ngOnInit() {
     this.activeSubmission = this.submissionsService.getActiveSubmission();
     this.token = this.tokenService.getToken();
-    this.submissionsService.getActiveSubmissionsFiles(this.token).subscribe(
+    this.submissionsService.getActiveSubmissionsFiles().subscribe(
       (data) => {
         this.files = data['_embedded']['files'];
       }
@@ -91,6 +95,27 @@ export class DataPageComponent implements OnInit {
 
   }
 
+  onDeleteFile(event, file) {
+    if (!confirm(`Are you sure you would like to delete this file: ${file.filename}`)) {
+      return;
+    }
+
+    const fileHref = file._links.file.href;
+
+    this.fileService.deleteFile(fileHref).subscribe(
+      (response) => {
+          if (response.status === HttpStatus.NO_CONTENT ) {
+              console.debug(`File: ${file.filename} has been succcesfully deleted from the storage.`);
+              this.files = this.files.filter(item => item !== file)
+          } else {
+              console.log(`File deletion has failed. The reason: ${response.statusText}`);
+          }
+      },
+      (err) => {
+        console.log(`File deletion has failed. The reason: ${err.error.title}, message: ${err.message}`);
+      }
+    );
+  }
 
   onSaveExit() {
     this.submissionsService.deleteActiveSubmission();
