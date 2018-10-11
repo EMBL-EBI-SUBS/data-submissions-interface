@@ -5,7 +5,7 @@ import { TokenService } from 'angular-aap-auth';
 // Import Services.
 import { SubmissionsService } from '../../../services/submissions.service';
 import { TeamsService } from '../../../services/teams.service';
-import { environment } from '../../../../environments/environment';
+import { environment } from 'src/environments/environment';
 
 import Uppy from '@uppy/core';
 import Dashboard from '@uppy/dashboard';

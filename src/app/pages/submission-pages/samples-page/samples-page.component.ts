@@ -7,7 +7,7 @@ import { SubmissionsService } from '../../../services/submissions.service';
 import { TeamsService } from '../../../services/teams.service';
 import { RequestsService } from '../../../services/requests.service';
 import { SpreadsheetsService } from '../../../services/spreadsheets.service';
-import { environment } from '../../../../environments/environment';
+import { environment } from 'src/environments/environment';
 
 declare var Choices;
 declare var $;

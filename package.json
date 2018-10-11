@@ -1,19 +1,19 @@
 {
   "name": "data-submissions-interface",
   "version": "0.1.0",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "angular-cli": {},
   "scripts": {
     "ng": "ng",
     "start": "ng serve --aot",
     "build": "ng build --aot",
-    "test": "ng test",
-    "test:chrome": "ng test --karma-config=src/karma_chrome.conf.js --source-map=false --watch",
+    "build:dev": "ng build --progress=false --aot --base-href 'https://submission-dev.ebi.ac.uk/api'",
+    "build:staging": "ng build --progress=false --aot --configuration=staging --base-href 'https://submission-test.ebi.ac.uk/api'",
+    "build:prod": "ng build --progress=false --prod --base-href 'https://submission.ebi.ac.uk/api'",
+    "test": "ng test --source-map=false",
+    "test:chromium": "ng test --progress=false --karma-config=src/karma_chromium.conf.js ",
     "lint": "ng lint",
-    "e2e": "ng e2e",
-    "build:dev": "ng build --aot --base-href 'https://submission-dev.ebi.ac.uk/api'",
-    "build:staging": "ng build --aot --configuration=staging --base-href 'https://submission-test.ebi.ac.uk/api'",
-    "build:prod": "ng build --prod --base-href 'https://submission.ebi.ac.uk/api'"
+    "e2e": "ng e2e"
   },
   "private": true,
   "dependencies": {

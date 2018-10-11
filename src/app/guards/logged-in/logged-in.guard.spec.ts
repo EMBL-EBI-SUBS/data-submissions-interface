@@ -1,46 +1,19 @@
 import { TestBed, async, inject } from '@angular/core/testing';
-import { Router } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
+
+import { CommonTestModule } from 'testing/common.module';
+
 import { LoggedInGuard } from './logged-in.guard';
-
-
-import {
-  AuthModule
-} from 'angular-aap-auth';
-import {
-  JwtModule
-} from '@auth0/angular-jwt';
-
-import { MockRouter } from 'src/app/testing/mockrouter.tests';
-import { environment } from 'src/environments/environment';
-
-export function getToken(): string {
-  return localStorage.getItem('jwt_token') || '';
-}
-export function updateToken(newToken: string): void {
-  return localStorage.setItem('jwt_token', newToken);
-}
-// Optional
-export function removeToken(): void {
-  return localStorage.removeItem('jwt_token');
-}
 
 describe('LoggedInGuard', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
+      imports: [
+        RouterTestingModule,
+        CommonTestModule
+      ],
       providers: [
-        {provide: Router, useClass: MockRouter},
         LoggedInGuard,
-        AuthModule.forRoot({
-          aapURL: environment.authenticationHost,
-          tokenGetter: getToken,
-          tokenUpdater: updateToken,
-          tokenRemover: removeToken // Optional
-          }),
-          JwtModule.forRoot({
-              config: {
-                  tokenGetter: getToken,
-              }
-          })
       ]
     });
   });
