@@ -1,10 +1,9 @@
-/* tslint:disable:no-unused-variable */
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
-import { HttpClientModule } from '@angular/common/http';
 import { Router } from '@angular/router';
 
-import { MockRouter } from '../../testing/mockrouter.tests';
+import { CommonTestModule } from  'testing/common.module';
+import { MockRouter } from 'testing/mockrouter.tests';
 
 //  Import Components.
 import { DashboardPageComponent } from './dashboard-page.component';
@@ -17,7 +16,7 @@ describe('DashboardPageComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientModule],
+      imports: [CommonTestModule],
       declarations: [
         DashboardPageComponent,
         EbiHeaderComponent

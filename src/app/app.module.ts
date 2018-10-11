@@ -12,7 +12,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
-import { environment }  from '../environments/environment';
+import { environment }  from 'src/environments/environment';
 
 // Import Pages.
 import { UserPageComponent } from './pages/user-page/user-page.component';
@@ -46,9 +46,6 @@ import { LoggedInGuard } from './guards/logged-in/logged-in.guard';
 import { LoadingModule, ANIMATION_TYPES } from 'ngx-loading';
 
 import { EndpointService } from './services/endpoint.service';
-
-// Import Tests Classes.
-import { RouterLinkStubDirective, RouterOutletStubComponent } from './testing/router.stubs';
 
 // Import Interceptors.
 import { httpInterceptorProviders } from './http-interceptors/index';
@@ -86,8 +83,6 @@ export function removeToken(): void {
     DashboardPageComponent,
     FAQPageComponent,
     HelpPageComponent,
-    RouterLinkStubDirective,
-    RouterOutletStubComponent,
     ProjectsPageComponent,
     ProjectCreatePageComponent
   ],

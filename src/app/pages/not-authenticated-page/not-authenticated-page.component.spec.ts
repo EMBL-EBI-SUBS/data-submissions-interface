@@ -1,17 +1,13 @@
-/* tslint:disable:no-unused-variable */
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { AuthService, TokenService } from 'angular-aap-auth';
-
-import { MockRouter } from '../../testing/mockrouter.tests';
+import { MockRouter } from 'testing/mockrouter.tests';
+import { CommonTestModule } from  'testing/common.module';
 
 import { NotAuthenticatedPageComponent } from './not-authenticated-page.component';
 import { EbiHeaderComponent } from '../../components/ebi-header/ebi-header.component';
 import { UserLoginPageComponent } from '../user-login-page/user-login-page.component';
-import { HttpClientModule } from '@angular/common/http';
-import { environment } from 'src/environments/environment';
 
 describe('NotAuthenticatedPageComponent', () => {
   let component: NotAuthenticatedPageComponent;
@@ -19,7 +15,7 @@ describe('NotAuthenticatedPageComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientModule],
+      imports: [CommonTestModule],
       declarations: [
         NotAuthenticatedPageComponent,
         EbiHeaderComponent,
@@ -27,14 +23,6 @@ describe('NotAuthenticatedPageComponent', () => {
        ],
       providers: [
         {provide: Router, useClass: MockRouter},
-        AuthService,
-        TokenService,
-        {
-          provide: 'AAP_CONFIG',
-          useValue: {
-            authURL: environment.authenticationHost
-          }
-        }
       ]
     })
     .compileComponents();

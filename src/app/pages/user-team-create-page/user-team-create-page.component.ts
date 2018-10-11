@@ -8,7 +8,7 @@ import { TeamsService } from "../../services/teams.service";
 import { EndpointService } from "../../services/endpoint.service";
 import { RequestsService } from "../../services/requests.service";
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { environment } from '../../../environments/environment';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: "app-user-team-create-page",

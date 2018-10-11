@@ -5,7 +5,7 @@ import {
 
 
 import { TokenService } from 'angular-aap-auth';
-import { environment } from '../../environments/environment';
+import { environment } from 'src/environments/environment';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
