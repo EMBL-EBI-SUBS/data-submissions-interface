@@ -42,8 +42,8 @@
           <tr *ngFor="let file of files">
             <td>{{file.filename}}</td>
             <td>{{file.uploadStartDate}}</td>
-            <td>{{file.totalSize}} bytes</td>
-            <td>{{file.status}}</td>
+            <td>{{file.totalSize | filesize}}</td>
+            <td>{{file.status_label}}</td>
             <td><button class="button" (click)="onDeleteFile($event, file)">Delete</button></td>
           </tr>
         </tbody>

@@ -61,6 +61,10 @@ export class DataPageComponent implements OnInit {
     this.submissionsService.getActiveSubmissionsFiles().subscribe(
       (data) => {
         this.files = data['_embedded']['files'];
+        // format the file status string and store it as status_label for display
+        this.files.forEach(element => {
+          element.status_label = this.formatFileStatus(element.status);
+        });
       }
     );
     this.uploadUppy = Uppy({
@@ -135,5 +139,22 @@ export class DataPageComponent implements OnInit {
       .replace(/ /g,'-')
       .replace(/[^\w-]+/g,'')
       ;
+  }
+
+  /**
+   * Replaces underscores with spaces in given string
+   * @param Text 
+   */
+  cleanupUnderscores(Text) {
+    return Text
+      .replace(/_/g,' ');
+  }
+
+  /**
+   * Formats the specified file status text: replace underscores, convert to lowercase, uppercase first letter
+   * @param Text 
+   */
+  formatFileStatus(Text) {
+    return this.cleanupUnderscores( Text.charAt(0).toUpperCase() + Text.substr(1).toLowerCase() );
   }
 }
