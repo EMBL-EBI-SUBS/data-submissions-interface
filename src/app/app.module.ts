@@ -7,7 +7,6 @@ import { HttpClientModule } from '@angular/common/http';
 
 import { AuthModule } from 'angular-aap-auth';
 import { JwtModule } from '@auth0/angular-jwt';
-
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
@@ -44,6 +43,7 @@ import { LoggedInGuard } from './guards/logged-in/logged-in.guard';
 
 // Imports
 import { LoadingModule, ANIMATION_TYPES } from 'ngx-loading';
+import { FileSizeModule } from 'ngx-filesize';
 
 import { EndpointService } from './services/endpoint.service';
 
@@ -108,7 +108,8 @@ export function removeToken(): void {
       secondaryColour: '#ffffff',
       tertiaryColour: '#ffffff'
     }),
-    HttpClientModule
+    HttpClientModule,
+    FileSizeModule
   ],
   providers: [
     LoggedInGuard,

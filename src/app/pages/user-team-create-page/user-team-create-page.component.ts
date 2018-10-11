@@ -1,6 +1,7 @@
 import { Component, OnInit, Renderer } from "@angular/core";
 import { Router } from "@angular/router";
 import { AuthService } from "angular-aap-auth";
+import { concatMap } from 'rxjs/operators';
 
 // Import Services.
 import { UserService } from "../../services/user.service";
@@ -23,29 +24,28 @@ import { environment } from 'src/environments/environment';
   ]
 })
 export class UserTeamCreatePageComponent implements OnInit {
-  teams = {};
+  public teams = {};
   private tokenListener: Function;
-  token: string;
-  userteamsEndpoint = "";
-  teamCreateForm : FormGroup;
-  constructor(
-    public renderer: Renderer,
-    public authService: AuthService,
-    public endpointService: EndpointService,
-    public requestsService: RequestsService,
-    public router: Router,
-  ) {}
-
-  async ngOnInit() {
-    this.teamCreateForm = new FormGroup({
+  public token: string;
+  public teamCreateForm = new FormGroup({
       centreName: new FormControl('', Validators.required),
       description: new FormControl(''),
     });
 
-    this.userteamsEndpoint = await this.endpointService.find("userTeams");
-  }
+  constructor(
+    public renderer: Renderer,
+    public authService: AuthService,
+    private _endpointService: EndpointService,
+    public requestsService: RequestsService,
+    public router: Router,
+  ) {}
+
+  ngOnInit() {}
+
   onCreateTeam() {
-    this.requestsService.create(this.userteamsEndpoint, this.teamCreateForm.value).subscribe(
+    this._endpointService.find('userTeams').pipe(
+      concatMap(url => this.requestsService.create(url, this.teamCreateForm.value))
+    ).subscribe(
       data => {
         this.doRefreshToken();
       }

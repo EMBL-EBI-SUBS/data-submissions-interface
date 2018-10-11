@@ -7,11 +7,11 @@
 
       <form class="login-form">
         <label>Email
-          <input type="email" placeholder="Somebody@example.com"/>
+          <input type="email" placeholder="Somebody@example.com" autocomplete="username">
         </label>
 
         <label>Password
-          <input type="password" placeholder="Password">
+          <input type="password" placeholder="Password" autocomplete="current-password">
         </label>
 
         <p>
@@ -23,9 +23,9 @@
     </div>
 
     <div *ngIf="authService.isAuthenticated() | async" class="text-center padding-top-large">
-      You are already logged in..
+      You are already logged in.
       <br><br>
-      <a class="button" routerLink="/dashboard">Visit Your Dashboard</a>
+      <a class="button primary" routerLink="/dashboard">Visit Your Dashboard</a>
     </div>
   </section>
 </div>
