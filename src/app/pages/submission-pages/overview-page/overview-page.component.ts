@@ -9,8 +9,6 @@ import { SubmissionsService } from '../../../services/submissions.service';
 import { RequestsService } from '../../../services/requests.service';
 
 
-declare var Choices;
-
 @Component({
   selector: 'app-overview-page',
   templateUrl: './overview-page.component.html',
@@ -23,7 +21,13 @@ declare var Choices;
   ]
 })
 export class OverviewPageComponent implements OnInit {
-  overviewForm: FormGroup;
+  public overviewForm = new FormGroup({
+      human: new FormControl(null, Validators.required),
+      controlled: new FormControl(null, Validators.required),
+      gdpr: new FormControl(null, Validators.required),
+      submissionPlan: new FormControl('', Validators.required),
+      submissionShortName: new FormControl('', Validators.required),
+    });
   objectKeys = Object.keys;
   activeSubmission: any;
   activeTeam: any;
@@ -33,6 +37,7 @@ export class OverviewPageComponent implements OnInit {
   savedHuman: string;
   savedControlled: string;
   savedGDPR: string;
+  savedSubmissionShortName: string;
   teams = [];
 
   tabLinks: any = [
@@ -53,12 +58,6 @@ export class OverviewPageComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.overviewForm = new FormGroup({
-      human: new FormControl(null, Validators.required),
-      controlled: new FormControl(null, Validators.required),
-      gdpr: new FormControl(null, Validators.required),
-      submissionPlan: new FormControl('', Validators.required),
-    });
     // Load User Teams.
     this.getUserTeams();
     // Get Active Submmission if exist.
@@ -169,12 +168,14 @@ export class OverviewPageComponent implements OnInit {
         this.savedHuman = this.activeSubmission.uiData.overview.human;
         this.savedControlled = this.activeSubmission.uiData.overview.controlled;
         this.savedGDPR = this.activeSubmission.uiData.overview.gdpr;
+        this.savedSubmissionShortName = this.activeSubmission.name;
 
         this.overviewForm.patchValue({
           human:  this.activeSubmission.uiData.overview.human,
           controlled: this.activeSubmission.uiData.overview.controlled,
           gdpr: this.activeSubmission.uiData.overview.gdpr,
           submissionPlan: this.activeSubmission.uiData.overview.submissionPlan,
+          submissionShortName: this.activeSubmission.name
         });
       }
     } catch (e) {}
@@ -291,10 +292,14 @@ export class OverviewPageComponent implements OnInit {
     if (fieldName === 'gdpr') {
       delete this.savedGDPR;
     }
-    
+
     if (fieldName === 'submissionPlan') {
       this.selectedSubmissionPlan = this.savedSubmissionPlan;
       this.savedSubmissionPlan = null;
+    }
+
+    if (fieldName === 'submissionShortName') {
+      delete this.savedSubmissionShortName;
     }
   }
 
@@ -310,6 +315,10 @@ export class OverviewPageComponent implements OnInit {
     if (fieldName === "gdpr") {
       this.savedGDPR = this.overviewForm.value[fieldName];
     }
+
+    if (fieldName === "submissionShortName") {
+      this.savedSubmissionShortName = this.overviewForm.value[fieldName];
+    }
   }
 
   isTabsDisabled() {
@@ -322,9 +331,10 @@ export class OverviewPageComponent implements OnInit {
 
   private createRequestBodyAndParams() {
     return {
-      'body' : {
-        'uiData' : {
-          'overview' : {
+      body : {
+        name: this.overviewForm.value.submissionShortName,
+        uiData : {
+          overview : {
             human: this.overviewForm.value.human,
             controlled: this.overviewForm.value.controlled,
             gdpr: this.overviewForm.value.gdpr,
@@ -332,8 +342,8 @@ export class OverviewPageComponent implements OnInit {
           }
         }
       },
-      'requestparam': {
-        'submissionPlanId': this.overviewForm.value.submissionPlan.id
+      requestparam: {
+        submissionPlanId: this.overviewForm.value.submissionPlan.id
       }
     };
   }
