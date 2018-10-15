@@ -35,15 +35,6 @@ export class OverviewPageComponent implements OnInit {
   savedGDPR: string;
   teams = [];
 
-  tabLinks: any = [
-    {'title': 'Overview', 'href': '/submission/overview'},
-    {'title': 'Project', 'href': '/submission/project'},
-    {'title': 'Data', 'href': '/submission/data'},
-    {'title': 'Samples', 'href': '/submission/samples'},
-    {'title': 'Protocols', 'href': '/submission/protocols'},
-    {'title': 'Contacts', 'href': '/submission/contacts'},
-    {'title': 'Submit', 'href': '/submission/submit'},
-  ];
   constructor(
     private userService: UserService,
     private teamsService: TeamsService,
@@ -66,6 +57,7 @@ export class OverviewPageComponent implements OnInit {
     // Set Form Default Value
     if (this.activeSubmission) {
       this.setFormDefaultValue();
+      this.getSubmissionContents(this.activeSubmission);
     }
     // Get Submission Plans.
     this.getSubmissionPlans();
@@ -128,6 +120,7 @@ export class OverviewPageComponent implements OnInit {
             // Save Updated Submission to the Session.
             this.submissionsService.deleteActiveSubmission();
             this.submissionsService.setActiveSubmission(data);
+            this.getSubmissionContents(data);
             this.setActiveSubmission();
 
             this.router.navigate(['/submission/project']);
@@ -149,7 +142,6 @@ export class OverviewPageComponent implements OnInit {
           // Get Submission Content.
           this.getSubmissionContents(this.activeSubmission);
           this.router.navigate(['/submission/project']);
-
         },
         (err) => {
           // TODO: Handle Errors.
@@ -214,9 +206,11 @@ export class OverviewPageComponent implements OnInit {
      const submissionLinksRequestUrl = submission._links.contents.href;
      this.submissionsService.get(submissionLinksRequestUrl).subscribe (
        (data) => {
-         submission._links.contents['_links'] = data['_links'];
+         submission['_links']['contents']['_links'] = data['_links'];
+         submission['_links']['contents']['dataTypes'] = data['dataTypes'];
          this.submissionsService.setActiveSubmission(submission);
-       },
+         this.activeSubmission = submission;
+        },
        (err) => {
          // TODO: Handle Errors.
          console.log(err);
@@ -291,7 +285,7 @@ export class OverviewPageComponent implements OnInit {
     if (fieldName === 'gdpr') {
       delete this.savedGDPR;
     }
-    
+
     if (fieldName === 'submissionPlan') {
       this.selectedSubmissionPlan = this.savedSubmissionPlan;
       this.savedSubmissionPlan = null;
@@ -312,13 +306,6 @@ export class OverviewPageComponent implements OnInit {
     }
   }
 
-  isTabsDisabled() {
-    if (!this.activeSubmission) {
-      return true;
-    }
-
-    return false;
-  }
 
   private createRequestBodyAndParams() {
     return {

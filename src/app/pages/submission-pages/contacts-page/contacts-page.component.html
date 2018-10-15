@@ -4,11 +4,7 @@
   <section id="main-content-area" class="row padding-top-xsmall padding-bottom-xsmall" role="main">
     <h2 class="padding-top-xlarge">Contacts</h2>
 
-    <ul class="tabs" id="example-tabs">
-      <li *ngFor="let link of tabLinks" routerLinkActive="active is-active" class="tabs-title">
-        <a [routerLink]="link.href" routerLinkActive="active">{{link.title}}</a>
-      </li>
-    </ul>
+    <ebi-submission-menu *ngIf="activeSubmission?._links?.contents?._links" [submission]="activeSubmission"></ebi-submission-menu>
 
     <div *ngIf="!activeProject" class="row callout notice margin-20">
       Please <a class="font-weight-bold" (click)="onCreateProject()">select project first</a> to be able to create contacts.

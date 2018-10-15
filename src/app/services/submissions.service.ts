@@ -117,11 +117,10 @@ export class SubmissionsService {
     }
     else {
       try {
-        let projectsLinks = activeSubmission['_links']['contents']['_links']['project']['href'];
-
-        this.http.get(projectsLinks).pipe(
+        let projectsLinks = activeSubmission['_links']['contents']['_links']['projects']['href'];
+        var projectResponse = this.http.get(projectsLinks).pipe(
           map(response => {
-            if(response.hasOwnProperty("_embedded") && response['_embedded'].hasOwnProperty("project")) {
+            if(response.hasOwnProperty("_embedded") && response['_embedded'].hasOwnProperty("projects")) {
               let activeProject = response['._embedded'].project.pop();
               return activeProject['_links']['self']['href'];
             }
@@ -140,8 +139,7 @@ export class SubmissionsService {
         response = of(emptyVariable);
       }
 
-
-      return response;
+      return projectResponse;
     }
   }
 

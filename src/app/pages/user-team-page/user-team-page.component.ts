@@ -54,6 +54,7 @@ export class UserTeamPageComponent implements OnInit {
   onCreateTeamSubmission(team) {
     this.teamsService.setActiveTeam(team);
     this.submissionsService.deleteActiveProject();
+    this.submissionsService.deleteActiveSubmission();
     this.router.navigate(["submission/overview"]);
   }
 
