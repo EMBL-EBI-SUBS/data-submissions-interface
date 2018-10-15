@@ -15,9 +15,6 @@ import GoldenRetriever from '@uppy/golden-retriever';
 import * as HttpStatus from 'http-status-codes';
 import { FileService } from 'src/app/services/file.service';
 
-declare var $;
-declare var require: any;
-
 @Component({
   selector: 'app-data-page',
   templateUrl: './data-page.component.html',
@@ -143,7 +140,7 @@ export class DataPageComponent implements OnInit {
 
   /**
    * Replaces underscores with spaces in given string
-   * @param Text 
+   * @param Text
    */
   cleanupUnderscores(Text) {
     return Text
@@ -152,7 +149,7 @@ export class DataPageComponent implements OnInit {
 
   /**
    * Formats the specified file status text: replace underscores, convert to lowercase, uppercase first letter
-   * @param Text 
+   * @param Text
    */
   formatFileStatus(Text) {
     return this.cleanupUnderscores( Text.charAt(0).toUpperCase() + Text.substr(1).toLowerCase() );
