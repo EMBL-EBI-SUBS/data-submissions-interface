@@ -75,14 +75,13 @@ export class OverviewPageComponent implements OnInit {
    * On Save and Exit.
    */
   onSaveExit() {
-    const bodyAndParam = this.createRequestBodyAndParams();
-    const bodyData = bodyAndParam.body;
-    const requestParam = bodyAndParam.requestparam;
+    const requestBody = this.createRequestBody();
+    requestBody['submissionPlan'] = this.overviewForm.value.submissionPlan.href;
 
     // TODO: Save the data to existing submission.
     if (this.activeSubmission) {
       const updateSubmissionUrl = this.activeSubmission._links['self:update'].href;
-      this.requestsService.partialUpdate(updateSubmissionUrl, bodyData, requestParam).subscribe(
+      this.requestsService.partialUpdate(updateSubmissionUrl, requestBody).subscribe(
           (data) => {
             // Save Updated Submission to the Session.
             this.submissionsService.deleteActiveSubmission();
@@ -100,7 +99,7 @@ export class OverviewPageComponent implements OnInit {
       this.router.navigate(['/dashboard']);
     } else {     // Create new submission
       const createSubmissionUrl = this.activeTeam._links['submissions:create'].href;
-      this.submissionsService.create(createSubmissionUrl, bodyData, requestParam).subscribe (
+      this.submissionsService.create(createSubmissionUrl, requestBody).subscribe (
         (data) => {
             // TODO: store overview data in submission.
             this.router.navigate(['/dashboard']);
@@ -117,13 +116,13 @@ export class OverviewPageComponent implements OnInit {
    * On Save and continue.
    */
   onSaveContinue() {
-    const bodyAndParam = this.createRequestBodyAndParams();
-    const bodyData = bodyAndParam.body;
-    const requestParam = bodyAndParam.requestparam;
+    const requestBody = this.createRequestBody();
+    requestBody['submissionPlan'] = this.overviewForm.value.submissionPlan.href;
+
     // If Submission Exist, Update Request.
     if (this.activeSubmission) {
       const updateSubmissionUrl = this.activeSubmission._links['self:update'].href;
-      this.requestsService.partialUpdate(updateSubmissionUrl, bodyData, requestParam).subscribe(
+      this.requestsService.partialUpdate(updateSubmissionUrl, requestBody).subscribe(
           (data) => {
             // Save Updated Submission to the Session.
             this.submissionsService.deleteActiveSubmission();
@@ -139,8 +138,7 @@ export class OverviewPageComponent implements OnInit {
 
     } else { // Create new submission. Set it as active submission.
       const createSubmissionUrl = this.activeTeam._links['submissions:create'].href;
-
-      this.submissionsService.create(createSubmissionUrl, bodyData, requestParam).subscribe (
+      this.submissionsService.create(createSubmissionUrl, requestBody).subscribe (
         (data) => {
           // TODO: store overview data in submission.
           // Store active submission in a local variable.
@@ -291,7 +289,7 @@ export class OverviewPageComponent implements OnInit {
     if (fieldName === 'gdpr') {
       delete this.savedGDPR;
     }
-    
+
     if (fieldName === 'submissionPlan') {
       this.selectedSubmissionPlan = this.savedSubmissionPlan;
       this.savedSubmissionPlan = null;
@@ -307,7 +305,7 @@ export class OverviewPageComponent implements OnInit {
       this.savedControlled = this.overviewForm.value[fieldName];
     }
 
-    if (fieldName === "gdpr") {
+    if (fieldName === 'gdpr') {
       this.savedGDPR = this.overviewForm.value[fieldName];
     }
   }
@@ -320,20 +318,15 @@ export class OverviewPageComponent implements OnInit {
     return false;
   }
 
-  private createRequestBodyAndParams() {
+  private createRequestBody() {
     return {
-      'body' : {
-        'uiData' : {
-          'overview' : {
-            human: this.overviewForm.value.human,
-            controlled: this.overviewForm.value.controlled,
-            gdpr: this.overviewForm.value.gdpr,
-            submissionPlan: this.overviewForm.value.submissionPlan,
-          }
+      'uiData' : {
+        'overview' : {
+          human: this.overviewForm.value.human,
+          controlled: this.overviewForm.value.controlled,
+          gdpr: this.overviewForm.value.gdpr,
+          submissionPlan: this.overviewForm.value.submissionPlan,
         }
-      },
-      'requestparam': {
-        'submissionPlanId': this.overviewForm.value.submissionPlan.id
       }
     };
   }

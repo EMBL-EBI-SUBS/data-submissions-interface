@@ -26,10 +26,10 @@ export class SubmissionsService {
    * Create new record.
    */
   create(url, bodyData = {}, requestParam = {}) {
-    const httpParams = new HttpParams();
+    let httpParams = new HttpParams();
     for (const key in requestParam) {
       if (requestParam.hasOwnProperty(key)) {
-        httpParams.append(key, requestParam[key]);
+        httpParams = httpParams.set(key, requestParam[key]);
       }
     }
 
@@ -61,6 +61,7 @@ export class SubmissionsService {
       submissionPlanUIData['displayName'] = submissionPlan.displayName;
       submissionPlanUIData['description'] = submissionPlan.description;
       submissionPlanUIData['id'] = submissionPlan.id;
+      submissionPlanUIData['href'] = submissionPlan._links.self.href;
 
       submissionPlansUIData.push(submissionPlanUIData);
     };
