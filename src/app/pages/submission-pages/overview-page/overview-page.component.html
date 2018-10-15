@@ -67,6 +67,18 @@
             You have selected: <span class="font-weight-bold">{{savedSubmissionPlan.displayName}}</span> <a (click)="onChangeField('submissionPlan')"> (Change)</a>
           </div>
         </fieldset>
+
+        <fieldset required class="large-form padding-bottom-large padding-top-large">
+          <legend>Submission short name (for easy reference)</legend>
+          <div *ngIf="!savedSubmissionShortName" class="buttons-wrapper">
+            <input name="shortName" type="text" placeholder="e.g. &quot;RAD sequencing - 2004 Liverpool&quot;" formControlName="submissionShortName">
+            <span>This name will show in your dashboard.</span>
+          </div>
+          <div *ngIf="savedSubmissionShortName">
+            You have selected: <span class="font-weight-bold">{{ savedSubmissionShortName }}</span> <a (click)="onChangeField('submissionShortName')"> (Change)</a>
+          </div>
+        </fieldset>
+
       </fieldset>
       <div>
         <button class="button secondary-color white-background" (click)="onSaveExit()" [disabled]="overviewForm.invalid || savedGDPR==='0'">Save & exit</button>
