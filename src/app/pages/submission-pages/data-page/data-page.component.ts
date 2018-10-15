@@ -15,9 +15,6 @@ import GoldenRetriever from '@uppy/golden-retriever';
 import * as HttpStatus from 'http-status-codes';
 import { FileService } from 'src/app/services/file.service';
 
-declare var $;
-declare var require: any;
-
 @Component({
   selector: 'app-data-page',
   templateUrl: './data-page.component.html',

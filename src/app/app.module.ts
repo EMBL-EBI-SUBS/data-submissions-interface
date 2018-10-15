@@ -7,6 +7,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 
 import { AuthModule } from 'angular-aap-auth';
 import { JwtModule } from '@auth0/angular-jwt';
+import { ToastrModule } from 'ngx-toastr';
+
 import { AppRoutingModule } from './app-routing.module';
 import { ServiceModule } from './services/service.module';
 import { environment }  from 'src/environments/environment';
@@ -107,6 +109,13 @@ export function removeToken(): void {
     }),
     HttpClientModule,
     FileSizeModule,
+    ToastrModule.forRoot({
+      positionClass: 'toast-bottom-center',
+      closeButton: true,
+      maxOpened: 5,
+      preventDuplicates: true,
+      resetTimeoutOnDuplicate: true
+    }),
     ServiceModule
   ],
   providers: [

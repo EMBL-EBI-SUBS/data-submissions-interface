@@ -58,10 +58,10 @@ export class RequestsService {
    * Partially update an existing record.
    */
   partialUpdate(url, data, requestParam = {}) {
-    const httpParams = new HttpParams();
+    let httpParams = new HttpParams();
     for (const key in requestParam) {
       if (requestParam.hasOwnProperty(key)) {
-        httpParams.append(key, requestParam[key]);
+        httpParams = httpParams.set(key, requestParam[key]);
       }
     }
 
