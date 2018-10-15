@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { TokenService } from 'ng-ebi-authorization';
 
 // Import Services.
 import { SubmissionsService } from '../../../services/submissions.service';

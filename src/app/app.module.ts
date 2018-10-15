@@ -4,6 +4,8 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
 
 import { AuthModule } from 'angular-aap-auth';
 import { JwtModule } from '@auth0/angular-jwt';
@@ -93,6 +95,7 @@ export function removeToken(): void {
     FormsModule,
     AppRoutingModule,
     ReactiveFormsModule,
+    BrowserAnimationsModule,
     AuthModule.forRoot({
       aapURL: environment.authenticationHost,
       tokenGetter: getToken,

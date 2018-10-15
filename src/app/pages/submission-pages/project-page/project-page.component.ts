@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { TokenService } from 'ng-ebi-authorization';
 
 // Import Services.
 import { SubmissionsService } from '../../../services/submissions.service';
@@ -17,8 +16,7 @@ import { RequestsService } from '../../../services/requests.service';
     SubmissionsService,
     TeamsService,
     UserService,
-    RequestsService,
-    TokenService
+    RequestsService
   ]
 })
 export class ProjectPageComponent implements OnInit {
@@ -26,19 +24,16 @@ export class ProjectPageComponent implements OnInit {
   activeSubmission: any;
   activeProject: any;
   projects: any;
-  token: string;
 
   constructor(
     private submissionsService: SubmissionsService,
     private teamsService: TeamsService,
     private userService: UserService,
     private requestsService: RequestsService,
-    private tokenService: TokenService,
     private router: Router,
   ) { }
 
   ngOnInit() {
-    this.token = this.tokenService.getToken();
     this.projectForm = new FormGroup({
       project: new FormControl('_create', Validators.required),
       projectTitle: new FormControl('', Validators.required),
@@ -222,7 +217,7 @@ export class ProjectPageComponent implements OnInit {
    * Load list of projects for exisitng user.
    */
   onLoadProjects() {
-    this.userService.getUserProjects(this.token).subscribe (
+    this.userService.getUserProjects().subscribe (
       (data) => {
         // TODO: Create a team if user has no tea m.
         // If user has no team assigned to it.
