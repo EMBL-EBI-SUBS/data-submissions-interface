@@ -7,10 +7,7 @@ import { SubmissionsService } from '../../../services/submissions.service';
 import { TeamsService } from '../../../services/teams.service';
 import { RequestsService } from '../../../services/requests.service';
 import { SpreadsheetsService } from '../../../services/spreadsheets.service';
-import { environment } from '../../../../environments/environment';
-
-declare var Choices;
-declare var $;
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-samples-page',
@@ -230,11 +227,11 @@ export class SamplesPageComponent implements OnInit {
 
     let thisVar = this;
 
-    $('[data-reveal].add-attribute-form').on('closed.zf.reveal', function () {
+    jQuery('[data-reveal].add-attribute-form').on('closed.zf.reveal', function () {
       thisVar.onCloseSampleAttributeModal();
     });
 
-    $('[data-reveal].add-samples-form').on('closed.zf.reveal', function () {
+    jQuery('[data-reveal].add-samples-form').on('closed.zf.reveal', function () {
       thisVar.onCloseSampleRelationsModal();
     });
   }
@@ -248,7 +245,7 @@ export class SamplesPageComponent implements OnInit {
   }
 
   ngForSamplesRendred() {
-    $('.reveal-button, .reveal-form').foundation();
+    jQuery('.reveal-button, .reveal-form').foundation();
   }
 
   editModeSample(sample) {
@@ -318,7 +315,7 @@ export class SamplesPageComponent implements OnInit {
                 this.submittionSamples._embedded.samples[this.activeSampleIndex][key] = data[key];
               }
               // CLose the popup.
-              $('.close-button').click();
+              jQuery('.close-button').click();
             },
             err => {
               try {
@@ -335,7 +332,7 @@ export class SamplesPageComponent implements OnInit {
 
           // this.onUpdateSampleAttributes();
           // Close the reveal.
-          $(".sample-attribute-close-button").click();
+          jQuery(".sample-attribute-close-button").click();
         } else {
           for(let formItemError in data) {
             this.formPathStringMap[formItemError['dataPath']].setErrors({
@@ -657,7 +654,7 @@ export class SamplesPageComponent implements OnInit {
   }
 
   triggerUpload() {
-    $("input[name='csv-template']").click();
+    jQuery("input[name='csv-template']").click();
     return false;
   }
 
@@ -745,7 +742,7 @@ export class SamplesPageComponent implements OnInit {
 
               this.onUpdateSampleAttributes();
               // Close the reveal.
-              $(".sample-attribute-close-button").click();
+              jQuery(".sample-attribute-close-button").click();
             } else {
               for(let formItemError in data) {
                 this.formPathStringMap[formItemError['dataPath']].setErrors({
@@ -808,7 +805,7 @@ export class SamplesPageComponent implements OnInit {
 
             this.onUpdateSampleAttributes();
             // Close the reveal.
-            $(".sample-relations-close-button").click();
+            jQuery(".sample-relations-close-button").click();
           } else {
             for (let formItemError in data) {
               this.formPathStringMap[formItemError['dataPath']].setErrors({

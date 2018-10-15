@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 
-declare var Choices;
-
 @Component({
   selector: 'project-create-page',
   templateUrl: './project-create-page.component.html',
@@ -19,7 +17,6 @@ export class ProjectCreatePageComponent implements OnInit {
       project: new FormControl('_create', Validators.required),
       projectTitle: new FormControl('', Validators.required),
       projectDescription: new FormControl(''),
-      projectShortName: new FormControl('', Validators.required),
     });
   }
 

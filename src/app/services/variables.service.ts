@@ -1,5 +1,5 @@
 import { HttpHeaders } from '@angular/common/http';
-import { environment } from '../../environments/environment';
+import { environment } from 'src/environments/environment';
 
 export class VariablesService {
   host: string = environment.apiHost;

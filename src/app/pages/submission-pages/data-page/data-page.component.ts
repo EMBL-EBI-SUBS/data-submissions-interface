@@ -5,7 +5,7 @@ import { TokenService } from 'angular-aap-auth';
 // Import Services.
 import { SubmissionsService } from '../../../services/submissions.service';
 import { TeamsService } from '../../../services/teams.service';
-import { environment } from '../../../../environments/environment';
+import { environment } from 'src/environments/environment';
 
 import Uppy from '@uppy/core';
 import Dashboard from '@uppy/dashboard';
@@ -14,9 +14,6 @@ import Form from '@uppy/form';
 import GoldenRetriever from '@uppy/golden-retriever';
 import * as HttpStatus from 'http-status-codes';
 import { FileService } from 'src/app/services/file.service';
-
-declare var $;
-declare var require: any;
 
 @Component({
   selector: 'app-data-page',
@@ -53,6 +50,10 @@ export class DataPageComponent implements OnInit {
     this.submissionsService.getActiveSubmissionsFiles().subscribe(
       (data) => {
         this.files = data['_embedded']['files'];
+        // format the file status string and store it as status_label for display
+        this.files.forEach(element => {
+          element.status_label = this.formatFileStatus(element.status);
+        });
       }
     );
     this.uploadUppy = Uppy({
@@ -127,5 +128,22 @@ export class DataPageComponent implements OnInit {
       .replace(/ /g,'-')
       .replace(/[^\w-]+/g,'')
       ;
+  }
+
+  /**
+   * Replaces underscores with spaces in given string
+   * @param Text
+   */
+  cleanupUnderscores(Text) {
+    return Text
+      .replace(/_/g,' ');
+  }
+
+  /**
+   * Formats the specified file status text: replace underscores, convert to lowercase, uppercase first letter
+   * @param Text
+   */
+  formatFileStatus(Text) {
+    return this.cleanupUnderscores( Text.charAt(0).toUpperCase() + Text.substr(1).toLowerCase() );
   }
 }

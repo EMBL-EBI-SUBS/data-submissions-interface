@@ -1,6 +1,7 @@
 import { Component, OnInit, Renderer } from "@angular/core";
 import { Router } from "@angular/router";
 import { AuthService } from "angular-aap-auth";
+import { concatMap } from 'rxjs/operators';
 
 // Import Services.
 import { TeamsService } from '../../services/teams.service';
@@ -24,24 +25,25 @@ export class UserTeamPageComponent implements OnInit {
   teams = {};
   private tokenListener: Function;
   token: string;
-  userteamsEndpoint = "";
   constructor(
     public renderer: Renderer,
     public authService: AuthService,
-    public endpointService: EndpointService,
+    private _endpointService: EndpointService,
     public requestsService: RequestsService,
     public teamsService: TeamsService,
     public submissionsService: SubmissionsService,
     public router: Router
-  ) {}
+  ) {
+  }
 
-  async ngOnInit() {
-    this.userteamsEndpoint = await this.endpointService.find("userTeams");
+  ngOnInit() {
     this.initializeData();
   }
 
   initializeData() {
-    this.requestsService.get(this.userteamsEndpoint).subscribe(
+    this._endpointService.find('userTeams').pipe(
+      concatMap(url => this.requestsService.get(url))
+    ).subscribe(
       data => {
         this.teams = data;
       },

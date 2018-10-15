@@ -2,17 +2,16 @@ import { RouterModule, PreloadAllModules } from '@angular/router';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-
+import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 
 import { AuthModule } from 'angular-aap-auth';
 import { JwtModule } from '@auth0/angular-jwt';
-
-import { ReactiveFormsModule } from '@angular/forms';
+import { ToastrModule } from 'ngx-toastr';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
-import { environment }  from '../environments/environment';
+import { environment }  from 'src/environments/environment';
 
 // Import Pages.
 import { UserPageComponent } from './pages/user-page/user-page.component';
@@ -45,11 +44,9 @@ import { LoggedInGuard } from './guards/logged-in/logged-in.guard';
 
 // Imports
 import { LoadingModule, ANIMATION_TYPES } from 'ngx-loading';
+import { FileSizeModule } from 'ngx-filesize';
 
 import { EndpointService } from './services/endpoint.service';
-
-// Import Tests Classes.
-import { RouterLinkStubDirective, RouterOutletStubComponent } from './testing/router.stubs';
 
 // Import Interceptors.
 import { httpInterceptorProviders } from './http-interceptors/index';
@@ -88,8 +85,6 @@ export function removeToken(): void {
     DashboardPageComponent,
     FAQPageComponent,
     HelpPageComponent,
-    RouterLinkStubDirective,
-    RouterOutletStubComponent,
     ProjectsPageComponent,
     ProjectCreatePageComponent
   ],
@@ -115,7 +110,15 @@ export function removeToken(): void {
       secondaryColour: '#ffffff',
       tertiaryColour: '#ffffff'
     }),
-    HttpClientModule
+    HttpClientModule,
+    FileSizeModule,
+    ToastrModule.forRoot({
+      positionClass: 'toast-bottom-center',
+      closeButton: true,
+      maxOpened: 5,
+      preventDuplicates: true,
+      resetTimeoutOnDuplicate: true
+    })
   ],
   providers: [
     LoggedInGuard,
