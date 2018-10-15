@@ -9,8 +9,6 @@ import { TeamsService } from '../../../services/teams.service';
 import { UserService } from '../../../services/user.service';
 import { RequestsService } from '../../../services/requests.service';
 
-declare var Choices;
-
 @Component({
   selector: 'app-project-page',
   templateUrl: './project-page.component.html',
