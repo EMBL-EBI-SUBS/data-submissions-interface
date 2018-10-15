@@ -10,10 +10,6 @@ import { RequestsService } from '../../../services/requests.service';
   selector: 'app-submit-page',
   templateUrl: './submit-page.component.html',
   styleUrls: ['./submit-page.component.scss'],
-  providers: [
-    SubmissionsService,
-    RequestsService
-  ]
 })
 export class SubmitPageComponent implements OnInit {
   token: string;

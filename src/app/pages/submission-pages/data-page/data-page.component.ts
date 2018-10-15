@@ -22,12 +22,6 @@ declare var require: any;
   selector: 'app-data-page',
   templateUrl: './data-page.component.html',
   styleUrls: ['./data-page.component.scss'],
-  providers: [
-    SubmissionsService,
-    TeamsService,
-    TokenService,
-    FileService
-  ]
 })
 export class DataPageComponent implements OnInit {
   activeSubmission: any;
@@ -143,7 +137,7 @@ export class DataPageComponent implements OnInit {
 
   /**
    * Replaces underscores with spaces in given string
-   * @param Text 
+   * @param Text
    */
   cleanupUnderscores(Text) {
     return Text
@@ -152,7 +146,7 @@ export class DataPageComponent implements OnInit {
 
   /**
    * Formats the specified file status text: replace underscores, convert to lowercase, uppercase first letter
-   * @param Text 
+   * @param Text
    */
   formatFileStatus(Text) {
     return this.cleanupUnderscores( Text.charAt(0).toUpperCase() + Text.substr(1).toLowerCase() );

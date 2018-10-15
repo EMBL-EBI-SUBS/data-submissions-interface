@@ -1,7 +1,9 @@
 import { NgModule } from '@angular/core';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+
 import { JwtModule } from '@auth0/angular-jwt';
 import { AuthModule } from 'angular-aap-auth';
+import { ServiceModule } from 'src/app/services/service.module';
 import { environment } from 'src/environments/environment';
 
 export const jwtName = 'test_usi';
@@ -17,19 +19,20 @@ export function removeToken(): void {
 
 @NgModule({
     imports: [
-        HttpClientTestingModule,
-        JwtModule.forRoot({
-            config: {
-                tokenGetter: getToken,
-                whitelistedDomains: [],
-            }
-        }),
-        AuthModule.forRoot({
-            aapURL: '',
-            tokenGetter: getToken,
-            tokenUpdater: updateToken,
-            tokenRemover: removeToken
-        }),
+      HttpClientTestingModule,
+      JwtModule.forRoot({
+        config: {
+          tokenGetter: getToken,
+          whitelistedDomains: [],
+        }
+      }),
+      AuthModule.forRoot({
+        aapURL: '',
+        tokenGetter: getToken,
+        tokenUpdater: updateToken,
+        tokenRemover: removeToken
+      }),
+      ServiceModule
     ],
     exports: [],
     providers: [],

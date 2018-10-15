@@ -13,11 +13,6 @@ import { map, catchError } from 'rxjs/operators';
   selector: 'app-login-page',
   templateUrl: './user-login-page.component.html',
   styleUrls: ['./user-login-page.component.scss'],
-  providers: [
-    AuthService,
-    UserService,
-    TeamsService,
-  ]
 })
 export class UserLoginPageComponent implements OnInit {
   constructor(

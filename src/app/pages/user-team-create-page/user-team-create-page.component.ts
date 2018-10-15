@@ -15,13 +15,6 @@ import { environment } from 'src/environments/environment';
   selector: "app-user-team-create-page",
   templateUrl: "./user-team-create-page.component.html",
   styleUrls: ["./user-team-create-page.component.scss"],
-  providers: [
-    AuthService,
-    UserService,
-    TeamsService,
-    EndpointService,
-    RequestsService
-  ]
 })
 export class UserTeamCreatePageComponent implements OnInit {
   public teams = {};
