@@ -663,6 +663,7 @@ export class SamplesPageComponent implements OnInit {
     this.submissionsService.get(submissionLinksRequestUrl).subscribe(
       (data) => {
         submission._links.contents['_links'] = data['_links'];
+        submission['_links']['contents']['dataTypes'] = data['dataTypes'];
         this.submissionsService.setActiveSubmission(submission);
         // Load Samples Data.
         this.getSubmissionSamples();

@@ -4,11 +4,7 @@
   <section id="main-content-area" class="row padding-top-xsmall padding-bottom-xsmall" role="main">
     <h2 class="padding-top-xlarge">Project and Publications</h2>
 
-    <ul class="tabs" id="example-tabs">
-      <li *ngFor="let link of tabLinks" routerLinkActive="active is-active" class="tabs-title">
-        <a [routerLink]="link.href" routerLinkActive="active">{{link.title}}</a>
-      </li>
-    </ul>
+    <ebi-submission-menu [activeSubmission]="activeSubmission"></ebi-submission-menu>
 
     <form novalidate [formGroup]="projectForm" >
       <!-- Project Details Fieldset. -->

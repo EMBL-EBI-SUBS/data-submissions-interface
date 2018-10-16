@@ -22,16 +22,6 @@ export class ContactsPageComponent implements OnInit {
   activeSubmission: any;
   activeProject: any;
 
-  tabLinks: any = [
-    {"title": "Overview", "href": "/submission/overview"},
-    {"title": "Project", "href": "/submission/project"},
-    {"title": "Data", "href": "/submission/data"},
-    {"title": "Samples", "href": "/submission/samples"},
-    {"title": "Protocols", "href": "/submission/protocols"},
-    {"title": "Contacts", "href": "/submission/contacts"},
-    {"title": "Submit", "href": "/submission/submit"},
-  ];
-
   constructor(
       private submissionsService: SubmissionsService,
       private requestsService: RequestsService,
@@ -91,7 +81,7 @@ export class ContactsPageComponent implements OnInit {
     this.activeProject = this.submissionsService.getActiveProject();
 
     // If there is no active project stored in session.
-    if (!this.activeProject) {
+    if (!this.activeProject && this.activeSubmission) {
       this.submissionsService.getActiveSubmissionProject().subscribe(
         (data) => {
           if(data) {
@@ -114,7 +104,7 @@ export class ContactsPageComponent implements OnInit {
   }
 
   onSaveContinue() {
-    this.router.navigate(['/submission/submit'])
+    this.router.navigate(['/submission/data'])
   }
 
 }

@@ -1,8 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { HttpParams } from '@angular/common/http';
-import { of } from 'rxjs';
 import { flatMap, map } from 'rxjs/operators';
+import { EMPTY } from 'rxjs'
+
+
 // Import Service Variables.
 import { VariablesService } from './variables.service';
 
@@ -67,7 +69,7 @@ export class SubmissionsService {
     return submissionPlansUIData;
   }
 
-  getActiveSubmissionsFiles(){
+  getActiveSubmissionsFiles() {
     const activeSubmission = this.getActiveSubmission();
     const contentsLinks = activeSubmission['_links']['contents']['href'];
     const response = this.http.get(contentsLinks).pipe(
@@ -92,16 +94,17 @@ export class SubmissionsService {
     const activeSubmission = this.getActiveSubmission();
 
     if (!activeSubmission) {
-        return ;
+      return EMPTY;
     }
     // If Contents links not exist then retrieve it.
     if (!activeSubmission._links.contents.hasOwnProperty('_links')) {
       const contentsLinks = activeSubmission['_links']['contents']['href'];
-      var response = this.http.get(contentsLinks).pipe(
+
+      return this.http.get(contentsLinks).pipe(
         map(res => {
           activeSubmission._links.contents['_links'] = res['_links'];
           this.setActiveSubmission(activeSubmission);
-          return res['_links']['project']['href'];
+          return res['_links']['projects']['href'];
         }),
         flatMap((projectsUrl) => {
           return this.http.get(projectsUrl);
@@ -111,35 +114,28 @@ export class SubmissionsService {
           return res;
         })
       );
-
-      return response;
     } else {
+      let projectsLinks = '';
+
       try {
-        const projectsLinks = activeSubmission['_links']['contents']['_links']['project']['href'];
+        projectsLinks = activeSubmission['_links']['contents']['_links']['projects']['href'];
+      } catch (err) { }
 
-        this.http.get(projectsLinks).pipe(
-          map(response => {
-            if (response.hasOwnProperty('_embedded') && response['_embedded'].hasOwnProperty('project')) {
-              const activeProject = response['._embedded'].project.pop();
-              return activeProject['_links']['self']['href'];
-            }
-          }),
-          flatMap((projectsUrl) => {
-            return this.http.get(projectsUrl);
-          }),
-          map(project => {
-            this.setActiveProject(project);
-            return project;
-          })
-        );
-      } catch (err) {
-        // Return empty reponse variable.
-        let emptyVariable: any;
-        response = of(emptyVariable);
-      }
-
-
-      return response;
+      return this.http.get(projectsLinks).pipe(
+        map(response => {
+          if (response['_embedded']['projects']) {
+            const activeProject = response['_embedded']['projects'][0];
+            return activeProject['_links']['self']['href'];
+          }
+        }),
+        flatMap((projectsUrl) => {
+          return this.http.get(projectsUrl);
+        }),
+        map(project => {
+          this.setActiveProject(project);
+          return project;
+        })
+      );
     }
   }
 

@@ -34,15 +34,6 @@ export class DataPageComponent implements OnInit {
   files: any;
   userHasTeam = true;
   token: string;
-  tabLinks: any = [
-    {"title": "Overview", "href": "/submission/overview"},
-    {"title": "Project", "href": "/submission/project"},
-    {"title": "Data", "href": "/submission/data"},
-    {"title": "Samples", "href": "/submission/samples"},
-    {"title": "Protocols", "href": "/submission/protocols"},
-    {"title": "Contacts", "href": "/submission/contacts"},
-    {"title": "Submit", "href": "/submission/submit"},
-  ];
 
   constructor(
     private router: Router,
@@ -55,6 +46,7 @@ export class DataPageComponent implements OnInit {
   ngOnInit() {
     this.activeSubmission = this.submissionsService.getActiveSubmission();
     this.token = this.tokenService.getToken();
+
     this.submissionsService.getActiveSubmissionsFiles().subscribe(
       (data) => {
         this.files = data['_embedded']['files'];
@@ -127,7 +119,7 @@ export class DataPageComponent implements OnInit {
   }
 
   onSaveContinue() {
-    this.router.navigate(['/submission/samples'])
+
   }
 
   convertToSlug(Text) {

@@ -6,11 +6,7 @@
   <section id="main-content-area" class="row padding-top-xsmall padding-bottom-xsmall" role="main">
     <h2 class="padding-top-xlarge">Data upload</h2>
 
-    <ul class="tabs" id="example-tabs">
-      <li *ngFor="let link of tabLinks" routerLinkActive="active" class="tabs-title">
-        <a [routerLink]="link.href" routerLinkActive="active">{{link.title}}</a>
-      </li>
-    </ul>
+    <ebi-submission-menu [activeSubmission]="activeSubmission"></ebi-submission-menu>
 
     <h3>Data Upload</h3>
     <p>Based on your data type selection, please feel free to upload:</p>

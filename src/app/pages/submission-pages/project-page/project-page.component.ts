@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { TokenService } from 'angular-aap-auth';
 
 // Import Services.
 import { SubmissionsService } from '../../../services/submissions.service';
@@ -17,8 +16,7 @@ import { RequestsService } from '../../../services/requests.service';
     SubmissionsService,
     TeamsService,
     UserService,
-    RequestsService,
-    TokenService
+    RequestsService
   ]
 })
 export class ProjectPageComponent implements OnInit {
@@ -26,29 +24,16 @@ export class ProjectPageComponent implements OnInit {
   activeSubmission: any;
   activeProject: any;
   projects: any;
-  token: string;
-
-  tabLinks: any = [
-    {"title": "Overview", "href": "/submission/overview"},
-    {"title": "Project", "href": "/submission/project"},
-    {"title": "Data", "href": "/submission/data"},
-    {"title": "Samples", "href": "/submission/samples"},
-    {"title": "Protocols", "href": "/submission/protocols"},
-    {"title": "Contacts", "href": "/submission/contacts"},
-    {"title": "Submit", "href": "/submission/submit"},
-  ];
 
   constructor(
     private submissionsService: SubmissionsService,
     private teamsService: TeamsService,
     private userService: UserService,
     private requestsService: RequestsService,
-    private tokenService: TokenService,
     private router: Router,
   ) { }
 
   ngOnInit() {
-    this.token = this.tokenService.getToken();
     this.projectForm = new FormGroup({
       project: new FormControl('_create', Validators.required),
       projectTitle: new FormControl('', Validators.required),
@@ -169,8 +154,7 @@ export class ProjectPageComponent implements OnInit {
     // Update the submission.
     this.requestsService.update(submissionUpdateUrl, submissionUpdateData).subscribe (
       (data) => {
-        this.submissionsService.setActiveSubmission(data);
-        this.activeSubmission = data;
+        this.getSubmissionContents(data);
       },
       (err) => {
         // TODO: Handle Errors.
@@ -178,8 +162,28 @@ export class ProjectPageComponent implements OnInit {
       }
     );
 
-    this.router.navigate(['/submission/data']);
+    this.router.navigate(['/submission/contacts']);
   }
+
+  /**
+   * Get Submission Content.
+   */
+  getSubmissionContents(submission: any) {
+    const submissionLinksRequestUrl = submission._links.contents.href;
+    this.submissionsService.get(submissionLinksRequestUrl).subscribe (
+      (data) => {
+        submission['_links']['contents']['_links'] = data['_links'];
+        submission['_links']['contents']['dataTypes'] = data['dataTypes'];
+        this.submissionsService.setActiveSubmission(submission);
+        this.activeSubmission = submission;
+       },
+      (err) => {
+        // TODO: Handle Errors.
+        console.log(err);
+      }
+    );
+  }
+
 
   getActiveProject() {
     this.activeProject = this.submissionsService.getActiveProject();
@@ -213,7 +217,7 @@ export class ProjectPageComponent implements OnInit {
    * Load list of projects for exisitng user.
    */
   onLoadProjects() {
-    this.userService.getUserProjects(this.token).subscribe (
+    this.userService.getUserProjects().subscribe (
       (data) => {
         // TODO: Create a team if user has no tea m.
         // If user has no team assigned to it.
@@ -247,16 +251,19 @@ export class ProjectPageComponent implements OnInit {
     }
   }
 
+
   /**
    * This function set default value for forms and load submission content data.
    */
   initializeForm() {
     // Set Active Submission.
     this.activeSubmission = this.submissionsService.getActiveSubmission();
+
     // Load Submission Content Actions.
     this.requestsService.get(this.activeSubmission._links.contents.href).subscribe (
       (data) => {
         this.activeSubmission['_links']['contents']['_links'] = data['_links'];
+        this.activeSubmission['_links']['contents']['dataTypes'] = data['dataTypes'];
         this.submissionsService.setActiveSubmission(this.activeSubmission);
       },
       (err) => {
