@@ -53,12 +53,12 @@ export class EbiSubmissionMenuComponent implements OnInit {
         this.getSubmissionContents(submission);
         return;
       }
-    } catch(e) {
+    } catch (e) {
       return;
     }
 
-    for(let dataType of submission['_links']['contents']['dataTypes']) {
-      this.tabLinks.splice(4, 0, new TabLinks(dataType.displayNamePlural, '/submission/metadata/' + dataType.id);
+    for (const dataType of submission['_links']['contents']['dataTypes']) {
+      this.tabLinks.splice(4, 0, new TabLinks(dataType.displayNamePlural, '/submission/metadata/' + dataType.id));
     }
   }
 
