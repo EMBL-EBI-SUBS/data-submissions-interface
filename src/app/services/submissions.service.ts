@@ -9,27 +9,25 @@ import { VariablesService } from './variables.service';
 @Injectable()
 export class SubmissionsService {
   variables = new VariablesService;
-  SubmissionPlansEndpoint = this.variables.host + "submissionPlans";
+  SubmissionPlansEndpoint = this.variables.host + 'submissionPlans';
 
   constructor(private http: HttpClient) { }
 
   /**
    * Get record.
    */
-  get(url) {
-    let requestUrl =  url;
-    var response = this.http.get(requestUrl);
-    return response;
+  get(requestUrl) {
+    return this.http.get(requestUrl);
   }
 
   /**
    * Create new record.
    */
   create(url, bodyData = {}, requestParam = {}) {
-    const httpParams = new HttpParams();
+    let httpParams = new HttpParams();
     for (const key in requestParam) {
       if (requestParam.hasOwnProperty(key)) {
-        httpParams.append(key, requestParam[key]);
+        httpParams = httpParams.set(key, requestParam[key]);
       }
     }
 
@@ -55,12 +53,13 @@ export class SubmissionsService {
   }
 
   getSubmissionPlansUIData(submissionPlans) {
-    let submissionPlansUIData = [];
+    const submissionPlansUIData = [];
     for (const submissionPlan of submissionPlans) {
       const submissionPlanUIData = {};
       submissionPlanUIData['displayName'] = submissionPlan.displayName;
       submissionPlanUIData['description'] = submissionPlan.description;
       submissionPlanUIData['id'] = submissionPlan.id;
+      submissionPlanUIData['href'] = submissionPlan._links.self.href;
 
       submissionPlansUIData.push(submissionPlanUIData);
     };
@@ -69,9 +68,9 @@ export class SubmissionsService {
   }
 
   getActiveSubmissionsFiles(){
-    let activeSubmission = this.getActiveSubmission();
-    let contentsLinks = activeSubmission['_links']['contents']['href'];
-    var response = this.http.get(contentsLinks).pipe(
+    const activeSubmission = this.getActiveSubmission();
+    const contentsLinks = activeSubmission['_links']['contents']['href'];
+    const response = this.http.get(contentsLinks).pipe(
       map(res => {
         return res['_links']['files']['href'];
       }),
@@ -90,14 +89,14 @@ export class SubmissionsService {
    * Get Project for Submission.
    */
   getActiveSubmissionProject() {
-    let activeSubmission = this.getActiveSubmission();
+    const activeSubmission = this.getActiveSubmission();
 
-    if(!activeSubmission) {
+    if (!activeSubmission) {
         return ;
     }
     // If Contents links not exist then retrieve it.
-    if (!activeSubmission._links.contents.hasOwnProperty("_links")) {
-      let contentsLinks = activeSubmission['_links']['contents']['href'];
+    if (!activeSubmission._links.contents.hasOwnProperty('_links')) {
+      const contentsLinks = activeSubmission['_links']['contents']['href'];
       var response = this.http.get(contentsLinks).pipe(
         map(res => {
           activeSubmission._links.contents['_links'] = res['_links'];
@@ -114,14 +113,13 @@ export class SubmissionsService {
       );
 
       return response;
-    }
-    else {
+    } else {
       try {
-        let projectsLinks = activeSubmission['_links']['contents']['_links']['projects']['href'];
+        const projectsLinks = activeSubmission['_links']['contents']['_links']['projects']['href'];
         var projectResponse = this.http.get(projectsLinks).pipe(
           map(response => {
             if(response.hasOwnProperty("_embedded") && response['_embedded'].hasOwnProperty("projects")) {
-              let activeProject = response['._embedded'].project.pop();
+              const activeProject = response['._embedded'].project.pop();
               return activeProject['_links']['self']['href'];
             }
           }),
@@ -147,62 +145,62 @@ export class SubmissionsService {
    * Update active submission.
    */
   setActiveSubmission(submission: any) {
-    localStorage.setItem("active_submission", JSON.stringify(submission));
+    localStorage.setItem('active_submission', JSON.stringify(submission));
   }
 
   /**
    * Retrieve active submission.
    */
   getActiveSubmission() {
-    return JSON.parse(localStorage.getItem("active_submission"));
+    return JSON.parse(localStorage.getItem('active_submission'));
   }
 
   /**
    * Delete active submission.
    */
   deleteActiveSubmission() {
-    localStorage.removeItem("active_submission");
+    localStorage.removeItem('active_submission');
   }
 
   /**
    * Set all submissions.
    */
   setSubmissions(submissions) {
-    localStorage.setItem("submissions", JSON.stringify(submissions));
+    localStorage.setItem('submissions', JSON.stringify(submissions));
   }
 
   /**
    * Retrieve all submissions.
    */
   getSubmissions() {
-    return JSON.parse(localStorage.getItem("submissions"));
+    return JSON.parse(localStorage.getItem('submissions'));
   }
 
   /**
    * Delete all submissions.
    */
   deleteSubmissions() {
-    localStorage.removeItem("submissions");
+    localStorage.removeItem('submissions');
   }
 
   /**
    * Update active project.
    */
   setActiveProject(project: any) {
-    localStorage.setItem("active_project", JSON.stringify(project));
+    localStorage.setItem('active_project', JSON.stringify(project));
   }
 
   /**
    * Retrieve active project.
    */
   getActiveProject() {
-    return JSON.parse(localStorage.getItem("active_project"));
+    return JSON.parse(localStorage.getItem('active_project'));
   }
 
   /**
    * Delete active project.
    */
   deleteActiveProject() {
-    localStorage.removeItem("active_project");
+    localStorage.removeItem('active_project');
   }
 }
