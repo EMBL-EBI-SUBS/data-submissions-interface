@@ -12,12 +12,6 @@ import { RequestsService } from '../../../services/requests.service';
   selector: 'app-overview-page',
   templateUrl: './overview-page.component.html',
   styleUrls: ['./overview-page.component.scss'],
-  providers: [
-    UserService,
-    TeamsService,
-    SubmissionsService,
-    RequestsService
-  ]
 })
 export class OverviewPageComponent implements OnInit {
   public overviewForm = new FormGroup({

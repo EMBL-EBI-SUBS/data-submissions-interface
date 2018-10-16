@@ -11,11 +11,6 @@ import { RequestsService } from '../../../services/requests.service';
   selector: 'app-contacts-page',
   templateUrl: './contacts-page.component.html',
   styleUrls: ['./contacts-page.component.scss'],
-  providers: [
-    SubmissionsService,
-    TeamsService,
-    RequestsService,
-  ]
 })
 export class ContactsPageComponent implements OnInit {
   contactForm: FormGroup;

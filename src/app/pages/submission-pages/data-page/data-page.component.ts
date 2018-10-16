@@ -19,12 +19,6 @@ import { FileService } from 'src/app/services/file.service';
   selector: 'app-data-page',
   templateUrl: './data-page.component.html',
   styleUrls: ['./data-page.component.scss'],
-  providers: [
-    SubmissionsService,
-    TeamsService,
-    TokenService,
-    FileService
-  ]
 })
 export class DataPageComponent implements OnInit {
   activeSubmission: any;

@@ -8,10 +8,6 @@ import { RequestsService } from '../../services/requests.service';
   selector: 'projects-page',
   templateUrl: './projects.component.html',
   styleUrls: ['./projects.component.scss'],
-  providers: [
-    ProjectsService,
-    RequestsService
-  ]
 })
 export class ProjectsPageComponent implements OnInit {
   token: string;

@@ -13,12 +13,6 @@ import { environment } from 'src/environments/environment';
   selector: 'app-samples-page',
   templateUrl: './samples-page.component.html',
   styleUrls: ['./samples-page.component.scss'],
-  providers: [
-    SubmissionsService,
-    TeamsService,
-    RequestsService,
-    SpreadsheetsService,
-  ]
 })
 export class SamplesPageComponent implements OnInit {
   @ViewChildren('allSamples') samplesRows: QueryList<any>;
