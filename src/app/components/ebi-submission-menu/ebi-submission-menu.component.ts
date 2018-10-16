@@ -1,15 +1,24 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { SubmissionsService } from '../../services/submissions.service';
 
-export class TabLinks {
-  title: string
-  href: string
+interface TabLinks {
+  title: string;
+  href: string;
+}
 
-  constructor (title: string, href: string) {
-    this.title = title
-    this.href = href
-  }
+interface DataType {
+  id: string;
+  displayNamePlural: string;
+}
+
+interface Submission {
+  _links:{
+    contents: {
+      href: string;
+      _links: Object;
+      dataTypes?: DataType[]
+    }
+  };
 }
 
 @Component({
@@ -18,67 +27,59 @@ export class TabLinks {
   styleUrls: ['./ebi-submission-menu.component.scss'],
 })
 export class EbiSubmissionMenuComponent implements OnInit {
-  @Input() activeSubmission: Object;
-  isTabsDisabled = false;
+  @Input()
+  activeSubmission: Submission | undefined;
 
-  tabLinks: TabLinks[] = [
-    new TabLinks('Overview', '/submission/overview'),
-    new TabLinks('Project', '/submission/project'),
-    new TabLinks('Contacts', '/submission/contacts'),
-    new TabLinks('Data', '/submission/data'),
-    new TabLinks('Submit', '/submission/submit'),
+  public isTabsDisabled = true;
+
+  public tabLinks: TabLinks[] = [
+    {title: 'Overview', href: '/submission/overview'},
+    {title: 'Project', href: '/submission/project'},
+    {title: 'Contacts', href: '/submission/contacts'},
+    {title: 'Data', href: '/submission/data'},
+    {title: 'Submit', href: '/submission/submit'},
   ];
 
   constructor(
-    private router: Router,
-    private submissionsService: SubmissionsService
+    private _submissionsService: SubmissionsService
   ) {
   }
 
   ngOnInit(): void {
-    this.updateDataTypeLinks(this.activeSubmission);
+    if (this.activeSubmission) {
+      this.isTabsDisabled = false;
 
-    if (!this.activeSubmission) {
-      this.isTabsDisabled = true;
+      const dataTypes = this.activeSubmission._links.contents.dataTypes; // undefined | DataType[]
+
+      if (dataTypes === undefined){
+        this.getSubmissionContents();
+      } else {
+        this.updateDataTypeLinks(dataTypes);
+      }
     }
   }
 
   /**
    * Alter menu links and add submission DataTypes as links.
    */
-  updateDataTypeLinks(submission): void {
-    // Do nothing if dataType not yet exists in the submission.
-    try {
-      if (!submission['_links']['contents']['dataTypes']) {
-        this.getSubmissionContents(submission);
-        return;
-      }
-    } catch (e) {
-      return;
-    }
-
-    for (const dataType of submission['_links']['contents']['dataTypes']) {
-      this.tabLinks.splice(4, 0, new TabLinks(dataType.displayNamePlural, '/submission/metadata/' + dataType.id));
+  updateDataTypeLinks(dataTypes: DataType[]): void {
+    for (const dataType of dataTypes) {
+      this.tabLinks.splice(4, 0, {title: dataType.displayNamePlural, href: `/submission/metadata/${dataType.id}`});
     }
   }
 
   /**
    * Get Submission Content.
    */
-  getSubmissionContents(submission: any) {
-    const submissionLinksRequestUrl = submission._links.contents.href;
-    this.submissionsService.get(submissionLinksRequestUrl).subscribe (
-      (data) => {
-        submission['_links']['contents']['_links'] = data['_links'];
-        submission['_links']['contents']['dataTypes'] = data['dataTypes'];
-        this.submissionsService.setActiveSubmission(submission);
-        this.activeSubmission = submission;
-        this.updateDataTypeLinks(submission);
-       },
-      (err) => {
-        // TODO: Handle Errors.
-        console.log(err);
-      }
+  getSubmissionContents(): void {
+    const submissionLinksRequestUrl = this.activeSubmission._links.contents.href;
+    this._submissionsService.get(submissionLinksRequestUrl).subscribe (
+      data => {
+        this.activeSubmission._links.contents._links = data['_links'];
+        this.activeSubmission._links.contents.dataTypes = data['dataTypes'];
+        this.updateDataTypeLinks(data['dataTypes']);
+        this._submissionsService.setActiveSubmission(this.activeSubmission);
+       }
     );
   }
 }
