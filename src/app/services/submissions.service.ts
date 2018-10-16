@@ -97,7 +97,7 @@ export class SubmissionsService {
       return EMPTY;
     }
     // If Contents links not exist then retrieve it.
-    if (!activeSubmission._links.contents.hasOwnProperty('_links')) {
+    if (!activeSubmission['_links']['contents']['_links']) {
       const contentsLinks = activeSubmission['_links']['contents']['href'];
 
       return this.http.get(contentsLinks).pipe(
