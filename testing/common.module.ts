@@ -34,7 +34,7 @@ export function removeToken(): void {
         tokenRemover: removeToken
       }),
       ToastrModule.forRoot({
-        positionClass: 'toast-bottom-center',
+        positionClass: 'toast-top-right',
         closeButton: true,
         maxOpened: 5,
         preventDuplicates: true,
