@@ -69,7 +69,7 @@ export class SubmissionsService {
     return submissionPlansUIData;
   }
 
-  getActiveSubmissionsFiles(){
+  getActiveSubmissionsFiles() {
     const activeSubmission = this.getActiveSubmission();
     const contentsLinks = activeSubmission['_links']['contents']['href'];
     const response = this.http.get(contentsLinks).pipe(
@@ -104,7 +104,7 @@ export class SubmissionsService {
         map(res => {
           activeSubmission._links.contents['_links'] = res['_links'];
           this.setActiveSubmission(activeSubmission);
-          return res['_links']['project']['href'];
+          return res['_links']['projects']['href'];
         }),
         flatMap((projectsUrl) => {
           return this.http.get(projectsUrl);
@@ -115,7 +115,7 @@ export class SubmissionsService {
         })
       );
     } else {
-      let projectsLinks = "";
+      let projectsLinks = '';
 
       try {
         projectsLinks = activeSubmission['_links']['contents']['_links']['projects']['href'];
@@ -123,8 +123,8 @@ export class SubmissionsService {
 
       return this.http.get(projectsLinks).pipe(
         map(response => {
-          if (response.hasOwnProperty('_embedded') && response['_embedded'].hasOwnProperty('projects')) {
-            const activeProject = response['._embedded'].project.pop();
+          if (response['_embedded']['projects']) {
+            const activeProject = response['_embedded']['projects'][0];
             return activeProject['_links']['self']['href'];
           }
         }),
