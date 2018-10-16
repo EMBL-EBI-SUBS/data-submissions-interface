@@ -52,7 +52,7 @@ a.disabled {
   display: inline-block;
 
   & > a {
-    color: #888;
+    color: $tabs-dark-gray;
     font-size: 1rem;
     margin: 0 1.25rem;
     padding: 1.25rem 0.25rem 0.5rem;
