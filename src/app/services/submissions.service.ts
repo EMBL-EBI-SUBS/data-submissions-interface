@@ -1,8 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { HttpParams } from '@angular/common/http';
-import { of } from 'rxjs';
 import { flatMap, map } from 'rxjs/operators';
+import { EMPTY } from 'rxjs'
+
+
 // Import Service Variables.
 import { VariablesService } from './variables.service';
 
@@ -92,12 +94,13 @@ export class SubmissionsService {
     const activeSubmission = this.getActiveSubmission();
 
     if (!activeSubmission) {
-        return ;
+      return EMPTY;
     }
     // If Contents links not exist then retrieve it.
     if (!activeSubmission._links.contents.hasOwnProperty('_links')) {
       const contentsLinks = activeSubmission['_links']['contents']['href'];
-      var response = this.http.get(contentsLinks).pipe(
+
+      return this.http.get(contentsLinks).pipe(
         map(res => {
           activeSubmission._links.contents['_links'] = res['_links'];
           this.setActiveSubmission(activeSubmission);
@@ -111,33 +114,28 @@ export class SubmissionsService {
           return res;
         })
       );
-
-      return response;
     } else {
-      try {
-        const projectsLinks = activeSubmission['_links']['contents']['_links']['projects']['href'];
-        var projectResponse = this.http.get(projectsLinks).pipe(
-          map(response => {
-            if(response.hasOwnProperty("_embedded") && response['_embedded'].hasOwnProperty("projects")) {
-              const activeProject = response['._embedded'].project.pop();
-              return activeProject['_links']['self']['href'];
-            }
-          }),
-          flatMap((projectsUrl) => {
-            return this.http.get(projectsUrl);
-          }),
-          map(project => {
-            this.setActiveProject(project);
-            return project;
-          })
-        );
-      } catch (err) {
-        // Return empty reponse variable.
-        let emptyVariable: any;
-        response = of(emptyVariable);
-      }
+      let projectsLinks = "";
 
-      return projectResponse;
+      try {
+        projectsLinks = activeSubmission['_links']['contents']['_links']['projects']['href'];
+      } catch (err) { }
+
+      return this.http.get(projectsLinks).pipe(
+        map(response => {
+          if (response.hasOwnProperty('_embedded') && response['_embedded'].hasOwnProperty('projects')) {
+            const activeProject = response['._embedded'].project.pop();
+            return activeProject['_links']['self']['href'];
+          }
+        }),
+        flatMap((projectsUrl) => {
+          return this.http.get(projectsUrl);
+        }),
+        map(project => {
+          this.setActiveProject(project);
+          return project;
+        })
+      );
     }
   }
 

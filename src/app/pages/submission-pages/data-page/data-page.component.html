@@ -6,8 +6,7 @@
   <section id="main-content-area" class="row padding-top-xsmall padding-bottom-xsmall" role="main">
     <h2 class="padding-top-xlarge">Data upload</h2>
 
-    <ebi-submission-menu *ngIf="activeSubmission?._links?.contents?._links" [submission]="activeSubmission"></ebi-submission-menu>
-
+    <ebi-submission-menu [activeSubmission]="activeSubmission"></ebi-submission-menu>
 
     <h3>Data Upload</h3>
     <p>Based on your data type selection, please feel free to upload:</p>

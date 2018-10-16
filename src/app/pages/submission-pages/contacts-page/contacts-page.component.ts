@@ -81,7 +81,7 @@ export class ContactsPageComponent implements OnInit {
     this.activeProject = this.submissionsService.getActiveProject();
 
     // If there is no active project stored in session.
-    if (!this.activeProject) {
+    if (!this.activeProject && this.activeSubmission) {
       this.submissionsService.getActiveSubmissionProject().subscribe(
         (data) => {
           if(data) {

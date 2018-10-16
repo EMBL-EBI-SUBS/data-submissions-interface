@@ -4,7 +4,7 @@
   <section id="main-content-area" class="row padding-top-xsmall padding-bottom-xsmall" role="main">
     <h2 class="padding-top-xlarge">New data submission</h2>
 
-    <ebi-submission-menu *ngIf="activeSubmission?._links?.contents?._links" [submission]="activeSubmission"></ebi-submission-menu>
+    <ebi-submission-menu [activeSubmission]="activeSubmission"></ebi-submission-menu>
 
 
     Submit page
