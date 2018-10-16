@@ -47,11 +47,16 @@ a.disabled {
   border: none;
 }
 
-.tabs-title > a {
-  color: #888;
-  font-size: 1rem;
-  margin: 0 1.25rem;
-  padding: 1.25rem 0.25rem 0.5rem;
+.tabs-title {
+  float: none;
+  display: inline-block;
+
+  & > a {
+    color: $tabs-dark-gray;
+    font-size: 1rem;
+    margin: 0 1.25rem;
+    padding: 1.25rem 0.25rem 0.5rem;
+  }
 }
 
 .button:focus {

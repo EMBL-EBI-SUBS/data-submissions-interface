@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule, PreloadAllModules } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
@@ -38,6 +39,7 @@ import { UserTeamCreatePageComponent } from './pages/user-team-create-page/user-
 import { EbiHeaderComponent } from './components/ebi-header/ebi-header.component';
 import { EbiNavbarComponent } from './components/ebi-navbar/ebi-navbar.component';
 import { EbiFooterComponent } from './components/ebi-footer/ebi-footer.component';
+import { EbiSubmissionMenuComponent } from './components/ebi-submission-menu/ebi-submission-menu.component';
 
 // Import Guards.
 import { LoggedInGuard } from './guards/logged-in/logged-in.guard';
@@ -72,6 +74,7 @@ export function removeToken(): void {
     EbiHeaderComponent,
     EbiNavbarComponent,
     EbiFooterComponent,
+    EbiSubmissionMenuComponent,
     DataPageComponent,
     ProjectPageComponent,
     ProtocolsPageComponent,
@@ -90,6 +93,7 @@ export function removeToken(): void {
     FormsModule,
     AppRoutingModule,
     ReactiveFormsModule,
+    BrowserAnimationsModule,
     AuthModule.forRoot({
       aapURL: environment.authenticationHost,
       tokenGetter: getToken,
