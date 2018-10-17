@@ -47,7 +47,7 @@ export class DataPageComponent implements OnInit {
     this.activeSubmission = this.submissionsService.getActiveSubmission();
     this.token = this.tokenService.getToken();
 
-    this.submissionsService.getActiveSubmissionsFiles().subscribe(
+    this.fileService.getActiveSubmissionsFiles(this.activeSubmission).subscribe(
       (data) => {
         this.files = data['_embedded']['files'];
         // format the file status string and store it as status_label for display

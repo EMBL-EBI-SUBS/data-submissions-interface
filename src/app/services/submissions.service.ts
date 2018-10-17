@@ -69,24 +69,6 @@ export class SubmissionsService {
     return submissionPlansUIData;
   }
 
-  getActiveSubmissionsFiles() {
-    const activeSubmission = this.getActiveSubmission();
-    const contentsLinks = activeSubmission['_links']['contents']['href'];
-    const response = this.http.get(contentsLinks).pipe(
-      map(res => {
-        return res['_links']['files']['href'];
-      }),
-      flatMap((filesUrl) => {
-        return this.http.get(filesUrl);
-      }),
-      map(res => {
-        return res;
-      })
-    );
-
-    return response;
-  }
-
   /**
    * Get Project for Submission.
    */
