@@ -24,7 +24,7 @@ export class OverviewPageComponent implements OnInit {
   objectKeys = Object.keys;
   activeSubmission: any;
   activeTeam: any;
-  submissionPlans= [];
+  submissionPlans = [];
   selectedSubmissionPlan: FormControl;
   savedSubmissionPlan: FormControl;
   savedHuman: string;

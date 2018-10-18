@@ -9,7 +9,7 @@ interface ApiResponse {
     [key: string]: {
       href: string
     }
-  }
+  };
 }
 
 @Injectable()

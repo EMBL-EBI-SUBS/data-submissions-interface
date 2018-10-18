@@ -1,20 +1,20 @@
-import { Component, OnInit, Renderer } from "@angular/core";
-import { Router } from "@angular/router";
-import { AuthService } from "angular-aap-auth";
+import { Component, OnInit, Renderer } from '@angular/core';
+import { Router } from '@angular/router';
+import { AuthService } from 'angular-aap-auth';
 import { concatMap } from 'rxjs/operators';
 
 // Import Services.
-import { UserService } from "../../services/user.service";
-import { TeamsService } from "../../services/teams.service";
-import { EndpointService } from "../../services/endpoint.service";
-import { RequestsService } from "../../services/requests.service";
+import { UserService } from '../../services/user.service';
+import { TeamsService } from '../../services/teams.service';
+import { EndpointService } from '../../services/endpoint.service';
+import { RequestsService } from '../../services/requests.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { environment } from 'src/environments/environment';
 
 @Component({
-  selector: "app-user-team-create-page",
-  templateUrl: "./user-team-create-page.component.html",
-  styleUrls: ["./user-team-create-page.component.scss"],
+  selector: 'app-user-team-create-page',
+  templateUrl: './user-team-create-page.component.html',
+  styleUrls: ['./user-team-create-page.component.scss'],
 })
 export class UserTeamCreatePageComponent implements OnInit {
   public teams = {};
@@ -46,9 +46,9 @@ export class UserTeamCreatePageComponent implements OnInit {
   }
 
   doRefreshToken() {
-    this.requestsService.get(environment.authenticationHost + "/token", {responseType: 'text'}).subscribe(
+    this.requestsService.get(environment.authenticationHost + '/token', {responseType: 'text'}).subscribe(
       (data) => {
-        let retrievedToken = data.toString();
+        const retrievedToken = data.toString();
         // Updating the token with a new one.
         localStorage.setItem('jwt_token', retrievedToken);
         this.onExit();
@@ -57,7 +57,7 @@ export class UserTeamCreatePageComponent implements OnInit {
   }
 
   onExit() {
-    this.router.navigate(["/user/teams"]);
+    this.router.navigate(['/user/teams']);
   }
 
 }

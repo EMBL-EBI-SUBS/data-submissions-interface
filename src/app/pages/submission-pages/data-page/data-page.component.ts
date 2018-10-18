@@ -51,7 +51,7 @@ export class DataPageComponent implements OnInit {
       }
     );
     this.uploadUppy = Uppy({
-      id :this.convertToSlug(this.activeSubmission.name + "-" + this.activeSubmission.projectName + "-data"),
+      id : this.convertToSlug(this.activeSubmission.name + '-' + this.activeSubmission.projectName + '-data'),
       autoProceed: true,
     });
 
@@ -62,7 +62,7 @@ export class DataPageComponent implements OnInit {
       note: 'Drag & drop filled out .CSV file'
     })
     .use(Form, {
-      target: ".uppy-metadata",
+      target: '.uppy-metadata',
       getMetaFromForm: true,
     })
     .use(GoldenRetriever, {
@@ -78,7 +78,7 @@ export class DataPageComponent implements OnInit {
 
     this.uploadUppy.on('core:upload-success', (fileId, url) => {
        // this.formDisabled = false;
-    })
+    });
 
   }
 
@@ -93,7 +93,7 @@ export class DataPageComponent implements OnInit {
       (response) => {
           if (response.status === HttpStatus.NO_CONTENT ) {
               console.debug(`File: ${file.filename} has been succcesfully deleted from the storage.`);
-              this.files = this.files.filter(item => item !== file)
+              this.files = this.files.filter(item => item !== file);
           } else {
               console.log(`File deletion has failed. The reason: ${response.statusText}`);
           }
@@ -109,7 +109,7 @@ export class DataPageComponent implements OnInit {
     this.submissionsService.deleteActiveProject();
     this.teamsService.deleteActiveTeam();
 
-    this.router.navigate(['/'])
+    this.router.navigate(['/']);
   }
 
   onSaveContinue() {
@@ -119,8 +119,8 @@ export class DataPageComponent implements OnInit {
   convertToSlug(Text) {
     return Text
       .toLowerCase()
-      .replace(/ /g,'-')
-      .replace(/[^\w-]+/g,'')
+      .replace(/ /g, '-')
+      .replace(/[^\w-]+/g, '')
       ;
   }
 
@@ -130,7 +130,7 @@ export class DataPageComponent implements OnInit {
    */
   cleanupUnderscores(Text) {
     return Text
-      .replace(/_/g,' ');
+      .replace(/_/g, ' ');
   }
 
   /**

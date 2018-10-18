@@ -8,7 +8,7 @@ import { VariablesService } from './variables.service';
 @Injectable()
 export class ProjectsService {
   variables = new VariablesService;
-  projectsListEndpoint = this.variables.host + "user/projects";
+  projectsListEndpoint = this.variables.host + 'user/projects';
 
   constructor(private http: HttpClient) { }
 
@@ -16,8 +16,8 @@ export class ProjectsService {
    * List Projects for Current Logged in user.
    */
   getProjectsList() {
-    let requestUrl =  this.projectsListEndpoint;
-    var response = this.http.get(requestUrl);
+    const requestUrl =  this.projectsListEndpoint;
+    const response = this.http.get(requestUrl);
     return response;
   }
 }

@@ -29,11 +29,11 @@ export class UserLoginPageComponent implements OnInit {
 
       this.userService.getUserTeams().subscribe (
         (data) => {
-            if(data['page']['totalElements'] == 0) {
+            if (data['page']['totalElements'] == 0) {
             this.teamsService.createTeam().subscribe(
               (data) => {
                 this.authService.logOut();
-                alert("New team has beeen created, you have to login again.");
+                alert('New team has beeen created, you have to login again.');
               },
               (err) => {
                 console.log(err);
@@ -41,7 +41,7 @@ export class UserLoginPageComponent implements OnInit {
             );
           }
           // User already has team, redirect him/her to the dashboard.
-          this.router.navigate(["/dashboard"]);
+          this.router.navigate(['/dashboard']);
         },
         (err) => {
           // TODO: Handle Errors.

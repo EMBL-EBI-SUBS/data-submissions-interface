@@ -25,10 +25,10 @@ export class SubmitPageComponent implements OnInit {
   }
 
   onSubmitSubmission() {
-    let activeSubmissionUpdateEndpoint = this.activeSubmission._links.submissionStatus.href;
-    let updateObj = {
-      "status" : "Submitted",
-    }
+    const activeSubmissionUpdateEndpoint = this.activeSubmission._links.submissionStatus.href;
+    const updateObj = {
+      'status' : 'Submitted',
+    };
     this.requestsService.update(activeSubmissionUpdateEndpoint, updateObj).subscribe(
       (data) => {
         // If updating status successfully done. redirect to dashboard.

@@ -8,8 +8,8 @@ import { VariablesService } from './variables.service';
 @Injectable()
 export class TeamsService {
   variables = new VariablesService;
-  teamEndpoint = this.variables.host + "teams/";
-  createTeamEndPoint = this.variables.host + "user/teams";
+  teamEndpoint = this.variables.host + 'teams/';
+  createTeamEndPoint = this.variables.host + 'user/teams';
 
   constructor(
     private http: HttpClient
@@ -19,29 +19,29 @@ export class TeamsService {
    * Set Teams.
    */
   setTeams(teams: any) {
-    localStorage.setItem("teams", JSON.stringify(teams));
+    localStorage.setItem('teams', JSON.stringify(teams));
   }
 
   /**
    * Get Teams.
    */
   getTeams() {
-    return JSON.parse(localStorage.getItem("teams"));
+    return JSON.parse(localStorage.getItem('teams'));
   }
 
   /**
    * Delete Teams.
    */
   deleteTeams() {
-    localStorage.removeItem("teams");
+    localStorage.removeItem('teams');
   }
 
   /**
    * Get Team by name.
    */
   getTeam(name) {
-    let requestUrl =  this.teamEndpoint + name;
-    var response = this.http.get(requestUrl);
+    const requestUrl =  this.teamEndpoint + name;
+    const response = this.http.get(requestUrl);
     return response;
   }
 
@@ -50,13 +50,13 @@ export class TeamsService {
    */
   createTeam() {
     // Post an Empty object to create submission.
-    let body = JSON.stringify({
-      "description" : "My lab group",
-      "centreName" : "An Institute"
+    const body = JSON.stringify({
+      'description' : 'My lab group',
+      'centreName' : 'An Institute'
     });
 
-    let requestUrl =  this.createTeamEndPoint;
-    var response = this.http.post(requestUrl, body);
+    const requestUrl =  this.createTeamEndPoint;
+    const response = this.http.post(requestUrl, body);
     return response;
   }
 
@@ -65,10 +65,10 @@ export class TeamsService {
    */
   addUserToTeam(teamDomainRef, userRef) {
     // Post an Empty object to create submission.
-    let body = JSON.stringify({});
+    const body = JSON.stringify({});
 
-    let requestUrl =  this.createTeamEndPoint + "/" + teamDomainRef + "/" +  userRef + "/user";
-    var response = this.http.put(requestUrl, body);
+    const requestUrl =  this.createTeamEndPoint + '/' + teamDomainRef + '/' +  userRef + '/user';
+    const response = this.http.put(requestUrl, body);
     return response;
   }
 
@@ -76,14 +76,14 @@ export class TeamsService {
    * Set Active Team.
    */
   setActiveTeam(team: any) {
-    localStorage.setItem("active_team", JSON.stringify(team));
+    localStorage.setItem('active_team', JSON.stringify(team));
   }
 
   /**
    * Get Active Team.
    */
   getActiveTeam() {
-    let teams = JSON.parse(localStorage.getItem("active_team"));
+    const teams = JSON.parse(localStorage.getItem('active_team'));
     return teams[0];
   }
 
@@ -91,6 +91,6 @@ export class TeamsService {
    * Delete Active Team.
    */
   deleteActiveTeam() {
-      localStorage.removeItem("active_team");
+      localStorage.removeItem('active_team');
   }
 }

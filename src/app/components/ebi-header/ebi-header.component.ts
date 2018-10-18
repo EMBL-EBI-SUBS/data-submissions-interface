@@ -13,9 +13,9 @@ import { map, catchError } from 'rxjs/operators';
 export class EbiHeaderComponent {
 
   @Input() title: string;
-  @Input() href: string = "/";
-  @Input() image: string = "https://www.ebi.ac.uk/web_guidelines/images/banners/EBI_SERVICES_Banner_2016.jpg";
-  @Input() color: string = "#091316";
+  @Input() href = '/';
+  @Input() image = 'https://www.ebi.ac.uk/web_guidelines/images/banners/EBI_SERVICES_Banner_2016.jpg';
+  @Input() color = '#091316';
 
   constructor(
     public authService: AuthService,
@@ -24,6 +24,6 @@ export class EbiHeaderComponent {
 
   onLogout() {
     this.authService.logOut();
-    this.router.navigate(["/user/login"]);
+    this.router.navigate(['/user/login']);
   }
 }

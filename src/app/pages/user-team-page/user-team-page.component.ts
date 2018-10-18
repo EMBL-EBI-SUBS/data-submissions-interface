@@ -1,18 +1,18 @@
-import { Component, OnInit, Renderer } from "@angular/core";
-import { Router } from "@angular/router";
-import { AuthService } from "angular-aap-auth";
+import { Component, OnInit, Renderer } from '@angular/core';
+import { Router } from '@angular/router';
+import { AuthService } from 'angular-aap-auth';
 import { concatMap } from 'rxjs/operators';
 
 // Import Services.
 import { TeamsService } from '../../services/teams.service';
-import { EndpointService } from "../../services/endpoint.service";
-import { RequestsService } from "../../services/requests.service";
-import { SubmissionsService } from "../../services/submissions.service";
+import { EndpointService } from '../../services/endpoint.service';
+import { RequestsService } from '../../services/requests.service';
+import { SubmissionsService } from '../../services/submissions.service';
 
 @Component({
-  selector: "app-user-team-page",
-  templateUrl: "./user-team-page.component.html",
-  styleUrls: ["./user-team-page.component.scss"],
+  selector: 'app-user-team-page',
+  templateUrl: './user-team-page.component.html',
+  styleUrls: ['./user-team-page.component.scss'],
 })
 export class UserTeamPageComponent implements OnInit {
   teams = {};
@@ -50,11 +50,11 @@ export class UserTeamPageComponent implements OnInit {
     this.teamsService.setActiveTeam(team);
     this.submissionsService.deleteActiveProject();
     this.submissionsService.deleteActiveSubmission();
-    this.router.navigate(["submission/overview"]);
+    this.router.navigate(['submission/overview']);
   }
 
   onCreateTeam() {
-    this.router.navigate(["/user/teams/create"]);
+    this.router.navigate(['/user/teams/create']);
   }
 
   /**
@@ -77,7 +77,7 @@ export class UserTeamPageComponent implements OnInit {
    * @param {string} action
    */
   onPagerClick(action: string) {
-    let getTeamsUrl = this.teams["_links"][action].href;
+    const getTeamsUrl = this.teams['_links'][action].href;
     this.getTeamsByUrl(getTeamsUrl);
   }
 }

@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { HttpParams } from '@angular/common/http';
 import { flatMap, map } from 'rxjs/operators';
-import { EMPTY } from 'rxjs'
+import { EMPTY } from 'rxjs';
 
 
 // Import Service Variables.
@@ -64,7 +64,7 @@ export class SubmissionsService {
       submissionPlanUIData['href'] = submissionPlan._links.self.href;
 
       submissionPlansUIData.push(submissionPlanUIData);
-    };
+    }
 
     return submissionPlansUIData;
   }

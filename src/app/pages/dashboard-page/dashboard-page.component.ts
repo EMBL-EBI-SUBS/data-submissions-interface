@@ -35,18 +35,18 @@ export class DashboardPageComponent implements OnInit {
     this.teamService.deleteActiveTeam();
 
     // Get all submissions.
-    if(!this.submissions) {
+    if (!this.submissions) {
       this.getUserSubmissions();
     }
 
     // Get submissions summary.
-    if(!this.submissionsSummary) {
+    if (!this.submissionsSummary) {
       this.getUserSubmissionsSummary();
     }
   }
 
   onStartSubmission() {
-    this.router.navigate(["/user/teams"]);
+    this.router.navigate(['/user/teams']);
   }
 
 
@@ -103,12 +103,12 @@ export class DashboardPageComponent implements OnInit {
    * @param {string} action
    */
   onPagerClick(action: string) {
-    let getSubmissionUrl = this.submissions._links[action].href;
+    const getSubmissionUrl = this.submissions._links[action].href;
     this.submissions = this.getUserSubmissionsByUrl(getSubmissionUrl);
   }
 
   onEditDraftSubmission(submissionItem: any) {
-    let submissionLinkEndpoint = submissionItem._links['self'].href;
+    const submissionLinkEndpoint = submissionItem._links['self'].href;
     this.requestsService.get(submissionLinkEndpoint).subscribe (
       (data) => {
         this.submissionsService.setActiveSubmission(data);

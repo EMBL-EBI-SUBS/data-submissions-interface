@@ -12,7 +12,7 @@ interface DataType {
 }
 
 interface Submission {
-  _links:{
+  _links: {
     contents: {
       href: string;
       _links: Object;
@@ -51,7 +51,7 @@ export class EbiSubmissionMenuComponent implements OnInit {
 
       const dataTypes = this.activeSubmission._links.contents.dataTypes; // undefined | DataType[]
 
-      if (dataTypes === undefined){
+      if (dataTypes === undefined) {
         this.getSubmissionContents();
       } else {
         this.updateDataTypeLinks(dataTypes);

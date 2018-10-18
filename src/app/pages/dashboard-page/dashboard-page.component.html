@@ -2,12 +2,12 @@
   <ebi-header></ebi-header>
 
   <section id="main-content-area" class="row padding-top-xs padding-bottom-xsmall" role="main">
-    <h2 class="padding-top-xlarge">Hi {{authService.realname() | async}}</h2>
+    <h2 class="padding-top-xlarge">Hi {{ authService.realname() | async }}</h2>
 
     <div class="row">
       <div class="columns small-9">
         <p>
-          This is your dashboard. You currently have {{submissionsSummary?.Draft}} active draft submissions, using 300 GB of space.
+          This is your dashboard. You currently have {{ submissionsSummary?.Draft }} active draft submissions, using 300 GB of space.
           <br>
           You have successfully completed 4 submissions to our archives.
           Thanks for contributing to the future of science.
@@ -32,10 +32,10 @@
 
       <tbody>
         <tr *ngFor="let submissionItem of submissions._embedded.submissions">
-          <td class="col-date">{{submissionItem.lastModifiedDate | date: 'd-MMM-yy' }}</td>
-          <td class="col-title">{{submissionItem?.name}}</td>
-          <td class="col-project">{{submissionItem?.projectName}}</td>
-          <td class="col-status status-{{submissionItem.submissionStatus | lowercase}}">{{submissionItem.submissionStatus}}</td>
+          <td class="col-date">{{ submissionItem.lastModifiedDate | date: 'd-MMM-yy' }}</td>
+          <td class="col-title">{{ submissionItem?.name }}</td>
+          <td class="col-project">{{ submissionItem?.projectName }}</td>
+          <td class="col-status status-{{submissionItem.submissionStatus | lowercase}}">{{ submissionItem.submissionStatus }}</td>
           <td>
             <!-- TODO: Update actions based on correct status names -->
             <!-- Delete Submission -->

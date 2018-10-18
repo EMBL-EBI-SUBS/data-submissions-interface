@@ -21,7 +21,7 @@ export class ProjectsPageComponent implements OnInit {
 
   ngOnInit() {
     // Get all submissions.
-    if(!this.projects) {
+    if (!this.projects) {
       this.getUserProjects();
     }
   }
@@ -60,7 +60,7 @@ export class ProjectsPageComponent implements OnInit {
    * @param {string} action
    */
   onPagerClick(action: string) {
-    let getProjectUrl = this.projects._links[action].href;
+    const getProjectUrl = this.projects._links[action].href;
     this.projects = this.getUserProjectsByUrl(getProjectUrl);
   }
 
