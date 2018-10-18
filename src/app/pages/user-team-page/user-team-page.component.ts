@@ -1,4 +1,4 @@
-import { Component, OnInit, Renderer } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from 'angular-aap-auth';
 import { concatMap } from 'rxjs/operators';
@@ -19,7 +19,6 @@ export class UserTeamPageComponent implements OnInit {
   private tokenListener: Function;
   token: string;
   constructor(
-    public renderer: Renderer,
     public authService: AuthService,
     private _endpointService: EndpointService,
     public requestsService: RequestsService,
@@ -74,7 +73,6 @@ export class UserTeamPageComponent implements OnInit {
 
   /**
    * When click on pager, update submissions.
-   * @param {string} action
    */
   onPagerClick(action: string) {
     const getTeamsUrl = this.teams['_links'][action].href;

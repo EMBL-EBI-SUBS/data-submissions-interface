@@ -92,10 +92,10 @@ export class DataPageComponent implements OnInit {
     this.fileService.deleteFile(fileHref).subscribe(
       (response) => {
           if (response.status === HttpStatus.NO_CONTENT ) {
-              console.debug(`File: ${file.filename} has been succcesfully deleted from the storage.`);
+              // console.debug(`File: ${file.filename} has been succcesfully deleted from the storage.`);
               this.files = this.files.filter(item => item !== file);
           } else {
-              console.log(`File deletion has failed. The reason: ${response.statusText}`);
+              // console.log(`File deletion has failed. The reason: ${response.statusText}`);
           }
       },
       (err) => {
@@ -126,7 +126,6 @@ export class DataPageComponent implements OnInit {
 
   /**
    * Replaces underscores with spaces in given string
-   * @param Text
    */
   cleanupUnderscores(Text) {
     return Text
@@ -135,7 +134,6 @@ export class DataPageComponent implements OnInit {
 
   /**
    * Formats the specified file status text: replace underscores, convert to lowercase, uppercase first letter
-   * @param Text
    */
   formatFileStatus(Text) {
     return this.cleanupUnderscores( Text.charAt(0).toUpperCase() + Text.substr(1).toLowerCase() );

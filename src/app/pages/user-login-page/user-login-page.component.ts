@@ -1,4 +1,4 @@
-import { Component, OnInit, Renderer } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from 'angular-aap-auth';
 import { TokenService } from 'angular-aap-auth';
@@ -16,7 +16,6 @@ import { map, catchError } from 'rxjs/operators';
 })
 export class UserLoginPageComponent implements OnInit {
   constructor(
-      public renderer: Renderer,
       public authService: AuthService,
       private userService: UserService,
       private teamsService: TeamsService,
@@ -29,9 +28,9 @@ export class UserLoginPageComponent implements OnInit {
 
       this.userService.getUserTeams().subscribe (
         (data) => {
-            if (data['page']['totalElements'] == 0) {
+            if (data['page']['totalElements'] === 0) {
             this.teamsService.createTeam().subscribe(
-              (data) => {
+              (unused) => {
                 this.authService.logOut();
                 alert('New team has beeen created, you have to login again.');
               },

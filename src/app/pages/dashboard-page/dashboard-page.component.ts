@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { AuthService } from 'angular-aap-auth';
 import { Router } from '@angular/router';
 
-// Import Services.
 import { TeamsService } from '../../services/teams.service';
 import { SubmissionsService } from '../../services/submissions.service';
 import { RequestsService } from '../../services/requests.service';
@@ -100,7 +99,6 @@ export class DashboardPageComponent implements OnInit {
 
   /**
    * When click on pager, update submissions.
-   * @param {string} action
    */
   onPagerClick(action: string) {
     const getSubmissionUrl = this.submissions._links[action].href;

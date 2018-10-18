@@ -1,4 +1,4 @@
-import { Component, OnInit, Renderer } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from 'angular-aap-auth';
 import { concatMap } from 'rxjs/operators';
@@ -26,7 +26,6 @@ export class UserTeamCreatePageComponent implements OnInit {
     });
 
   constructor(
-    public renderer: Renderer,
     public authService: AuthService,
     private _endpointService: EndpointService,
     public requestsService: RequestsService,

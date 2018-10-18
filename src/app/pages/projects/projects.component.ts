@@ -5,7 +5,7 @@ import { ProjectsService } from '../../services/projects.service';
 import { RequestsService } from '../../services/requests.service';
 
 @Component({
-  selector: 'projects-page',
+  selector: 'app-projects-page',
   templateUrl: './projects.component.html',
   styleUrls: ['./projects.component.scss'],
 })
@@ -57,7 +57,6 @@ export class ProjectsPageComponent implements OnInit {
 
     /**
    * When click on pager, update submissions.
-   * @param {string} action
    */
   onPagerClick(action: string) {
     const getProjectUrl = this.projects._links[action].href;

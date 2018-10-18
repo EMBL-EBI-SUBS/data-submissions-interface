@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { CommonTestModule } from  'testing/common.module';
+import { CommonTestModule } from 'testing/common.module';
 import { MockRouter } from 'testing/mockrouter.tests';
 
 //  Import Components.

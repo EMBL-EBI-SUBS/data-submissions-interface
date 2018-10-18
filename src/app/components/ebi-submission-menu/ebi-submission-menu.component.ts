@@ -22,7 +22,7 @@ interface Submission {
 }
 
 @Component({
-  selector: 'ebi-submission-menu',
+  selector: 'app-ebi-submission-menu',
   templateUrl: './ebi-submission-menu.component.html',
   styleUrls: ['./ebi-submission-menu.component.scss'],
 })

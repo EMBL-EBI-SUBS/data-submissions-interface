@@ -5,7 +5,7 @@ import { Observable, of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 
 @Component({
-  selector: 'ebi-header',
+  selector: 'app-ebi-header',
   templateUrl: './ebi-header.component.html',
   styleUrls: ['./ebi-header.component.scss'],
   providers: [AuthService]
