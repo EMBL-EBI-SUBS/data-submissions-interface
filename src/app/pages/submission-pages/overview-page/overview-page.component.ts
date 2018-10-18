@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
+import { Observable } from 'rxjs';
+import { tap, pluck, filter } from 'rxjs/operators';
 
-// Import Services.
 import { UserService } from '../../../services/user.service';
 import { TeamsService } from '../../../services/teams.service';
 import { SubmissionsService } from '../../../services/submissions.service';
@@ -14,129 +15,95 @@ import { RequestsService } from '../../../services/requests.service';
   styleUrls: ['./overview-page.component.scss'],
 })
 export class OverviewPageComponent implements OnInit {
-  public overviewForm = new FormGroup({
-      human: new FormControl(null, Validators.required),
-      controlled: new FormControl(null, Validators.required),
-      gdpr: new FormControl(null, Validators.required),
-      submissionPlan: new FormControl('', Validators.required),
-      submissionShortName: new FormControl('', Validators.required),
-    });
-  objectKeys = Object.keys;
-  activeSubmission: any;
-  activeTeam: any;
-  submissionPlans= [];
-  selectedSubmissionPlan: FormControl;
-  savedSubmissionPlan: FormControl;
-  savedHuman: string;
-  savedControlled: string;
-  savedGDPR: string;
-  savedSubmissionShortName: string;
-  teams = [];
+  public overviewForm = this._fb.group({
+    uiData: this._fb.group({
+      gdpr: ['', Validators.required],
+      human: ['', Validators.required],
+      controlled: ['', Validators.required],
+      submissionPlan: ['', Validators.required],
+    }),
+    name: ['', Validators.required],
+  });
+  public submissionPlans;
+  public locked = false;
+  public lockedPlan = false;
+
+  private _activeTeam;
+  private _activeSubmission;
 
   constructor(
     private userService: UserService,
     private teamsService: TeamsService,
     private submissionsService: SubmissionsService,
     private requestsService: RequestsService,
-    private router: Router
-  ) { }
+    private router: Router,
+    private _fb: FormBuilder
+  ) {}
 
-  ngOnInit() {
-    // Load User Teams.
-    this.getUserTeams();
-    // Get Active Submmission if exist.
-    this.setActiveSubmission();
-    // Set Form Default Value
-    if (this.activeSubmission) {
-      this.setFormDefaultValue();
-      this.getSubmissionContents(this.activeSubmission);
-    }
-    // Get Submission Plans.
-    this.getSubmissionPlans();
-  }
+  public ngOnInit(): void {
+    this._getUserTeams();
+    this._getSubmissionPlans();
+    this._getActiveSubmission();
 
-  /**
-   * On Save and Exit.
-   */
-  onSaveExit() {
-    const requestBody = this.createRequestBody();
-    requestBody['submissionPlan'] = this.overviewForm.value.submissionPlan.href;
-
-    // TODO: Save the data to existing submission.
-    if (this.activeSubmission) {
-      const updateSubmissionUrl = this.activeSubmission._links['self:update'].href;
-      this.requestsService.partialUpdate(updateSubmissionUrl, requestBody).subscribe(
-          (data) => {
-            // Save Updated Submission to the Session.
-            this.submissionsService.deleteActiveSubmission();
-            this.submissionsService.setActiveSubmission(data);
-          },
-          (err) => {
-            console.log(err);
-          }
-      );
-
-      this.submissionsService.deleteActiveSubmission();
-      this.submissionsService.deleteActiveProject();
-      this.teamsService.deleteActiveTeam();
-
-      this.router.navigate(['/dashboard']);
-    } else {     // Create new submission
-      const createSubmissionUrl = this.activeTeam._links['submissions:create'].href;
-      this.submissionsService.create(createSubmissionUrl, requestBody).subscribe (
-        (data) => {
-            // TODO: store overview data in submission.
-            this.router.navigate(['/dashboard']);
-        },
-        (err) => {
-            // TODO: Handle Errors.
-            console.log(err);
-        }
-      );
+    if (this._activeSubmission) {
+      this.locked = this.lockedPlan = true;
+      this._setFormDefaultValue();
+      this._getSubmissionContents(this._activeSubmission);
     }
   }
 
-  /**
-   * On Save and continue.
-   */
-  onSaveContinue() {
-    const requestBody = this.createRequestBody();
-    requestBody['submissionPlan'] = this.overviewForm.value.submissionPlan.href;
+  public onChangeField(): void {
+    const message = 'You are about to modify an important value. Are you sure?';
+    window.confirm(message);
+    this.lockedPlan = false;
+  }
 
-    // If Submission Exist, Update Request.
-    if (this.activeSubmission) {
-      const updateSubmissionUrl = this.activeSubmission._links['self:update'].href;
-      this.requestsService.partialUpdate(updateSubmissionUrl, requestBody).subscribe(
-          (data) => {
+  public onSaveExit(): void {
+    this._partialUpdate().subscribe(
+      data => {
+        this.submissionsService.deleteActiveSubmission();
+        this.submissionsService.deleteActiveProject();
+        this.teamsService.deleteActiveTeam();
+
+        this.router.navigate(['/dashboard']);
+      },
+    );
+  }
+
+  public onSaveContinue(): void {
+    this._partialUpdate().subscribe(
+      data => {
+        this._getSubmissionContents(data);
+        this._getActiveSubmission();
+
+        this.router.navigate(['/submission/project']);
+      },
+    );
+  }
+
+  public showPlanName(): string {
+    try {
+      const planUrl = this.overviewForm.get('uiData.submissionPlan').value;
+      return ` ${this.submissionPlans.filter( plan => plan.href === planUrl)[0]['displayName']} `;
+    } catch (error) {
+      return ' Unknown ';
+    }
+  }
+
+  private _partialUpdate(): Observable<any> {
+    if (this._activeSubmission) {
+      const updateSubmissionUrl = this._activeSubmission._links['self:update'].href;
+      return this.requestsService.partialUpdate(updateSubmissionUrl, this.overviewForm.value).pipe(
+        tap(data => {
             // Save Updated Submission to the Session.
             this.submissionsService.deleteActiveSubmission();
             this.submissionsService.setActiveSubmission(data);
-            this.getSubmissionContents(data);
-            this.setActiveSubmission();
-
-            this.router.navigate(['/submission/project']);
-          },
-          (err) => {
-            console.log(err);
-          }
+        }),
       );
-
-    } else { // Create new submission. Set it as active submission.
-      const createSubmissionUrl = this.activeTeam._links['submissions:create'].href;
-      this.submissionsService.create(createSubmissionUrl, requestBody).subscribe (
-        (data) => {
-          // TODO: store overview data in submission.
-          // Store active submission in a local variable.
-          this.activeSubmission = data;
-          this.submissionsService.setActiveSubmission(this.activeSubmission);
-          // Get Submission Content.
-          this.getSubmissionContents(this.activeSubmission);
-          this.router.navigate(['/submission/project']);
-        },
-        (err) => {
-          // TODO: Handle Errors.
-          console.log(err);
-        }
+    } else {
+      const createSubmissionUrl = this._activeTeam._links['submissions:create'].href;
+      return this.submissionsService.create(createSubmissionUrl, this.overviewForm.value).pipe(
+        tap(data => this.submissionsService.setActiveSubmission(data)),
       );
     }
   }
@@ -144,93 +111,50 @@ export class OverviewPageComponent implements OnInit {
   /**
    * Set Form Default Value.
    */
-  setFormDefaultValue() {
-    try {
-      if (this.activeSubmission.uiData.overview) {
-        this.savedSubmissionPlan = this.activeSubmission.uiData.overview.submissionPlan;
-        this.savedHuman = this.activeSubmission.uiData.overview.human;
-        this.savedControlled = this.activeSubmission.uiData.overview.controlled;
-        this.savedGDPR = this.activeSubmission.uiData.overview.gdpr;
-        this.savedSubmissionShortName = this.activeSubmission.name;
-
-        this.overviewForm.patchValue({
-          human:  this.activeSubmission.uiData.overview.human,
-          controlled: this.activeSubmission.uiData.overview.controlled,
-          gdpr: this.activeSubmission.uiData.overview.gdpr,
-          submissionPlan: this.activeSubmission.uiData.overview.submissionPlan,
-          submissionShortName: this.activeSubmission.name
-        });
-      }
-    } catch (e) {}
+  private _setFormDefaultValue(): void {
+    this.overviewForm.patchValue(this._activeSubmission);
   }
 
   /**
-   * Retrieve list of submission plans.
+   * Get submissions from local storage
    */
-  getSubmissionPlans() {
-    this.submissionsService.getSubmissionPlansResponse().subscribe (
-      (data) => {
-        this.submissionPlans = this.submissionsService.getSubmissionPlansUIData(data['_embedded'].submissionPlans);
-      },
-      (err) => {
-        // TODO: Handle Errors.
-        console.log(err);
-      }
-    );
-  }
-
-  /**
-   * Create new submissions.
-   */
-  setActiveSubmission() {
-    // If Submission Already created before then return it.
+  private _getActiveSubmission(): void {
     const getActiveSubmission = this.submissionsService.getActiveSubmission();
 
     if (getActiveSubmission) {
-      this.activeSubmission = getActiveSubmission;
+      this._activeSubmission = getActiveSubmission;
     }
   }
 
   /**
    * Get Submission Content.
    */
-   getSubmissionContents(submission: any) {
+  private _getSubmissionContents(submission: any): void {
      const submissionLinksRequestUrl = submission._links.contents.href;
      this.submissionsService.get(submissionLinksRequestUrl).subscribe (
-       (data) => {
+       data => {
          submission['_links']['contents']['_links'] = data['_links'];
          submission['_links']['contents']['dataTypes'] = data['dataTypes'];
          this.submissionsService.setActiveSubmission(submission);
-         this.activeSubmission = submission;
+         this._activeSubmission = submission;
         },
-       (err) => {
-         // TODO: Handle Errors.
-         console.log(err);
-       }
      );
-   }
+  }
 
   /**
    * Get User Teams.
    */
-  getUserTeams() {
-    this.userService.getUserTeams().subscribe (
-      (data) => {
-        // If user has no team assigned to it.
-        if (!data.hasOwnProperty('_embedded')) {
-          return false;
-        }
-
-        this.teams = data['_embedded']['teams'];
+  private _getUserTeams(): void {
+    this.userService.getUserTeams().pipe(
+      pluck('_embedded', 'teams'),
+      filter(teams => teams !== undefined),
+    ).subscribe (
+      teams => {
         // TODO: Currently we set the first team as default one. We have to change this later on.
-        if (this.teams[0].name) {
-          this.setActiveTeam(this.teams[0].name);
+        if (teams[0].name) {
+          this._setActiveTeam(teams[0].name);
         }
       },
-      (err) => {
-        // TODO: Handle Errors.
-        console.log(err);
-      }
     );
   }
 
@@ -238,86 +162,22 @@ export class OverviewPageComponent implements OnInit {
    * On Change / Select the team.
    * Set active team.
    */
-  setActiveTeam(name) {
+  private _setActiveTeam(name): void {
     this.teamsService.getTeam(name).subscribe (
-      (data) => {
-        this.activeTeam = data;
+      data => {
+        this._activeTeam = data;
         this.teamsService.setActiveTeam(data);
       },
-      (err) => {
-        // TODO: Handle Errors.
-        console.log(err);
-      }
     );
   }
 
-  onSelectSubmissionPlan(event, submissionPlan) {
-    this.selectedSubmissionPlan = submissionPlan;
-
-    this.overviewForm.patchValue({
-      submissionPlan: this.selectedSubmissionPlan
-    });
-  }
-
-  onChangeField(fieldName: string) {
-    const message = 'You might loss uploaded data and samples if you have changed this field value. Are you sure?';
-
-    if (this.activeSubmission && !confirm(message)) {
-      return;
-    }
-
-    if (fieldName === 'human') {
-      delete this.savedHuman;
-    }
-
-    if (fieldName === 'controlled') {
-      delete this.savedControlled;
-    }
-
-    if (fieldName === 'gdpr') {
-      delete this.savedGDPR;
-    }
-
-    if (fieldName === 'submissionPlan') {
-      this.selectedSubmissionPlan = this.savedSubmissionPlan;
-      this.savedSubmissionPlan = null;
-    }
-
-    if (fieldName === 'submissionShortName') {
-      delete this.savedSubmissionShortName;
-    }
-  }
-
-  onUpdateField(fieldName) {
-    if (fieldName === 'human') {
-      this.savedHuman = this.overviewForm.value[fieldName];
-    }
-
-    if (fieldName === 'controlled') {
-      this.savedControlled = this.overviewForm.value[fieldName];
-    }
-
-    if (fieldName === 'gdpr') {
-      this.savedGDPR = this.overviewForm.value[fieldName];
-    }
-
-    if (fieldName === 'submissionShortName') {
-      this.savedSubmissionShortName = this.overviewForm.value[fieldName];
-    }
-  }
-
-
-  private createRequestBody() {
-    return {
-      name: this.overviewForm.value.submissionShortName,
-      uiData : {
-        overview : {
-          human: this.overviewForm.value.human,
-          controlled: this.overviewForm.value.controlled,
-          gdpr: this.overviewForm.value.gdpr,
-          submissionPlan: this.overviewForm.value.submissionPlan,
-        }
-      }
-    };
+  /**
+   * Retrieve list of submission plans.
+   */
+  private _getSubmissionPlans(): void {
+    this.submissionsService.getSubmissionPlansResponse().pipe(
+      pluck('_embedded', 'submissionPlans'),
+      tap(plans => this.submissionPlans = this.submissionsService.getSubmissionPlansUIData(plans))
+    ).subscribe();
   }
 }
