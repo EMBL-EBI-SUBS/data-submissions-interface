@@ -16,7 +16,7 @@ export class ProjectsService {
    * List Projects for Current Logged in user.
    */
   getProjectsList() {
-    const requestUrl =  this.projectsListEndpoint;
+    const requestUrl = this.projectsListEndpoint;
     const response = this.http.get(requestUrl);
     return response;
   }

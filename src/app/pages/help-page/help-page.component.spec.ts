@@ -21,12 +21,12 @@ describe('HelpPageComponent', () => {
       declarations: [
         HelpPageComponent,
         EbiHeaderComponent
-     ],
-     providers: [
-       {provide: Router, useClass: MockRouter},
-     ]
+      ],
+      providers: [
+        { provide: Router, useClass: MockRouter },
+      ]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

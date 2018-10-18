@@ -41,7 +41,7 @@ export const ROUTES: Routes = [
   { path: 'user/login', component: UserLoginPageComponent },
   { path: 'user/teams', component: UserTeamPageComponent, canActivate: [LoggedInGuard] },
   { path: 'user/teams/create', component: UserTeamCreatePageComponent, canActivate: [LoggedInGuard] },
-  { path: 'faq', component: FAQPageComponent},
+  { path: 'faq', component: FAQPageComponent },
   { path: 'helpdesk', component: HelpPageComponent },
   { path: '**', component: NotFoundPageComponent },
 ];

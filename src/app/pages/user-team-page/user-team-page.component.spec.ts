@@ -18,10 +18,10 @@ describe('UserTeamPageComponent', () => {
         RouterTestingModule,
         CommonTestModule
       ],
-      declarations: [ UserLoginPageComponent, EbiHeaderComponent ],
+      declarations: [UserLoginPageComponent, EbiHeaderComponent],
       providers: []
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

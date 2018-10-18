@@ -1,5 +1,5 @@
 
-import {map} from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
@@ -16,21 +16,21 @@ export class SpreadsheetsService {
   /**
    * List of templates that user can use.
    */
-  getTemplatesList(options: any = { size: 12, page: 0}) {
-    const requestUrl =  this.templatesListEndpoint + '?size=' + options.size + '&page=' + options.page;
+  getTemplatesList(options: any = { size: 12, page: 0 }) {
+    const requestUrl = this.templatesListEndpoint + '?size=' + options.size + '&page=' + options.page;
     const response = this.http.get(requestUrl);
     return response;
   }
 
-   /**
-   * Create new record.
-   */
+  /**
+  * Create new record.
+  */
   create(url, data) {
     const header = new HttpHeaders({
-      'Content-Type' : 'text/csv',
+      'Content-Type': 'text/csv',
     });
 
-    const requestUrl =  url;
+    const requestUrl = url;
     const response = this.http.post(requestUrl, data, { headers: header });
     return response;
   }

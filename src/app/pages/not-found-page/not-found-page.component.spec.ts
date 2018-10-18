@@ -15,14 +15,14 @@ describe('NotFoundPageComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ NotFoundPageComponent, EbiHeaderComponent ],
+      declarations: [NotFoundPageComponent, EbiHeaderComponent],
       imports: [
         RouterTestingModule,
         CommonTestModule
       ],
       providers: []
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

@@ -21,18 +21,18 @@ export class UserTeamCreatePageComponent implements OnInit {
   private tokenListener: Function;
   public token: string;
   public teamCreateForm = new FormGroup({
-      centreName: new FormControl('', Validators.required),
-      description: new FormControl(''),
-    });
+    centreName: new FormControl('', Validators.required),
+    description: new FormControl(''),
+  });
 
   constructor(
     public authService: AuthService,
     private _endpointService: EndpointService,
     public requestsService: RequestsService,
     public router: Router,
-  ) {}
+  ) { }
 
-  ngOnInit() {}
+  ngOnInit() { }
 
   onCreateTeam() {
     this._endpointService.find('userTeams').pipe(
@@ -45,7 +45,7 @@ export class UserTeamCreatePageComponent implements OnInit {
   }
 
   doRefreshToken() {
-    this.requestsService.get(environment.authenticationHost + '/token', {responseType: 'text'}).subscribe(
+    this.requestsService.get(environment.authenticationHost + '/token', { responseType: 'text' }).subscribe(
       (data) => {
         const retrievedToken = data.toString();
         // Updating the token with a new one.

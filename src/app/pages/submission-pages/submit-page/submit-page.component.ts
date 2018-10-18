@@ -27,7 +27,7 @@ export class SubmitPageComponent implements OnInit {
   onSubmitSubmission() {
     const activeSubmissionUpdateEndpoint = this.activeSubmission._links.submissionStatus.href;
     const updateObj = {
-      'status' : 'Submitted',
+      'status': 'Submitted',
     };
     this.requestsService.update(activeSubmissionUpdateEndpoint, updateObj).subscribe(
       (data) => {

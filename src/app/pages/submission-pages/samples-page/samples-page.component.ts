@@ -61,82 +61,82 @@ export class SamplesPageComponent implements OnInit, AfterViewInit {
       'description': 'Sample base schema',
       'type': 'object',
       'properties': {
-          'alias': {
-              'description': 'An unique identifier in a submission.',
-              'type': 'string',
-              'minLength': 1
-          },
-          'title': {
-              'description': 'Title of the sample.',
-              'type': 'string',
-              'minLength': 1
-          },
-          'description': {
-              'description': 'More extensive free-form description.',
-              'type': 'string',
-              'minLength': 1
-          },
-          'attributes': {
-              'description': 'Attributes for describing a sample.',
-              'type': 'object',
-              'properties': {},
-              'patternProperties': {
-                  '^.*$': {
-                      'type': 'array',
-                      'minItems': 1,
-                      'items': {
-                          'properties': {
-                              'value': { 'type': 'string', 'minLength': 1 },
-                              'units': { 'type': 'string', 'minLength': 1 },
-                              'terms': {
-                                  'type': 'array',
-                                  'items': {
-                                      'type': 'object',
-                                      'properties': {
-                                          'url': {'type': 'string', 'format': 'uri' }
-                                      },
-                                      'required': ['url']
-                                  }
-                              }
-                          },
-                          'required': ['value']
-                      }
-                  }
-              }
-          },
-          'sampleRelationships': {
+        'alias': {
+          'description': 'An unique identifier in a submission.',
+          'type': 'string',
+          'minLength': 1
+        },
+        'title': {
+          'description': 'Title of the sample.',
+          'type': 'string',
+          'minLength': 1
+        },
+        'description': {
+          'description': 'More extensive free-form description.',
+          'type': 'string',
+          'minLength': 1
+        },
+        'attributes': {
+          'description': 'Attributes for describing a sample.',
+          'type': 'object',
+          'properties': {},
+          'patternProperties': {
+            '^.*$': {
               'type': 'array',
+              'minItems': 1,
               'items': {
-                  'type': 'object',
-                  'properties': {
-                      'alias': { 'type': 'string', 'minLength': 1 },
-                      'accession': { 'type': 'string', 'minLength': 1 },
-                      'team': { 'type': 'string', 'minLength': 1 },
-                      'nature': {
-                          'type': 'string',
-                          'enum': [ 'derived from', 'child of', 'same as', 'recurated from' ]
-                      }
-                  },
-                  'oneOf': [
-                      { 'required': ['alias', 'team', 'nature'] },
-                      { 'required': ['accession', 'nature'] }
-                  ]
+                'properties': {
+                  'value': { 'type': 'string', 'minLength': 1 },
+                  'units': { 'type': 'string', 'minLength': 1 },
+                  'terms': {
+                    'type': 'array',
+                    'items': {
+                      'type': 'object',
+                      'properties': {
+                        'url': { 'type': 'string', 'format': 'uri' }
+                      },
+                      'required': ['url']
+                    }
+                  }
+                },
+                'required': ['value']
               }
-          },
-          'taxonomy': {
-              'type': 'object',
-              'properties': {
-                  'taxonId': { 'type': 'integer' },
-                  'taxonName': { 'type': 'string', 'minLength': 1 }
-              },
-              'required': ['taxonId']
-          },
-          'releaseDate': {
-              'type': 'string',
-              'format': 'date'
+            }
           }
+        },
+        'sampleRelationships': {
+          'type': 'array',
+          'items': {
+            'type': 'object',
+            'properties': {
+              'alias': { 'type': 'string', 'minLength': 1 },
+              'accession': { 'type': 'string', 'minLength': 1 },
+              'team': { 'type': 'string', 'minLength': 1 },
+              'nature': {
+                'type': 'string',
+                'enum': ['derived from', 'child of', 'same as', 'recurated from']
+              }
+            },
+            'oneOf': [
+              { 'required': ['alias', 'team', 'nature'] },
+              { 'required': ['accession', 'nature'] }
+            ]
+          }
+        },
+        'taxonomy': {
+          'type': 'object',
+          'properties': {
+            'taxonId': { 'type': 'integer' },
+            'taxonName': { 'type': 'string', 'minLength': 1 }
+          },
+          'required': ['taxonId']
+        },
+        'releaseDate': {
+          'type': 'string',
+          'format': 'date'
+        }
       },
-      'required': [ 'alias', 'taxonomy', 'releaseDate' ]
+      'required': ['alias', 'taxonomy', 'releaseDate']
     },
     'object': {}
   };
@@ -221,11 +221,11 @@ export class SamplesPageComponent implements OnInit, AfterViewInit {
 
     const thisVar = this;
 
-    jQuery('[data-reveal].add-attribute-form').on('closed.zf.reveal', function () {
+    jQuery('[data-reveal].add-attribute-form').on('closed.zf.reveal', function() {
       thisVar.onCloseSampleAttributeModal();
     });
 
-    jQuery('[data-reveal].add-samples-form').on('closed.zf.reveal', function () {
+    jQuery('[data-reveal].add-samples-form').on('closed.zf.reveal', function() {
       thisVar.onCloseSampleRelationsModal();
     });
   }
@@ -298,7 +298,7 @@ export class SamplesPageComponent implements OnInit, AfterViewInit {
     this.loading = true;
     this.requestsService.createNoAuth(this.validationSchemaUrl, sampleValidationObject).subscribe(
       data => {
-       if (data['length'] === 0) {
+        if (data['length'] === 0) {
           // TODO: Clean This!
           this.requestsService.partialUpdate(updateLink, updateData).subscribe(
             newData => {
@@ -486,7 +486,7 @@ export class SamplesPageComponent implements OnInit, AfterViewInit {
             } else {
               this.processingSheets = tempProcessingSheets;
               const that = this;
-              setTimeout(function () {
+              setTimeout(function() {
                 that.checkProcessingSheets();
               }, 10000);
             }
@@ -820,11 +820,11 @@ export class SamplesPageComponent implements OnInit, AfterViewInit {
             jQuery('.sample-relations-close-button').click();
           } else {
             for (const formItemError in data) {
-             if (data.hasOwnProperty(formItemError)) {
-               this.formPathStringMap[formItemError['dataPath']].setErrors({
-                 'errors': formItemError['errors']
-               });
-             }
+              if (data.hasOwnProperty(formItemError)) {
+                this.formPathStringMap[formItemError['dataPath']].setErrors({
+                  'errors': formItemError['errors']
+                });
+              }
             }
 
             this.loading = false;
@@ -924,7 +924,7 @@ export class SamplesPageComponent implements OnInit, AfterViewInit {
     return new Function('_', 'return _.' + path)(obj);
   }
 
-  onSampleTableClickCell(sample, key , show) {
+  onSampleTableClickCell(sample, key, show) {
     if (!sample['fields']) {
       sample['fields'] = {};
     }

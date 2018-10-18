@@ -13,7 +13,7 @@ export class TeamsService {
 
   constructor(
     private http: HttpClient
-    ) { }
+  ) { }
 
   /**
    * Set Teams.
@@ -40,7 +40,7 @@ export class TeamsService {
    * Get Team by name.
    */
   getTeam(name) {
-    const requestUrl =  this.teamEndpoint + name;
+    const requestUrl = this.teamEndpoint + name;
     const response = this.http.get(requestUrl);
     return response;
   }
@@ -51,11 +51,11 @@ export class TeamsService {
   createTeam() {
     // Post an Empty object to create submission.
     const body = JSON.stringify({
-      'description' : 'My lab group',
-      'centreName' : 'An Institute'
+      'description': 'My lab group',
+      'centreName': 'An Institute'
     });
 
-    const requestUrl =  this.createTeamEndPoint;
+    const requestUrl = this.createTeamEndPoint;
     const response = this.http.post(requestUrl, body);
     return response;
   }
@@ -67,7 +67,7 @@ export class TeamsService {
     // Post an Empty object to create submission.
     const body = JSON.stringify({});
 
-    const requestUrl =  this.createTeamEndPoint + '/' + teamDomainRef + '/' +  userRef + '/user';
+    const requestUrl = this.createTeamEndPoint + '/' + teamDomainRef + '/' + userRef + '/user';
     const response = this.http.put(requestUrl, body);
     return response;
   }
@@ -91,6 +91,6 @@ export class TeamsService {
    * Delete Active Team.
    */
   deleteActiveTeam() {
-      localStorage.removeItem('active_team');
+    localStorage.removeItem('active_team');
   }
 }

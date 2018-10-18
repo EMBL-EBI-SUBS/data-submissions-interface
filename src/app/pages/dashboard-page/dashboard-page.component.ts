@@ -53,7 +53,7 @@ export class DashboardPageComponent implements OnInit {
    * Loop across the teams and get submissions for each team and put it in array.
    */
   getUserSubmissionsByUrl(serviceUrl) {
-    this.submissionsService.get(serviceUrl).subscribe (
+    this.submissionsService.get(serviceUrl).subscribe(
       (data) => {
         // Store active submission in a local variable.
         this.submissions = data;
@@ -69,10 +69,10 @@ export class DashboardPageComponent implements OnInit {
    * Get User submissions.
    */
   getUserSubmissions() {
-    this.userService.geUserSubmissions().subscribe (
+    this.userService.geUserSubmissions().subscribe(
       (data) => {
         // Store active submission in a local variable.
-       this.submissions = data;
+        this.submissions = data;
       },
       (err) => {
         // TODO: Handle Errors.
@@ -85,7 +85,7 @@ export class DashboardPageComponent implements OnInit {
    * Get User submissions summary.
    */
   getUserSubmissionsSummary() {
-    this.userService.geUserSubmissionsSummary().subscribe (
+    this.userService.geUserSubmissionsSummary().subscribe(
       (data) => {
         // Store active submission in a local variable.
         this.submissionsSummary = data;
@@ -107,7 +107,7 @@ export class DashboardPageComponent implements OnInit {
 
   onEditDraftSubmission(submissionItem: any) {
     const submissionLinkEndpoint = submissionItem._links['self'].href;
-    this.requestsService.get(submissionLinkEndpoint).subscribe (
+    this.requestsService.get(submissionLinkEndpoint).subscribe(
       (data) => {
         this.submissionsService.setActiveSubmission(data);
         this.teamService.setActiveTeam(data['team']);
@@ -130,7 +130,7 @@ export class DashboardPageComponent implements OnInit {
 
   onDeleteSubmission(submissionItem: any) {
     const deleteLinkEndpoint = submissionItem._links['self:delete'].href;
-    this.requestsService.delete(deleteLinkEndpoint).subscribe (
+    this.requestsService.delete(deleteLinkEndpoint).subscribe(
       (data) => {
         // Update submissions list.
         this.submissions._embedded.submissions = this.submissions._embedded.submissions.filter(obj => obj !== submissionItem);

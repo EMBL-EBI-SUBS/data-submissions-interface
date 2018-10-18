@@ -22,10 +22,10 @@ describe('DashboardPageComponent', () => {
         EbiHeaderComponent
       ],
       providers: [
-        {provide: Router, useClass: MockRouter},
+        { provide: Router, useClass: MockRouter },
       ]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

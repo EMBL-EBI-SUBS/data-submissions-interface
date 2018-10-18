@@ -1,5 +1,5 @@
 
-import {map} from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
@@ -19,8 +19,8 @@ export class UserService {
   /**
    * List Team Members for Current Logged in user.
    */
-  getUserTeams(options: any = { size: 12, page: 0}) {
-    const requestUrl =  this.userTeamsEndpoint + '?size=' + options.size + '&page=' + options.page;
+  getUserTeams(options: any = { size: 12, page: 0 }) {
+    const requestUrl = this.userTeamsEndpoint + '?size=' + options.size + '&page=' + options.page;
     const response = this.http.get(requestUrl);
     return response;
   }
@@ -28,8 +28,8 @@ export class UserService {
   /**
    * List Projects for Current Logged in user.
    */
-  getUserProjects(options: any = { size: 12, page: 0}) {
-    const requestUrl =  this.userProjectsEndpoint + '?size=' + options.size + '&page=' + options.page;
+  getUserProjects(options: any = { size: 12, page: 0 }) {
+    const requestUrl = this.userProjectsEndpoint + '?size=' + options.size + '&page=' + options.page;
     const response = this.http.get(requestUrl);
     return response;
   }
@@ -38,7 +38,7 @@ export class UserService {
    * Get User Submissions.
    */
   geUserSubmissions() {
-    const requestUrl =  this.userSubmissionsEndpoint;
+    const requestUrl = this.userSubmissionsEndpoint;
     const response = this.http.get(requestUrl);
     return response;
   }
@@ -50,7 +50,7 @@ export class UserService {
     // Post an Empty object to create submission.
     const body = JSON.stringify({});
 
-    const requestUrl =  this.userSubmissionsSummaryEndpoint;
+    const requestUrl = this.userSubmissionsSummaryEndpoint;
     const response = this.http.get(requestUrl);
     return response;
   }

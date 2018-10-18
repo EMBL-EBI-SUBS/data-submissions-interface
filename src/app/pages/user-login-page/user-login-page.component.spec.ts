@@ -19,9 +19,9 @@ describe('UserLoginPageComponent', () => {
         RouterTestingModule,
         CommonTestModule
       ],
-      declarations: [ UserLoginPageComponent, EbiHeaderComponent ],
+      declarations: [UserLoginPageComponent, EbiHeaderComponent],
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

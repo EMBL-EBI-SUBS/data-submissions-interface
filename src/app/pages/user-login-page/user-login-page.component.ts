@@ -16,19 +16,19 @@ import { map, catchError } from 'rxjs/operators';
 })
 export class UserLoginPageComponent implements OnInit {
   constructor(
-      public authService: AuthService,
-      private userService: UserService,
-      private teamsService: TeamsService,
-      private router: Router,
-  ) {}
+    public authService: AuthService,
+    private userService: UserService,
+    private teamsService: TeamsService,
+    private router: Router,
+  ) { }
 
   ngOnInit() {
     // TODO: Improve this nested calls. maybe using flatMap
     this.authService.addLogInEventListener(() => {
 
-      this.userService.getUserTeams().subscribe (
+      this.userService.getUserTeams().subscribe(
         (data) => {
-            if (data['page']['totalElements'] === 0) {
+          if (data['page']['totalElements'] === 0) {
             this.teamsService.createTeam().subscribe(
               (unused) => {
                 this.authService.logOut();

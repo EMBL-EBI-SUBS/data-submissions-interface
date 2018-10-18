@@ -10,7 +10,7 @@ import { environment } from 'src/environments/environment';
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
 
-  constructor(private tokenService: TokenService) {}
+  constructor(private tokenService: TokenService) { }
 
   intercept(req: HttpRequest<any>, next: HttpHandler) {
     if (!req.url.startsWith(environment.apiHost) && !req.url.startsWith(environment.authenticationHost)) {
@@ -24,9 +24,9 @@ export class AuthInterceptor implements HttpInterceptor {
     const authReq = req.clone(
       {
         setHeaders: {
-          Authorization:  'Bearer ' + authToken,
-          'Content-Type' : 'application/json',
-          Accept : 'application/hal+json, application/json',
+          Authorization: 'Bearer ' + authToken,
+          'Content-Type': 'application/json',
+          Accept: 'application/hal+json, application/json',
         }
       }
     );

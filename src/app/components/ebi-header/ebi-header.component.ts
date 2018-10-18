@@ -20,7 +20,7 @@ export class EbiHeaderComponent {
   constructor(
     public authService: AuthService,
     private router: Router
-  ) {  }
+  ) { }
 
   onLogout() {
     this.authService.logOut();

@@ -18,10 +18,10 @@ describe('EbiHeaderComponent', () => {
         RouterTestingModule,
         CommonTestModule
       ],
-      declarations: [ EbiHeaderComponent ],
+      declarations: [EbiHeaderComponent],
       providers: []
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

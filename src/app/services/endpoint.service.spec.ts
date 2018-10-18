@@ -6,7 +6,7 @@ import { environment } from 'src/environments/environment';
 import { EndpointService } from './endpoint.service';
 
 describe('EndpointService', () => {
-  const mockedResponse = {_links: {userTeams: {href: 'https://dummy' }}};
+  const mockedResponse = { _links: { userTeams: { href: 'https://dummy' } } };
 
   beforeEach(() => {
     TestBed.configureTestingModule({

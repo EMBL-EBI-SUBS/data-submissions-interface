@@ -55,7 +55,7 @@ export class ProjectPageComponent implements OnInit {
     try {
       // Create new project.
       const submissionProjectUpdateUrl = this.activeSubmission._links.contents._links['projects:create'].href;
-      this.requestsService.create(submissionProjectUpdateUrl, submissionProjectDataObject).subscribe (
+      this.requestsService.create(submissionProjectUpdateUrl, submissionProjectDataObject).subscribe(
         (data) => {
           this.submissionsService.setActiveProject(data);
         },
@@ -66,7 +66,7 @@ export class ProjectPageComponent implements OnInit {
     } catch (err) {
       // Update existing project.
       const submissionProjectUpdateUrl = this.activeProject._links['self:update'].href;
-      this.requestsService.partialUpdate(submissionProjectUpdateUrl, submissionProjectDataObject).subscribe (
+      this.requestsService.partialUpdate(submissionProjectUpdateUrl, submissionProjectDataObject).subscribe(
         (data) => {
           this.submissionsService.setActiveProject(data);
         },
@@ -82,11 +82,11 @@ export class ProjectPageComponent implements OnInit {
     submissionUpdateData['name'] = this.projectForm.value.submissionShortName;
     submissionUpdateData['projectName'] = this.projectForm.value.projectShortName;
     submissionUpdateData['uiData']['project'] = {
-      'publication' : this.projectForm.value.submissionPublication
+      'publication': this.projectForm.value.submissionPublication
     };
 
     // Update the submission.
-    this.requestsService.update(submissionUpdateUrl, submissionUpdateData).subscribe (
+    this.requestsService.update(submissionUpdateUrl, submissionUpdateData).subscribe(
       (data) => {
         this.router.navigate(['/']);
       },
@@ -114,7 +114,7 @@ export class ProjectPageComponent implements OnInit {
     try {
       // Create new project.
       const submissionProjectUpdateUrl = this.activeSubmission._links.contents._links['projects:create'].href;
-      this.requestsService.create(submissionProjectUpdateUrl, submissionProjectDataObject).subscribe (
+      this.requestsService.create(submissionProjectUpdateUrl, submissionProjectDataObject).subscribe(
         (data) => {
           this.submissionsService.setActiveProject(data);
         },
@@ -126,7 +126,7 @@ export class ProjectPageComponent implements OnInit {
     } catch (err) {
       // Update existing project.
       const submissionProjectUpdateUrl = this.activeProject._links['self:update'].href;
-      this.requestsService.partialUpdate(submissionProjectUpdateUrl, submissionProjectDataObject).subscribe (
+      this.requestsService.partialUpdate(submissionProjectUpdateUrl, submissionProjectDataObject).subscribe(
         (data) => {
           this.submissionsService.setActiveProject(data);
         },
@@ -142,11 +142,11 @@ export class ProjectPageComponent implements OnInit {
     submissionUpdateData['name'] = this.projectForm.value.submissionShortName;
     submissionUpdateData['projectName'] = this.projectForm.value.projectShortName;
     submissionUpdateData['uiData']['project'] = {
-      'publication' : this.projectForm.value.submissionPublication
+      'publication': this.projectForm.value.submissionPublication
     };
 
     // Update the submission.
-    this.requestsService.update(submissionUpdateUrl, submissionUpdateData).subscribe (
+    this.requestsService.update(submissionUpdateUrl, submissionUpdateData).subscribe(
       (data) => {
         this.getSubmissionContents(data);
       },
@@ -164,13 +164,13 @@ export class ProjectPageComponent implements OnInit {
    */
   getSubmissionContents(submission: any) {
     const submissionLinksRequestUrl = submission._links.contents.href;
-    this.submissionsService.get(submissionLinksRequestUrl).subscribe (
+    this.submissionsService.get(submissionLinksRequestUrl).subscribe(
       (data) => {
         submission['_links']['contents']['_links'] = data['_links'];
         submission['_links']['contents']['dataTypes'] = data['dataTypes'];
         this.submissionsService.setActiveSubmission(submission);
         this.activeSubmission = submission;
-       },
+      },
       (err) => {
         // TODO: Handle Errors.
         console.log(err);
@@ -192,7 +192,7 @@ export class ProjectPageComponent implements OnInit {
           }
 
         },
-        (error) =>  {
+        (error) => {
         }
       );
     } else {
@@ -210,7 +210,7 @@ export class ProjectPageComponent implements OnInit {
    * Load list of projects for exisitng user.
    */
   onLoadProjects() {
-    this.userService.getUserProjects().subscribe (
+    this.userService.getUserProjects().subscribe(
       (data) => {
         // TODO: Create a team if user has no tea m.
         // If user has no team assigned to it.
@@ -252,7 +252,7 @@ export class ProjectPageComponent implements OnInit {
     this.activeSubmission = this.submissionsService.getActiveSubmission();
 
     // Load Submission Content Actions.
-    this.requestsService.get(this.activeSubmission._links.contents.href).subscribe (
+    this.requestsService.get(this.activeSubmission._links.contents.href).subscribe(
       (data) => {
         this.activeSubmission['_links']['contents']['_links'] = data['_links'];
         this.activeSubmission['_links']['contents']['dataTypes'] = data['dataTypes'];

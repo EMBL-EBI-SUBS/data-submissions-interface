@@ -29,7 +29,7 @@ export class EndpointService {
 
   public find(name: string): Observable<string | undefined> {
     return this._cache.asObservable().pipe(
-        pluck('_links', name, 'href')
+      pluck('_links', name, 'href')
     );
   }
 }

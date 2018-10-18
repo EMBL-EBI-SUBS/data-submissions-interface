@@ -20,10 +20,10 @@ describe('UserPageComponent', () => {
         RouterTestingModule,
         CommonTestModule
       ],
-      declarations: [ UserPageComponent, EbiHeaderComponent ],
+      declarations: [UserPageComponent, EbiHeaderComponent],
       providers: []
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

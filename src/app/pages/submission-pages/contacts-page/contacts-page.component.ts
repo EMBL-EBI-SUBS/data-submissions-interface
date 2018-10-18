@@ -18,10 +18,10 @@ export class ContactsPageComponent implements OnInit {
   activeProject: any;
 
   constructor(
-      private submissionsService: SubmissionsService,
-      private requestsService: RequestsService,
-      private teamsService: TeamsService,
-      private router: Router,
+    private submissionsService: SubmissionsService,
+    private requestsService: RequestsService,
+    private teamsService: TeamsService,
+    private router: Router,
   ) { }
 
   ngOnInit() {
@@ -83,7 +83,7 @@ export class ContactsPageComponent implements OnInit {
             this.activeProject = data;
           }
         },
-        (error) =>  {
+        (error) => {
 
         }
       );
