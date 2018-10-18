@@ -306,7 +306,9 @@ export class SamplesPageComponent implements OnInit, AfterViewInit {
               this.errors = [];
               // Update table data.
               for (const key in updateData) {
-                this.submittionSamples._embedded.samples[this.activeSampleIndex][key] = newData[key];
+                if (updateData.hasOwnProperty(key)) {
+                  this.submittionSamples._embedded.samples[this.activeSampleIndex][key] = newData[key];
+                }
               }
               // CLose the popup.
               jQuery('.close-button').click();
@@ -329,9 +331,11 @@ export class SamplesPageComponent implements OnInit, AfterViewInit {
           jQuery('.sample-attribute-close-button').click();
         } else {
           for (const formItemError in data) {
-            this.formPathStringMap[formItemError['dataPath']].setErrors({
-              'errors': formItemError['errors']
-            });
+            if (data.hasOwnProperty(formItemError)) {
+              this.formPathStringMap[formItemError['dataPath']].setErrors({
+                'errors': formItemError['errors']
+              });
+            }
           }
 
           this.loading = false;
@@ -393,7 +397,9 @@ export class SamplesPageComponent implements OnInit, AfterViewInit {
               this.errors = [];
               // Update table data.
               for (const key in updateData) {
-                sample[key] = newData[key];
+                if (updateData.hasOwnProperty(key)) {
+                  sample[key] = newData[key];
+                }
               }
 
               // Hide the input.
@@ -416,9 +422,11 @@ export class SamplesPageComponent implements OnInit, AfterViewInit {
           );
         } else {
           for (const formItemError in data) {
-            this.formPathStringMap[formItemError['dataPath']].setErrors({
-              'errors': formItemError['errors']
-            });
+            if (data.hasOwnProperty(formItemError)) {
+              this.formPathStringMap[formItemError['dataPath']].setErrors({
+                'errors': formItemError['errors']
+              });
+            }
           }
 
           this.loading = false;
@@ -747,9 +755,11 @@ export class SamplesPageComponent implements OnInit, AfterViewInit {
               jQuery('.sample-attribute-close-button').click();
             } else {
               for (const formItemError in data) {
-                this.formPathStringMap[formItemError['dataPath']].setErrors({
-                  'errors': formItemError['errors']
-                });
+                if (data.hasOwnProperty(formItemError)) {
+                  this.formPathStringMap[formItemError['dataPath']].setErrors({
+                    'errors': formItemError['errors']
+                  });
+                }
               }
 
               this.loading = false;
@@ -810,9 +820,11 @@ export class SamplesPageComponent implements OnInit, AfterViewInit {
             jQuery('.sample-relations-close-button').click();
           } else {
             for (const formItemError in data) {
-              this.formPathStringMap[formItemError['dataPath']].setErrors({
-                'errors': formItemError['errors']
-              });
+             if (data.hasOwnProperty(formItemError)) {
+               this.formPathStringMap[formItemError['dataPath']].setErrors({
+                 'errors': formItemError['errors']
+               });
+             }
             }
 
             this.loading = false;
