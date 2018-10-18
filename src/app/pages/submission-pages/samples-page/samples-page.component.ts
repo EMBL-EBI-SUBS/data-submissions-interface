@@ -1,4 +1,4 @@
-import { Component, OnInit, NgModule, ViewChildren, QueryList } from '@angular/core';
+import { Component, OnInit, AfterViewInit, NgModule, ViewChildren, QueryList } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, FormArray, FormControl, FormControlName, Validators } from '@angular/forms';
 
@@ -14,7 +14,7 @@ import { environment } from 'src/environments/environment';
   templateUrl: './samples-page.component.html',
   styleUrls: ['./samples-page.component.scss'],
 })
-export class SamplesPageComponent implements OnInit {
+export class SamplesPageComponent implements OnInit, AfterViewInit {
   @ViewChildren('allSamples') samplesRows: QueryList<any>;
 
   objectKeys = Object.keys;
@@ -281,11 +281,11 @@ export class SamplesPageComponent implements OnInit {
       if (typeof this.sampleForm.value[key] !== 'undefined') {
         updateData[key] = this.sampleForm.value[key];
 
-        if (sample && this.sampleForm.value[key] == '') {
+        if (sample && this.sampleForm.value[key] === '') {
           updateData[key] = sample[key];
         }
 
-        if (key == 'taxonId' || key == 'taxonName') {
+        if (key === 'taxonId' || key === 'taxonName') {
           sampleValidationObject['object']['taxonomy'][key] = this.sampleForm.value[key];
           this.formPathStringMap['.taxonomy.' + key] = this.sampleForm.get(key);
         } else {
@@ -298,15 +298,15 @@ export class SamplesPageComponent implements OnInit {
     this.loading = true;
     this.requestsService.createNoAuth(this.validationSchemaUrl, sampleValidationObject).subscribe(
       data => {
-       if (data['length'] == 0) {
+       if (data['length'] === 0) {
           // TODO: Clean This!
           this.requestsService.partialUpdate(updateLink, updateData).subscribe(
-            data => {
+            newData => {
               this.loading = false;
               this.errors = [];
               // Update table data.
               for (const key in updateData) {
-                this.submittionSamples._embedded.samples[this.activeSampleIndex][key] = data[key];
+                this.submittionSamples._embedded.samples[this.activeSampleIndex][key] = newData[key];
               }
               // CLose the popup.
               jQuery('.close-button').click();
@@ -364,7 +364,7 @@ export class SamplesPageComponent implements OnInit {
       if (typeof this.sampleForm.value[key] !== 'undefined' && typeof sample[key] !== 'undefined' && key !== fieldKey) {
         updateData[key] = sample[key];
 
-        if (key == 'taxonId' || key == 'taxonName') {
+        if (key === 'taxonId' || key === 'taxonName') {
           sampleValidationObject['object']['taxonomy'][key] = sample[key];
           this.formPathStringMap['.taxonomy.' + key] = this.sampleForm.get(key);
         } else {
@@ -374,8 +374,9 @@ export class SamplesPageComponent implements OnInit {
       }
     }
 
-    if (fieldKey == 'taxonId' || fieldKey == 'taxonName') {
-      sampleValidationObject['object']['taxonomy'][fieldKey] = (this.sampleForm.get(fieldKey).value !== '') ? this.sampleForm.get(fieldKey).value : sample[fieldKey];
+    if (fieldKey === 'taxonId' || fieldKey === 'taxonName') {
+      sampleValidationObject['object']['taxonomy'][fieldKey] =
+        (this.sampleForm.get(fieldKey).value !== '') ? this.sampleForm.get(fieldKey).value : sample[fieldKey];
       this.formPathStringMap['.taxonomy.' + fieldKey] = this.sampleForm.get(fieldKey);
     }
 
@@ -386,12 +387,12 @@ export class SamplesPageComponent implements OnInit {
         if (data['length'] == 0) {
           // TODO: Clean This!
           this.requestsService.partialUpdate(updateLink, updateData).subscribe(
-            data => {
+            newData => {
               this.loading = false;
               this.errors = [];
               // Update table data.
               for (const key in updateData) {
-                sample[key] = data[key];
+                sample[key] = newData[key];
               }
 
               // Hide the input.
@@ -470,7 +471,7 @@ export class SamplesPageComponent implements OnInit {
                 tempProcessingSheets.push(processingSheet);
               }
             }
-            if (tempProcessingSheets['length'] == 0) {
+            if (tempProcessingSheets['length'] === 0) {
               this.processingSheets = [];
               this.getSubmissionSamples();
             } else {
@@ -624,7 +625,6 @@ export class SamplesPageComponent implements OnInit {
 
   /**
  * When click on pager, update submissions.
- * @param {string} action
  */
   onPagerClick(action: string) {
     this.loading = true;
@@ -720,7 +720,7 @@ export class SamplesPageComponent implements OnInit {
               this.sampleAttribute['terms'].push(termObj);
             }
           }
-          if (this.sampleAttribute['terms'].length == 0) {
+          if (this.sampleAttribute['terms'].length === 0) {
             delete this.sampleAttribute['terms'];
           }
         }
