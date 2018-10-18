@@ -110,8 +110,12 @@ export class SubmissionsService {
           return this.http.get(projectsUrl);
         }),
         map(res => {
-          this.setActiveProject(res);
-          return res;
+          if (res['_embedded']['projects']) {
+            const activeProject = res['_embedded']['projects'][0];
+            this.setActiveProject(activeProject);
+            return activeProject;
+          }
+
         })
       );
     } else {
