@@ -58,13 +58,13 @@
           <fieldset class="padding-bottom-large padding-top-large">
             <legend>What type of data are you submitting?</legend>
             <div *ngIf="locked; else showPlan">
-              You have selected:<span class="font-weight-bold">{{ showPlanName() }}</span>
+              You have selected:<span class="font-weight-bold">{{ ' ' + overviewForm.get('uiData.submissionPlan').value['displayName'] }}</span>
             </div>
             <ng-template #showPlan>
               <ul class="no-bullet">
                 <li class="large-form" *ngFor="let plan of submissionPlans; let i = index">
                   <!-- TODO: this should be a checkbox rather than radio button, but need to create styles for it match -->
-                  <input type="radio" value="{{ plan.href }}" formControlName="submissionPlan" id="{{ 'plan-' + i }}">
+                  <input type="radio" [value]="plan" formControlName="submissionPlan" id="{{ 'plan-' + i }}">
                   <label for="{{ 'plan-' + i }}">{{ plan.displayName }}</label>
                   <!--label for="{{ 'plan-' + i }}" data-tooltip title="{{ plan.description }}">{{ plan.displayName }}</label-->
                 </li>

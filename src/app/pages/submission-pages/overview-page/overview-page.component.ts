@@ -81,22 +81,13 @@ export class OverviewPageComponent implements OnInit {
     );
   }
 
-  public showPlanName(): string {
-    try {
-      const planUrl = this.overviewForm.get('uiData.submissionPlan').value;
-      return ` ${this.submissionPlans.filter( plan => plan.href === planUrl)[0]['displayName']} `;
-    } catch (error) {
-      return ' Unknown ';
-    }
-  }
-
   private _partialUpdate(): Observable<any> {
     if (this.activeSubmission) {
       const updateSubmissionUrl = this.activeSubmission._links['self:update'].href;
       return this.requestsService.partialUpdate(updateSubmissionUrl, this.overviewForm.value).pipe(
         tap(data => {
-            // Save Updated Submission to the Session.
             this.submissionsService.deleteActiveSubmission();
+            // Save updated submission to the local storage
             this.submissionsService.setActiveSubmission(data);
         }),
       );
