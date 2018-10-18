@@ -13,7 +13,7 @@ import { ToastrModule } from 'ngx-toastr';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
-import { environment }  from 'src/environments/environment';
+import { environment } from 'src/environments/environment';
 
 // Import Pages.
 import { UserPageComponent } from './pages/user-page/user-page.component';
@@ -24,8 +24,7 @@ import { DataPageComponent } from './pages/submission-pages/data-page/data-page.
 import { OverviewPageComponent } from './pages/submission-pages/overview-page/overview-page.component';
 import { SubmitPageComponent } from './pages/submission-pages/submit-page/submit-page.component';
 import { ProjectPageComponent } from './pages/submission-pages/project-page/project-page.component';
-import { ProtocolsPageComponent } from './pages/submission-pages/protocols-page/protocols-page.component';
-import { SamplesPageComponent } from './pages/submission-pages/samples-page/samples-page.component';
+import { MetadataPageComponent } from './pages/submission-pages/metadata-page/metadata-page.component';
 import { ContactsPageComponent } from './pages/submission-pages/contacts-page/contacts-page.component';
 import { DashboardPageComponent } from './pages/dashboard-page/dashboard-page.component';
 import { FAQPageComponent } from './pages/faq-page/faq-page.component';
@@ -79,8 +78,7 @@ export function removeToken(): void {
     EbiSubmissionMenuComponent,
     DataPageComponent,
     ProjectPageComponent,
-    ProtocolsPageComponent,
-    SamplesPageComponent,
+    MetadataPageComponent,
     ContactsPageComponent,
     OverviewPageComponent,
     SubmitPageComponent,

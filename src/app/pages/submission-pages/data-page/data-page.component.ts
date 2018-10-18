@@ -28,7 +28,6 @@ import { FileService } from 'src/app/services/file.service';
 })
 export class DataPageComponent implements OnInit {
   activeSubmission: any;
-
   uploadEndpoint  = environment.uploadEndpoint;
   uploadUppy: any;
   files: any;
@@ -40,7 +39,8 @@ export class DataPageComponent implements OnInit {
     private submissionsService: SubmissionsService,
     private teamsService: TeamsService,
     private tokenService: TokenService,
-    private fileService: FileService
+    private fileService: FileService,
+    private elementRef: ElementRef
   ) { }
 
   ngOnInit() {
@@ -119,7 +119,7 @@ export class DataPageComponent implements OnInit {
   }
 
   onSaveContinue() {
-
+    this.elementRef.nativeElement.querySelector('li.tabs-title.active+li a').click();
   }
 
   convertToSlug(Text) {

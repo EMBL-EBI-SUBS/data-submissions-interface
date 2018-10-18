@@ -1,0 +1,123 @@
+<div id="content">
+  <ebi-header></ebi-header>
+
+  <section id="main-content-area" class="row padding-top-xsmall padding-bottom-xsmall" role="main">
+    <h2 class="padding-top-xlarge">New data submission</h2>
+
+    <ebi-submission-menu [activeSubmission]="activeSubmission"></ebi-submission-menu>
+
+    <ngx-loading [show]="loading" [config]=""></ngx-loading>
+
+    <fieldset required class="large-form padding-bottom-large padding-top-large">
+      <legend>Upload {{ activeDataType.displayNamePlural }} Sheet</legend>
+
+      <p>
+        Based on your selection above, you might find the following community sample templates helpful:
+      </p>
+      <select name="template" (change)="onSelectTemplate($event)" *ngIf="templatesList">
+        <option value="_none"> - Select Template - </option>
+        <option *ngFor="let template of templatesList" value="{{template?.id}}" attr.data-description="{{template?.description}}"
+          attr.data-href="{{template._links['spreadsheet-csv-download'].href}}">
+          {{template?.displayName}}
+        </option>
+      </select>
+
+
+      <div *ngIf="templatesList.length === 0">
+          No templates available for {{ activeDataType.displayNamePlural }}.
+      </div>
+
+      <div *ngIf="selectedTemplate?.name && templatesList?.length > 0">
+
+        <div class="margin-bottom-20">{{selectedTemplate?.description}}</div>
+
+        <a href="{{selectedTemplate.href}}" target="_blank" class="hollow button uppercase margin-right-10">Download
+          The Template</a>
+
+        <a href="#" (click)="triggerUpload()" target="_blank" class="button primary uppercase">Upload Filled Template</a>
+        <input type="file" name="csv-template" (change)="previewCSVFile($event)" class="hide" />
+      </div>
+
+
+    </fieldset>
+
+
+    <fieldset required class="large-form padding-bottom-large padding-top-large">
+      <legend>View Uploaded {{ activeDataType.displayNamePlural }}</legend>
+      <div required class="large-form padding-bottom-large padding-top-large ds-tabs">
+
+        <div *ngIf="submittionSamples?._embedded?.samples.length > 0">
+          <div class="row">
+            <div *ngIf="processingSheets.length > 0" class="sheet-items-wrapper">
+              <div *ngFor="let processingSheet of processingSheets; let i = index" class="sheet-item">
+                Sheet #{{i + 1}} : Processing {{processingSheet.processedRowCount}} of
+                {{processingSheet.totalRowCount}}
+              </div>
+            </div>
+            <div class="small-6 columns text-left">
+              Page {{submittionSamples?.page?.number + 1}} of {{submittionSamples?.page?.totalPages}}
+            </div>
+
+            <div class="small-6 columns text-right"> {{submittionSamples?.page?.totalElements}} samples</div>
+          </div>
+
+          <table class="margin-top-20 samples-table inline-editing-table">
+            <thead>
+              <tr>
+                <th></th>
+                <ng-container *ngFor="let keyName of objectKeys(submittionSamples._embedded.samples[0])">
+                  <th *ngIf="blackListSampleFields.indexOf(keyName) < 0 && addSampleActiveKey(keyName)"> {{keyName |
+                    uppercase}}</th>
+                </ng-container>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr #allSamples *ngFor="let sample of submittionSamples?._embedded?.samples; let last = last; let i = index;">
+                <td class="text-center actions">
+                  <button class="reveal-button" data-open="exampleModal1" type='button' (click)="setActiveSample(sample, i)">
+                    <i class="icon icon-functional" data-icon="e"></i>
+                  </button>
+
+                  <!-- <i class="icon icon-functional success" *ngIf="sample?.editMode" data-icon="/" (click)="onUpdateSample(sample)"></i> -->
+                </td>
+
+                <td *ngFor="let key of activeSampleFields">
+                  <div class="info" *ngIf="!sample?.fields || !sample['fields'][key] || (sample['fields'] && sample['fields'][key] && !sample['fields'][key]['editMode'])"
+                    (click)="onSampleTableClickCell(sample, key, true)">
+                    {{sample[key]}}
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <ul class="pagination" *ngIf="submittionSamples && submittionSamples.page.totalPages > 0">
+            <li class="arrow">
+              <a (click)="onPagerClick('first')" *ngIf="!(submittionSamples.page.number == 0)">&laquo; First</a>
+            </li>
+            <li class="arrow">
+              <a (click)="onPagerClick('prev')" *ngIf="submittionSamples._links.prev">&laquo; Previous</a>
+            </li>
+            <li class="arrow">
+              <a (click)="onPagerClick('next')" *ngIf="submittionSamples._links.next">Next &raquo;</a>
+            </li>
+            <li class="arrow">
+              <a (click)="onPagerClick('last')" *ngIf="(submittionSamples.page.totalPages - submittionSamples.page.number) > 1">Last
+                &raquo;</a>
+            </li>
+          </ul>
+        </div>
+
+        <div *ngIf="!(submittionSamples?._embedded?.samples.length > 0)">
+          No {{activeDataType.displayNamePlural}} has been uploaded yet. If you just uploaded the spreadsheet then it may take a while to appears.
+        </div>
+      </div>
+
+    </fieldset>
+    <div>
+      <button class="button secondary-color white-background" (click)="onSaveExit()">Save &amp; exit</button>
+      <button class="button readmore" (click)="onSaveContinue()">Save &amp; continue</button>
+    </div>
+  </section>
+</div>
