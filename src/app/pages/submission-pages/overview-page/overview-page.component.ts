@@ -17,10 +17,12 @@ import { RequestsService } from '../../../services/requests.service';
 export class OverviewPageComponent implements OnInit {
   public overviewForm = this._fb.group({
     uiData: this._fb.group({
-      gdpr: ['', Validators.required],
-      human: ['', Validators.required],
-      controlled: ['', Validators.required],
-      submissionPlan: ['', Validators.required],
+      overview: this._fb.group({
+        gdpr: ['', Validators.required],
+        human: ['', Validators.required],
+        controlled: ['', Validators.required],
+        submissionPlan: ['', Validators.required],
+      }),
     }),
     name: ['', Validators.required],
   });
@@ -82,9 +84,12 @@ export class OverviewPageComponent implements OnInit {
   }
 
   private _partialUpdate(): Observable<any> {
+    const { href } = this.overviewForm.get('uiData.overview.submissionPlan').value;
+    const body = { submissionPlan: href, ...this.overviewForm.value };
+
     if (this.activeSubmission) {
       const updateSubmissionUrl = this.activeSubmission._links['self:update'].href;
-      return this.requestsService.partialUpdate(updateSubmissionUrl, this.overviewForm.value).pipe(
+      return this.requestsService.partialUpdate(updateSubmissionUrl, body).pipe(
         tap(data => {
             this.submissionsService.deleteActiveSubmission();
             // Save updated submission to the local storage
@@ -93,7 +98,7 @@ export class OverviewPageComponent implements OnInit {
       );
     } else {
       const createSubmissionUrl = this._activeTeam._links['submissions:create'].href;
-      return this.submissionsService.create(createSubmissionUrl, this.overviewForm.value).pipe(
+      return this.submissionsService.create(createSubmissionUrl, body).pipe(
         tap(data => this.submissionsService.setActiveSubmission(data)),
       );
     }
