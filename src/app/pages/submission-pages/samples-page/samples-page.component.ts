@@ -352,7 +352,8 @@ export class SamplesPageComponent implements OnInit, AfterViewInit {
     const sampleValidationObject = this.initialValidationSchema;
 
     updateData[fieldKey] = (this.sampleForm.get(fieldKey).value !== '') ? this.sampleForm.get(fieldKey).value : sample[fieldKey];
-    sampleValidationObject['object'][fieldKey] = (this.sampleForm.get(fieldKey).value !== '') ? this.sampleForm.get(fieldKey).value : sample[fieldKey];
+    sampleValidationObject['object'][fieldKey] =
+      (this.sampleForm.get(fieldKey).value !== '') ? this.sampleForm.get(fieldKey).value : sample[fieldKey];
     this.formPathStringMap['.' + fieldKey] = this.sampleForm.get(fieldKey);
     this.loading = false;
 
@@ -384,7 +385,7 @@ export class SamplesPageComponent implements OnInit, AfterViewInit {
     this.loading = true;
     this.requestsService.createNoAuth(this.validationSchemaUrl, sampleValidationObject).subscribe(
       data => {
-        if (data['length'] == 0) {
+        if (data['length'] === 0) {
           // TODO: Clean This!
           this.requestsService.partialUpdate(updateLink, updateData).subscribe(
             newData => {
@@ -568,7 +569,11 @@ export class SamplesPageComponent implements OnInit, AfterViewInit {
   previewCSVFile(event) {
     this.loading = true;
 
-    const templateUploadLink = this.activeSubmission._links.contents._links['sheetUpload'].href.replace('{templateName}', this.selectedTemplate['name']);
+    const templateUploadLink = this.activeSubmission
+      ._links.contents
+      ._links['sheetUpload']
+      .href
+      .replace('{templateName}', this.selectedTemplate['name']);
     const reader = new FileReader();
     reader.onload = (e: any) => {
       let fileResults: any;
@@ -701,12 +706,13 @@ export class SamplesPageComponent implements OnInit, AfterViewInit {
 
       try {
         this.sampleAttribute['value'] = this.sampleAttributeForm.value['value'];
-        this.formPathStringMap['.attributes[\'' + this.sampleAttributeForm.value['name'] + '\'][0].value'] = this.sampleAttributeForm.get('value');
-        this.formPathStringMap['.attributes[\'' + this.sampleAttributeForm.value['name'] + '\'][0].name'] = this.sampleAttributeForm.get('name');
+        const sampleName = `.attributes['${this.sampleAttributeForm.value['name']}'][0]`;
+        this.formPathStringMap[`${sampleName}.value`] = this.sampleAttributeForm.get('value');
+        this.formPathStringMap[`${sampleName}.name`] = this.sampleAttributeForm.get('name');
 
         if (this.sampleAttributeForm.value['unit'] && this.sampleAttributeForm.value['unit'] !== '') {
           this.sampleAttribute['units'] = this.sampleAttributeForm.value['unit'];
-          this.formPathStringMap['.attributes[\'' + this.sampleAttributeForm.value['name'] + '\'][0].units'] = this.sampleAttributeForm.get('unit');
+          this.formPathStringMap[`${sampleName}.units`] = this.sampleAttributeForm.get('unit');
         }
 
         if (this.sampleAttributeForm.value['terms'] && this.sampleAttributeForm.value['terms']['length'] > 0) {
@@ -716,7 +722,9 @@ export class SamplesPageComponent implements OnInit, AfterViewInit {
             if (term['term']) {
               const termObj = {};
               termObj['url'] = term['term'];
-              this.formPathStringMap['.attributes[\'' + this.sampleAttributeForm.value['name'] + '\'][0].terms[' + this.sampleAttribute['terms']['length'] + '].url'] = this.sampleAttributeForm.get('terms').get(String(this.sampleAttribute['terms']['length']));
+              const sampleTerm = `.terms['${this.sampleAttribute['terms']['length']}'].url`;
+              const value = this.sampleAttributeForm.get('terms').get(String(this.sampleAttribute['terms']['length']));
+              this.formPathStringMap[`${sampleName}${sampleTerm}`] = value;
               this.sampleAttribute['terms'].push(termObj);
             }
           }
@@ -730,7 +738,7 @@ export class SamplesPageComponent implements OnInit, AfterViewInit {
         this.loading = true;
         this.requestsService.createNoAuth(this.validationSchemaUrl, sampleAttributeValidationObject).subscribe(
           data => {
-            if (data['length'] == 0) {
+            if (data['length'] === 0) {
               this.activeSample['attributes'][this.sampleAttributeForm.value['name']] = [];
               this.activeSample['attributes'][this.sampleAttributeForm.value['name']].push(this.sampleAttribute);
 
@@ -778,13 +786,13 @@ export class SamplesPageComponent implements OnInit, AfterViewInit {
         this.activeSample['sampleRelationships'] = [];
       }
 
-      if (this.sampleRelationsForm.value['method'] == 'using-alias') {
+      if (this.sampleRelationsForm.value['method'] === 'using-alias') {
         sampleRelationSingle['alias'] = this.sampleRelationsForm.get('alias').value;
         sampleRelationSingle['team'] = this.sampleRelationsForm.get('team').value;
         sampleRelationSingle['nature'] = this.sampleRelationsForm.get('nature').value;
       }
 
-      if (this.sampleRelationsForm.value['method'] == 'using-accession') {
+      if (this.sampleRelationsForm.value['method'] === 'using-accession') {
         sampleRelationSingle['accession'] = this.sampleRelationsForm.get('accession').value;
         sampleRelationSingle['nature'] = this.sampleRelationsForm.get('nature').value;
       }
@@ -794,7 +802,7 @@ export class SamplesPageComponent implements OnInit, AfterViewInit {
 
       this.requestsService.createNoAuth(this.validationSchemaUrl, sampleRelationValidationObject).subscribe(
         data => {
-          if (data['length'] == 0) {
+          if (data['length'] === 0) {
             this.activeSample['sampleRelationships'].push(sampleRelationSingle);
 
             this.onUpdateSampleAttributes();
@@ -878,7 +886,7 @@ export class SamplesPageComponent implements OnInit, AfterViewInit {
   }
 
   onChangeRelationMethod() {
-    if (this.sampleRelationsForm.value['method'] == 'using-alias') {
+    if (this.sampleRelationsForm.value['method'] === 'using-alias') {
       this.sampleRelationsForm.get('alias').setValidators([Validators.required]);
       this.sampleRelationsForm.get('team').setValidators([Validators.required]);
       this.sampleRelationsForm.get('accession').clearValidators();
@@ -888,7 +896,7 @@ export class SamplesPageComponent implements OnInit, AfterViewInit {
       this.sampleRelationsForm.get('accession').updateValueAndValidity();
     }
 
-    if (this.sampleRelationsForm.value['method'] == 'using-accession') {
+    if (this.sampleRelationsForm.value['method'] === 'using-accession') {
       this.sampleRelationsForm.get('alias').clearValidators();
       this.sampleRelationsForm.get('team').clearValidators();
       this.sampleRelationsForm.get('accession').setValidators([Validators.required]);
