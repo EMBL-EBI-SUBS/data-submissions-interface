@@ -12,7 +12,7 @@ import { ToastrModule } from 'ngx-toastr';
 
 import { AppRoutingModule } from './app-routing.module';
 import { ServiceModule } from './services/service.module';
-import { environment }  from 'src/environments/environment';
+import { environment } from 'src/environments/environment';
 
 // Import Pages.
 import { AppComponent } from './app.component';
@@ -50,6 +50,7 @@ import { FileSizeModule } from 'ngx-filesize';
 
 // Import Interceptors.
 import { httpInterceptorProviders } from './http-interceptors/index';
+import { YesNoPipe } from './pipes/yes-no.pipe';
 
 export function getToken(): string {
   return localStorage.getItem('jwt_token') || '';
@@ -86,7 +87,8 @@ export function removeToken(): void {
     FAQPageComponent,
     HelpPageComponent,
     ProjectsPageComponent,
-    ProjectCreatePageComponent
+    ProjectCreatePageComponent,
+    YesNoPipe
   ],
   imports: [
     BrowserModule,

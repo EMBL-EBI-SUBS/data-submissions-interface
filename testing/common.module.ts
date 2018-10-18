@@ -7,6 +7,8 @@ import { ToastrModule } from 'ngx-toastr';
 import { ServiceModule } from 'src/app/services/service.module';
 import { environment } from 'src/environments/environment';
 
+import { YesNoPipe } from 'src/app/pipes/yes-no.pipe';
+
 export const jwtName = 'test_usi';
 export function getToken(): string {
     return localStorage.getItem(jwtName) || '';
@@ -44,6 +46,8 @@ export function removeToken(): void {
     ],
     exports: [],
     providers: [],
-    declarations: [],
+    declarations: [
+      YesNoPipe
+    ],
 })
 export class CommonTestModule {}
