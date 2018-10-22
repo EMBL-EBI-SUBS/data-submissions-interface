@@ -1,4 +1,4 @@
-import { Component, OnInit, NgModule, ViewChildren, QueryList } from '@angular/core';
+import { Component, OnInit, AfterViewInit, NgModule, ViewChildren, QueryList } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, FormArray, FormControl, FormControlName, Validators } from '@angular/forms';
 
@@ -14,7 +14,7 @@ import { environment } from 'src/environments/environment';
   templateUrl: './samples-page.component.html',
   styleUrls: ['./samples-page.component.scss'],
 })
-export class SamplesPageComponent implements OnInit {
+export class SamplesPageComponent implements OnInit, AfterViewInit {
   @ViewChildren('allSamples') samplesRows: QueryList<any>;
 
   objectKeys = Object.keys;
@@ -33,7 +33,7 @@ export class SamplesPageComponent implements OnInit {
   errors = [];
   templatesList: any;
   selectedTemplate: any = {};
-  activeTab: string = 'samples-upload';
+  activeTab = 'samples-upload';
 
   processingSheets = [];
   blackListSampleFields = [
@@ -55,103 +55,103 @@ export class SamplesPageComponent implements OnInit {
 
   validationSchemaUrl = environment.validationSchemaEndpoint;
   initialValidationSchema = {
-    "schema": {
-      "$schema": "http://json-schema.org/draft-07/schema#",
-      "title": "A Sample Schema",
-      "description": "Sample base schema",
-      "type": "object",
-      "properties": {
-          "alias": {
-              "description": "An unique identifier in a submission.",
-              "type": "string",
-              "minLength": 1
-          },
-          "title": {
-              "description": "Title of the sample.",
-              "type": "string",
-              "minLength": 1
-          },
-          "description": {
-              "description": "More extensive free-form description.",
-              "type": "string",
-              "minLength": 1
-          },
-          "attributes": {
-              "description": "Attributes for describing a sample.",
-              "type": "object",
-              "properties": {},
-              "patternProperties": {
-                  "^.*$": {
-                      "type": "array",
-                      "minItems": 1,
-                      "items": {
-                          "properties": {
-                              "value": { "type": "string", "minLength": 1 },
-                              "units": { "type": "string", "minLength": 1 },
-                              "terms": {
-                                  "type": "array",
-                                  "items": {
-                                      "type": "object",
-                                      "properties": {
-                                          "url": {"type": "string", "format": "uri" }
-                                      },
-                                      "required": ["url"]
-                                  }
-                              }
-                          },
-                          "required": ["value"]
-                      }
+    'schema': {
+      '$schema': 'http://json-schema.org/draft-07/schema#',
+      'title': 'A Sample Schema',
+      'description': 'Sample base schema',
+      'type': 'object',
+      'properties': {
+        'alias': {
+          'description': 'An unique identifier in a submission.',
+          'type': 'string',
+          'minLength': 1
+        },
+        'title': {
+          'description': 'Title of the sample.',
+          'type': 'string',
+          'minLength': 1
+        },
+        'description': {
+          'description': 'More extensive free-form description.',
+          'type': 'string',
+          'minLength': 1
+        },
+        'attributes': {
+          'description': 'Attributes for describing a sample.',
+          'type': 'object',
+          'properties': {},
+          'patternProperties': {
+            '^.*$': {
+              'type': 'array',
+              'minItems': 1,
+              'items': {
+                'properties': {
+                  'value': { 'type': 'string', 'minLength': 1 },
+                  'units': { 'type': 'string', 'minLength': 1 },
+                  'terms': {
+                    'type': 'array',
+                    'items': {
+                      'type': 'object',
+                      'properties': {
+                        'url': { 'type': 'string', 'format': 'uri' }
+                      },
+                      'required': ['url']
+                    }
                   }
+                },
+                'required': ['value']
               }
-          },
-          "sampleRelationships": {
-              "type": "array",
-              "items": {
-                  "type": "object",
-                  "properties": {
-                      "alias": { "type": "string", "minLength": 1 },
-                      "accession": { "type": "string", "minLength": 1 },
-                      "team": { "type": "string", "minLength": 1 },
-                      "nature": {
-                          "type": "string",
-                          "enum": [ "derived from", "child of", "same as", "recurated from" ]
-                      }
-                  },
-                  "oneOf": [
-                      { "required": ["alias", "team", "nature"] },
-                      { "required": ["accession", "nature"] }
-                  ]
-              }
-          },
-          "taxonomy": {
-              "type": "object",
-              "properties": {
-                  "taxonId": { "type": "integer" },
-                  "taxonName": { "type": "string", "minLength": 1 }
-              },
-              "required": ["taxonId"]
-          },
-          "releaseDate": {
-              "type": "string",
-              "format": "date"
+            }
           }
+        },
+        'sampleRelationships': {
+          'type': 'array',
+          'items': {
+            'type': 'object',
+            'properties': {
+              'alias': { 'type': 'string', 'minLength': 1 },
+              'accession': { 'type': 'string', 'minLength': 1 },
+              'team': { 'type': 'string', 'minLength': 1 },
+              'nature': {
+                'type': 'string',
+                'enum': ['derived from', 'child of', 'same as', 'recurated from']
+              }
+            },
+            'oneOf': [
+              { 'required': ['alias', 'team', 'nature'] },
+              { 'required': ['accession', 'nature'] }
+            ]
+          }
+        },
+        'taxonomy': {
+          'type': 'object',
+          'properties': {
+            'taxonId': { 'type': 'integer' },
+            'taxonName': { 'type': 'string', 'minLength': 1 }
+          },
+          'required': ['taxonId']
+        },
+        'releaseDate': {
+          'type': 'string',
+          'format': 'date'
+        }
       },
-      "required": [ "alias", "taxonomy", "releaseDate" ]
+      'required': ['alias', 'taxonomy', 'releaseDate']
     },
-    "object": {}
+    'object': {}
   };
 
   public loading = false;
 
 
   tabLinks: any = [
-    { "title": "Overview", "href": "/submission/overview" },
-    { "title": "Project", "href": "/submission/project" },
-    { "title": "Data", "href": "/submission/data" },
-    { "title": "Samples", "href": "/submission/samples" },
-    { "title": "Protocols", "href": "/submission/protocols" },
-    { "title": "Contacts", "href": "/submission/contacts" },
-    { "title": "Submit", "href": "/submission/submit" },
+    { 'title': 'Overview', 'href': '/submission/overview' },
+    { 'title': 'Project', 'href': '/submission/project' },
+    { 'title': 'Data', 'href': '/submission/data' },
+    { 'title': 'Samples', 'href': '/submission/samples' },
+    { 'title': 'Protocols', 'href': '/submission/protocols' },
+    { 'title': 'Contacts', 'href': '/submission/contacts' },
+    { 'title': 'Submit', 'href': '/submission/submit' },
   ];
 
   constructor(
@@ -217,15 +217,15 @@ export class SamplesPageComponent implements OnInit {
 
     this.samplesRows.changes.subscribe(t => {
       this.ngForSamplesRendred();
-    })
+    });
 
-    let thisVar = this;
+    const thisVar = this;
 
-    jQuery('[data-reveal].add-attribute-form').on('closed.zf.reveal', function () {
+    jQuery('[data-reveal].add-attribute-form').on('closed.zf.reveal', function() {
       thisVar.onCloseSampleAttributeModal();
     });
 
-    jQuery('[data-reveal].add-samples-form').on('closed.zf.reveal', function () {
+    jQuery('[data-reveal].add-samples-form').on('closed.zf.reveal', function() {
       thisVar.onCloseSampleRelationsModal();
     });
   }
@@ -262,30 +262,30 @@ export class SamplesPageComponent implements OnInit {
 
   onUpdateSample(sample = null) {
     this.loading = true;
-    let updateLink = "";
+    let updateLink = '';
     if (sample) {
       updateLink = sample._links.self.href;
     } else {
       updateLink = this.activeSample._links.self.href;
     }
-    let updateData = {};
+    const updateData = {};
     this.loading = false;
 
-    let sampleValidationObject = this.initialValidationSchema;
+    const sampleValidationObject = this.initialValidationSchema;
     sampleValidationObject['object']['taxonomy'] = {};
     delete sampleValidationObject['object']['attributes'];
     delete sampleValidationObject['object']['attributes'];
 
 
-    for (let key in this.sampleForm.value) {
-      if (typeof this.sampleForm.value[key] !== "undefined") {
+    for (const key in this.sampleForm.value) {
+      if (typeof this.sampleForm.value[key] !== 'undefined') {
         updateData[key] = this.sampleForm.value[key];
 
-        if (sample && this.sampleForm.value[key] == "") {
+        if (sample && this.sampleForm.value[key] === '') {
           updateData[key] = sample[key];
         }
 
-        if (key == "taxonId" || key == "taxonName") {
+        if (key === 'taxonId' || key === 'taxonName') {
           sampleValidationObject['object']['taxonomy'][key] = this.sampleForm.value[key];
           this.formPathStringMap['.taxonomy.' + key] = this.sampleForm.get(key);
         } else {
@@ -298,22 +298,24 @@ export class SamplesPageComponent implements OnInit {
     this.loading = true;
     this.requestsService.createNoAuth(this.validationSchemaUrl, sampleValidationObject).subscribe(
       data => {
-       if(data['length'] == 0) {
+        if (data['length'] === 0) {
           // TODO: Clean This!
           this.requestsService.partialUpdate(updateLink, updateData).subscribe(
-            data => {
+            newData => {
               this.loading = false;
               this.errors = [];
               // Update table data.
-              for (let key in updateData) {
-                this.submittionSamples._embedded.samples[this.activeSampleIndex][key] = data[key];
+              for (const key in updateData) {
+                if (updateData.hasOwnProperty(key)) {
+                  this.submittionSamples._embedded.samples[this.activeSampleIndex][key] = newData[key];
+                }
               }
               // CLose the popup.
               jQuery('.close-button').click();
             },
             err => {
               try {
-                let error = JSON.parse(err['_body']);
+                const error = JSON.parse(err['_body']);
                 this.errors = error.errors;
               } catch (e) {
 
@@ -322,16 +324,18 @@ export class SamplesPageComponent implements OnInit {
               this.loading = false;
 
             }
-          )
+          );
 
           // this.onUpdateSampleAttributes();
           // Close the reveal.
-          jQuery(".sample-attribute-close-button").click();
+          jQuery('.sample-attribute-close-button').click();
         } else {
-          for(let formItemError in data) {
-            this.formPathStringMap[formItemError['dataPath']].setErrors({
-              'errors': formItemError['errors']
-            });
+          for (const formItemError in data) {
+            if (data.hasOwnProperty(formItemError)) {
+              this.formPathStringMap[formItemError['dataPath']].setErrors({
+                'errors': formItemError['errors']
+              });
+            }
           }
 
           this.loading = false;
@@ -342,17 +346,18 @@ export class SamplesPageComponent implements OnInit {
         console.log(err);
         this.loading = false;
       }
-    )
+    );
   }
 
   onUpdateSampleTableCell(sample, fieldKey) {
     this.loading = true;
-    let updateLink = sample._links.self.href;;
-    let updateData = {};
-    let sampleValidationObject = this.initialValidationSchema;
+    const updateLink = sample._links.self.href;
+    const updateData = {};
+    const sampleValidationObject = this.initialValidationSchema;
 
-    updateData[fieldKey] = (this.sampleForm.get(fieldKey).value !== "") ? this.sampleForm.get(fieldKey).value : sample[fieldKey];
-    sampleValidationObject['object'][fieldKey] = (this.sampleForm.get(fieldKey).value !== "") ? this.sampleForm.get(fieldKey).value : sample[fieldKey];
+    updateData[fieldKey] = (this.sampleForm.get(fieldKey).value !== '') ? this.sampleForm.get(fieldKey).value : sample[fieldKey];
+    sampleValidationObject['object'][fieldKey] =
+      (this.sampleForm.get(fieldKey).value !== '') ? this.sampleForm.get(fieldKey).value : sample[fieldKey];
     this.formPathStringMap['.' + fieldKey] = this.sampleForm.get(fieldKey);
     this.loading = false;
 
@@ -360,11 +365,11 @@ export class SamplesPageComponent implements OnInit {
     delete sampleValidationObject['object']['attributes'];
     delete sampleValidationObject['object']['attributes'];
 
-    for (let key in this.sampleForm.value) {
-      if (typeof this.sampleForm.value[key] !== "undefined" && typeof sample[key] !== "undefined" && key !== fieldKey) {
+    for (const key in this.sampleForm.value) {
+      if (typeof this.sampleForm.value[key] !== 'undefined' && typeof sample[key] !== 'undefined' && key !== fieldKey) {
         updateData[key] = sample[key];
 
-        if (key == "taxonId" || key == "taxonName") {
+        if (key === 'taxonId' || key === 'taxonName') {
           sampleValidationObject['object']['taxonomy'][key] = sample[key];
           this.formPathStringMap['.taxonomy.' + key] = this.sampleForm.get(key);
         } else {
@@ -374,8 +379,9 @@ export class SamplesPageComponent implements OnInit {
       }
     }
 
-    if (fieldKey == "taxonId" || fieldKey == "taxonName") {
-      sampleValidationObject['object']['taxonomy'][fieldKey] = (this.sampleForm.get(fieldKey).value !== "") ? this.sampleForm.get(fieldKey).value : sample[fieldKey];
+    if (fieldKey === 'taxonId' || fieldKey === 'taxonName') {
+      sampleValidationObject['object']['taxonomy'][fieldKey] =
+        (this.sampleForm.get(fieldKey).value !== '') ? this.sampleForm.get(fieldKey).value : sample[fieldKey];
       this.formPathStringMap['.taxonomy.' + fieldKey] = this.sampleForm.get(fieldKey);
     }
 
@@ -383,15 +389,17 @@ export class SamplesPageComponent implements OnInit {
     this.loading = true;
     this.requestsService.createNoAuth(this.validationSchemaUrl, sampleValidationObject).subscribe(
       data => {
-        if(data['length'] == 0) {
+        if (data['length'] === 0) {
           // TODO: Clean This!
           this.requestsService.partialUpdate(updateLink, updateData).subscribe(
-            data => {
+            newData => {
               this.loading = false;
               this.errors = [];
               // Update table data.
-              for (let key in updateData) {
-                sample[key] = data[key];
+              for (const key in updateData) {
+                if (updateData.hasOwnProperty(key)) {
+                  sample[key] = newData[key];
+                }
               }
 
               // Hide the input.
@@ -399,7 +407,7 @@ export class SamplesPageComponent implements OnInit {
             },
             err => {
               try {
-                let error = JSON.parse(err['_body']);
+                const error = JSON.parse(err['_body']);
                 this.sampleForm.get(fieldKey).setErrors({
                   'errors': error.errors
                 });
@@ -411,12 +419,14 @@ export class SamplesPageComponent implements OnInit {
               this.loading = false;
 
             }
-          )
+          );
         } else {
-          for(let formItemError in data) {
-            this.formPathStringMap[formItemError['dataPath']].setErrors({
-              'errors': formItemError['errors']
-            });
+          for (const formItemError in data) {
+            if (data.hasOwnProperty(formItemError)) {
+              this.formPathStringMap[formItemError['dataPath']].setErrors({
+                'errors': formItemError['errors']
+              });
+            }
           }
 
           this.loading = false;
@@ -427,11 +437,11 @@ export class SamplesPageComponent implements OnInit {
         console.log(err);
         this.loading = false;
       }
-    )
+    );
   }
 
   onUpdateSampleAttributes() {
-    let updateLink = this.activeSample._links.self.href;
+    const updateLink = this.activeSample._links.self.href;
     this.loading = true;
 
     this.requestsService.update(updateLink, this.activeSample).subscribe(
@@ -440,13 +450,13 @@ export class SamplesPageComponent implements OnInit {
       },
       err => {
         try {
-          let error = JSON.parse(err['_body']);
+          const error = JSON.parse(err['_body']);
           this.errors = error.errors;
         } catch (e) { }
 
         this.loading = false;
       }
-    )
+    );
   }
 
   addSampleActiveKey(keyName) {
@@ -457,26 +467,26 @@ export class SamplesPageComponent implements OnInit {
   }
 
   checkProcessingSheets() {
-    let samplesSheets = this.activeSubmission._links.contents._links['samplesSheets'].href;
+    const samplesSheets = this.activeSubmission._links.contents._links['samplesSheets'].href;
 
     this.requestsService.get(samplesSheets).subscribe(
       data => {
         try {
           if (data['_embedded']['sheets']['length'] > 0) {
-            let tempProcessingSheets = [];
+            const tempProcessingSheets = [];
 
-            for (let processingSheet of data['_embedded']['sheets']) {
-              if (processingSheet['status'] !== "Completed") {
+            for (const processingSheet of data['_embedded']['sheets']) {
+              if (processingSheet['status'] !== 'Completed') {
                 tempProcessingSheets.push(processingSheet);
               }
             }
-            if (tempProcessingSheets['length'] == 0) {
+            if (tempProcessingSheets['length'] === 0) {
               this.processingSheets = [];
               this.getSubmissionSamples();
             } else {
               this.processingSheets = tempProcessingSheets;
-              let that = this;
-              setTimeout(function () {
+              const that = this;
+              setTimeout(function() {
                 that.checkProcessingSheets();
               }, 10000);
             }
@@ -488,16 +498,16 @@ export class SamplesPageComponent implements OnInit {
       err => {
 
       }
-    )
+    );
   }
 
   onSaveContinue() {
-    let samplesData = {};
+    const samplesData = {};
     samplesData['samplesSource'] = this.samplesForm.value.samplesSource;
     samplesData['samplesSpecies'] = this.samplesForm.value.samplesSpecies;
 
     this.activeSubmission['uiData']['samples'] = samplesData;
-    let submissionUpdateUrl = this.activeSubmission._links['self:update'].href;
+    const submissionUpdateUrl = this.activeSubmission._links['self:update'].href;
 
     // Update the submission.
     this.requestsService.update(submissionUpdateUrl, this.activeSubmission).subscribe(
@@ -550,9 +560,9 @@ export class SamplesPageComponent implements OnInit {
   }
 
   onSelectTemplate(ev) {
-    let selectedOptionValue = ev.target.value;
+    const selectedOptionValue = ev.target.value;
 
-    if (selectedOptionValue !== "_none") {
+    if (selectedOptionValue !== '_none') {
       try {
         this.selectedTemplate['name'] = selectedOptionValue;
         this.selectedTemplate['href'] = ev.target.selectedOptions[0].dataset.href;
@@ -567,7 +577,11 @@ export class SamplesPageComponent implements OnInit {
   previewCSVFile(event) {
     this.loading = true;
 
-    let templateUploadLink = this.activeSubmission._links.contents._links['sheetUpload'].href.replace('{templateName}', this.selectedTemplate['name']);
+    const templateUploadLink = this.activeSubmission
+      ._links.contents
+      ._links['sheetUpload']
+      .href
+      .replace('{templateName}', this.selectedTemplate['name']);
     const reader = new FileReader();
     reader.onload = (e: any) => {
       let fileResults: any;
@@ -600,7 +614,7 @@ export class SamplesPageComponent implements OnInit {
   }
 
   getSubmissionSamples() {
-    let submissionSamplesLink = this.activeSubmission._links.contents._links.samples.href;
+    const submissionSamplesLink = this.activeSubmission._links.contents._links.samples.href;
 
     this.requestsService.get(submissionSamplesLink).subscribe(
       data => {
@@ -609,7 +623,7 @@ export class SamplesPageComponent implements OnInit {
 
         try {
           if (data['_embedded']['samples'] && data['_embedded']['samples']['length'] > 0) {
-            this.activateTab("samples-view");
+            this.activateTab('samples-view');
           }
         } catch (e) {
 
@@ -619,16 +633,15 @@ export class SamplesPageComponent implements OnInit {
         console.log(err);
         this.loading = false;
       }
-    )
+    );
   }
 
   /**
  * When click on pager, update submissions.
- * @param {string} action
  */
   onPagerClick(action: string) {
     this.loading = true;
-    let getSubmissionSamplesUrl = this.submittionSamples._links[action].href;
+    const getSubmissionSamplesUrl = this.submittionSamples._links[action].href;
     this.submittionSamples = this.getUserSubmissionsSamplesByUrl(getSubmissionSamplesUrl);
   }
 
@@ -648,7 +661,7 @@ export class SamplesPageComponent implements OnInit {
   }
 
   triggerUpload() {
-    jQuery("input[name='csv-template']").click();
+    jQuery('input[name=\'csv-template\']').click();
     return false;
   }
 
@@ -674,7 +687,7 @@ export class SamplesPageComponent implements OnInit {
   createSampleAttrTerm() {
     return this.fb.group({
       term: ''
-    })
+    });
   }
 
   addSampleAttrTerm() {
@@ -689,7 +702,7 @@ export class SamplesPageComponent implements OnInit {
 
   onAddSampleAttribute() {
     if (this.sampleAttributeForm.valid) {
-      let sampleAttributeValidationObject = this.initialValidationSchema;
+      const sampleAttributeValidationObject = this.initialValidationSchema;
       delete sampleAttributeValidationObject['schema']['required'];
       sampleAttributeValidationObject['object']['attributes'] = {};
       sampleAttributeValidationObject['object']['attributes'][this.sampleAttributeForm.value['name']] = [];
@@ -700,28 +713,31 @@ export class SamplesPageComponent implements OnInit {
       }
 
       try {
-        this.sampleAttribute["value"] = this.sampleAttributeForm.value['value'];
-        this.formPathStringMap['.attributes[\'' + this.sampleAttributeForm.value['name'] + '\'][0].value'] = this.sampleAttributeForm.get('value');
-        this.formPathStringMap['.attributes[\'' + this.sampleAttributeForm.value['name'] + '\'][0].name'] = this.sampleAttributeForm.get('name');
+        this.sampleAttribute['value'] = this.sampleAttributeForm.value['value'];
+        const sampleName = `.attributes['${this.sampleAttributeForm.value['name']}'][0]`;
+        this.formPathStringMap[`${sampleName}.value`] = this.sampleAttributeForm.get('value');
+        this.formPathStringMap[`${sampleName}.name`] = this.sampleAttributeForm.get('name');
 
-        if (this.sampleAttributeForm.value['unit'] && this.sampleAttributeForm.value['unit'] !== "") {
-          this.sampleAttribute["units"] = this.sampleAttributeForm.value['unit'];
-          this.formPathStringMap['.attributes[\'' + this.sampleAttributeForm.value['name'] + '\'][0].units'] = this.sampleAttributeForm.get('unit');
+        if (this.sampleAttributeForm.value['unit'] && this.sampleAttributeForm.value['unit'] !== '') {
+          this.sampleAttribute['units'] = this.sampleAttributeForm.value['unit'];
+          this.formPathStringMap[`${sampleName}.units`] = this.sampleAttributeForm.get('unit');
         }
 
         if (this.sampleAttributeForm.value['terms'] && this.sampleAttributeForm.value['terms']['length'] > 0) {
-          this.sampleAttribute["terms"] = [];
+          this.sampleAttribute['terms'] = [];
 
-          for (let term of this.sampleAttributeForm.value['terms']) {
+          for (const term of this.sampleAttributeForm.value['terms']) {
             if (term['term']) {
-              let termObj = {};
+              const termObj = {};
               termObj['url'] = term['term'];
-              this.formPathStringMap['.attributes[\'' + this.sampleAttributeForm.value['name'] + '\'][0].terms[' + this.sampleAttribute["terms"]['length'] + '].url'] = this.sampleAttributeForm.get('terms').get(String(this.sampleAttribute["terms"]['length']));
-              this.sampleAttribute["terms"].push(termObj);
+              const sampleTerm = `.terms['${this.sampleAttribute['terms']['length']}'].url`;
+              const value = this.sampleAttributeForm.get('terms').get(String(this.sampleAttribute['terms']['length']));
+              this.formPathStringMap[`${sampleName}${sampleTerm}`] = value;
+              this.sampleAttribute['terms'].push(termObj);
             }
           }
-          if (this.sampleAttribute["terms"].length == 0) {
-            delete this.sampleAttribute["terms"];
+          if (this.sampleAttribute['terms'].length === 0) {
+            delete this.sampleAttribute['terms'];
           }
         }
 
@@ -730,18 +746,20 @@ export class SamplesPageComponent implements OnInit {
         this.loading = true;
         this.requestsService.createNoAuth(this.validationSchemaUrl, sampleAttributeValidationObject).subscribe(
           data => {
-            if (data['length'] == 0) {
+            if (data['length'] === 0) {
               this.activeSample['attributes'][this.sampleAttributeForm.value['name']] = [];
               this.activeSample['attributes'][this.sampleAttributeForm.value['name']].push(this.sampleAttribute);
 
               this.onUpdateSampleAttributes();
               // Close the reveal.
-              jQuery(".sample-attribute-close-button").click();
+              jQuery('.sample-attribute-close-button').click();
             } else {
-              for(let formItemError in data) {
-                this.formPathStringMap[formItemError['dataPath']].setErrors({
-                  'errors': formItemError['errors']
-                });
+              for (const formItemError in data) {
+                if (data.hasOwnProperty(formItemError)) {
+                  this.formPathStringMap[formItemError['dataPath']].setErrors({
+                    'errors': formItemError['errors']
+                  });
+                }
               }
 
               this.loading = false;
@@ -752,7 +770,7 @@ export class SamplesPageComponent implements OnInit {
             console.log(err);
             this.loading = false;
           }
-        )
+        );
 
       } catch (err) { }
     }
@@ -762,11 +780,11 @@ export class SamplesPageComponent implements OnInit {
 
 
     if (this.sampleRelationsForm.valid) {
-      let sampleRelationValidationObject = this.initialValidationSchema;
+      const sampleRelationValidationObject = this.initialValidationSchema;
       delete sampleRelationValidationObject['schema']['required'];
       sampleRelationValidationObject['object']['sampleRelationships'] = [];
 
-      let sampleRelationSingle = {};
+      const sampleRelationSingle = {};
 
       this.formPathStringMap['.sampleRelationships[0].alias'] = this.sampleRelationsForm.get('alias');
       this.formPathStringMap['.sampleRelationships[0].team'] = this.sampleRelationsForm.get('team');
@@ -778,13 +796,13 @@ export class SamplesPageComponent implements OnInit {
         this.activeSample['sampleRelationships'] = [];
       }
 
-      if (this.sampleRelationsForm.value['method'] == "using-alias") {
+      if (this.sampleRelationsForm.value['method'] === 'using-alias') {
         sampleRelationSingle['alias'] = this.sampleRelationsForm.get('alias').value;
         sampleRelationSingle['team'] = this.sampleRelationsForm.get('team').value;
         sampleRelationSingle['nature'] = this.sampleRelationsForm.get('nature').value;
       }
 
-      if (this.sampleRelationsForm.value['method'] == "using-accession") {
+      if (this.sampleRelationsForm.value['method'] === 'using-accession') {
         sampleRelationSingle['accession'] = this.sampleRelationsForm.get('accession').value;
         sampleRelationSingle['nature'] = this.sampleRelationsForm.get('nature').value;
       }
@@ -794,17 +812,19 @@ export class SamplesPageComponent implements OnInit {
 
       this.requestsService.createNoAuth(this.validationSchemaUrl, sampleRelationValidationObject).subscribe(
         data => {
-          if(data['length'] == 0) {
+          if (data['length'] === 0) {
             this.activeSample['sampleRelationships'].push(sampleRelationSingle);
 
             this.onUpdateSampleAttributes();
             // Close the reveal.
-            jQuery(".sample-relations-close-button").click();
+            jQuery('.sample-relations-close-button').click();
           } else {
-            for (let formItemError in data) {
-              this.formPathStringMap[formItemError['dataPath']].setErrors({
-                'errors': formItemError['errors']
-              });
+            for (const formItemError in data) {
+              if (data.hasOwnProperty(formItemError)) {
+                this.formPathStringMap[formItemError['dataPath']].setErrors({
+                  'errors': formItemError['errors']
+                });
+              }
             }
 
             this.loading = false;
@@ -815,7 +835,7 @@ export class SamplesPageComponent implements OnInit {
           console.log(err);
           this.loading = false;
         }
-      )
+      );
     }
   }
 
@@ -831,12 +851,12 @@ export class SamplesPageComponent implements OnInit {
 
   onEditSampleAttribute(attributeKey) {
     this.resetSampleAttributesForm();
-    let sampleTerms = [];
+    const sampleTerms = [];
     try {
       if (this.activeSample['attributes'][attributeKey][0]['terms'].length > 0) {
-        for (let term of this.activeSample['attributes'][attributeKey][0]['terms']) {
-          if (term['url'] && term['url'] !== "") {
-            sampleTerms.push({ "term": term['url'] });
+        for (const term of this.activeSample['attributes'][attributeKey][0]['terms']) {
+          if (term['url'] && term['url'] !== '') {
+            sampleTerms.push({ 'term': term['url'] });
             this.addSampleAttrTerm();
           }
         }
@@ -878,7 +898,7 @@ export class SamplesPageComponent implements OnInit {
   }
 
   onChangeRelationMethod() {
-    if (this.sampleRelationsForm.value['method'] == "using-alias") {
+    if (this.sampleRelationsForm.value['method'] === 'using-alias') {
       this.sampleRelationsForm.get('alias').setValidators([Validators.required]);
       this.sampleRelationsForm.get('team').setValidators([Validators.required]);
       this.sampleRelationsForm.get('accession').clearValidators();
@@ -888,7 +908,7 @@ export class SamplesPageComponent implements OnInit {
       this.sampleRelationsForm.get('accession').updateValueAndValidity();
     }
 
-    if (this.sampleRelationsForm.value['method'] == "using-accession") {
+    if (this.sampleRelationsForm.value['method'] === 'using-accession') {
       this.sampleRelationsForm.get('alias').clearValidators();
       this.sampleRelationsForm.get('team').clearValidators();
       this.sampleRelationsForm.get('accession').setValidators([Validators.required]);
@@ -904,12 +924,12 @@ export class SamplesPageComponent implements OnInit {
     return new Function('_', 'return _.' + path)(obj);
   }
 
-  onSampleTableClickCell(sample, key , show) {
-    if(!sample['fields']) {
+  onSampleTableClickCell(sample, key, show) {
+    if (!sample['fields']) {
       sample['fields'] = {};
     }
 
-    if(!sample['fields'][key]) {
+    if (!sample['fields'][key]) {
       sample['fields'][key] = {};
     }
 

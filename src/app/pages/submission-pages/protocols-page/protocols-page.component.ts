@@ -8,13 +8,13 @@ import { Router } from '@angular/router';
 })
 export class ProtocolsPageComponent implements OnInit {
   tabLinks: any = [
-    {"title": "Overview", "href": "/submission/overview"},
-    {"title": "Project", "href": "/submission/project"},
-    {"title": "Data", "href": "/submission/data"},
-    {"title": "Samples", "href": "/submission/samples"},
-    {"title": "Protocols", "href": "/submission/protocols"},
-    {"title": "Contacts", "href": "/submission/contacts"},
-    {"title": "Submit", "href": "/submission/submit"},
+    { 'title': 'Overview', 'href': '/submission/overview' },
+    { 'title': 'Project', 'href': '/submission/project' },
+    { 'title': 'Data', 'href': '/submission/data' },
+    { 'title': 'Samples', 'href': '/submission/samples' },
+    { 'title': 'Protocols', 'href': '/submission/protocols' },
+    { 'title': 'Contacts', 'href': '/submission/contacts' },
+    { 'title': 'Submit', 'href': '/submission/submit' },
   ];
 
   constructor(private router: Router) { }
@@ -22,17 +22,17 @@ export class ProtocolsPageComponent implements OnInit {
   ngOnInit() {
   }
 
-    /**
-   * On Save and Exit.
-   */
+  /**
+ * On Save and Exit.
+ */
   onSaveExit() {
-    this.router.navigate(["/"]);
+    this.router.navigate(['/']);
   }
 
- /**
-   * On Save and continue.
-   */
+  /**
+    * On Save and continue.
+    */
   onSaveContinue() {
-    this.router.navigate(["/submission/contacts"]);
+    this.router.navigate(['/submission/contacts']);
   }
 }

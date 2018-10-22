@@ -13,8 +13,8 @@ export class RequestsService {
    * Get record.
    */
   get(url, options = {}) {
-    let requestUrl =  url;
-    var response = this.http.get(requestUrl, options);
+    const requestUrl = url;
+    const response = this.http.get(requestUrl, options);
     return response;
   }
 
@@ -23,22 +23,22 @@ export class RequestsService {
    */
   create(url, data) {
     // Post an Empty object to create submission.
-    let body = JSON.stringify(data);
+    const body = JSON.stringify(data);
 
-    let requestUrl =  url;
-    var response = this.http.post(requestUrl, body);
+    const requestUrl = url;
+    const response = this.http.post(requestUrl, body);
     return response;
   }
 
-   /**
-   * Create new record.
-   */
+  /**
+  * Create new record.
+  */
   createNoAuth(url, data) {
     // Post an Empty object to create submission.
-    let body = JSON.stringify(data);
+    const body = JSON.stringify(data);
 
-    let requestUrl =  url;
-    var response = this.http.post(requestUrl, body);
+    const requestUrl = url;
+    const response = this.http.post(requestUrl, body);
     return response;
   }
 
@@ -47,10 +47,10 @@ export class RequestsService {
    */
   update(url, data) {
     // Post an Empty object to create submission.
-    let body = JSON.stringify(data);
+    const body = JSON.stringify(data);
 
-    let requestUrl =  url;
-    var response = this.http.put(requestUrl, body);
+    const requestUrl = url;
+    const response = this.http.put(requestUrl, body);
     return response;
   }
 
@@ -67,12 +67,12 @@ export class RequestsService {
 
     // Post an Empty object to create submission.
     const body = JSON.stringify(data);
-    const requestUrl =  url;
+    const requestUrl = url;
 
     return this.http.patch(
-        requestUrl,
-        body,
-        { params: httpParams }
+      requestUrl,
+      body,
+      { params: httpParams }
     );
   }
 
@@ -85,8 +85,8 @@ export class RequestsService {
       {
         observe: 'response',
         responseType: 'json'
-       }
-      );
+      }
+    );
     return response;
   }
 }

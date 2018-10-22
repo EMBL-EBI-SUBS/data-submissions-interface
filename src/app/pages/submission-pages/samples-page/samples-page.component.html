@@ -1,14 +1,14 @@
 <div id="content">
   <link href="https://unpkg.com/uppy/dist/uppy.min.css" rel="stylesheet">
 
-  <ebi-header></ebi-header>
+  <app-ebi-header></app-ebi-header>
 
   <section id="main-content-area" class="row padding-top-xsmall padding-bottom-xsmall" role="main">
     <h2 class="padding-top-xlarge">New data submission</h2>
 
     <ul class="tabs" id="example-tabs">
       <li *ngFor="let link of tabLinks" routerLinkActive="active is-active" class="tabs-title">
-        <a [routerLink]="link.href" routerLinkActive="active">{{link.title}}</a>
+        <a [routerLink]="link.href" routerLinkActive="active">{{ link.title }}</a>
       </li>
     </ul>
 
@@ -26,7 +26,7 @@
 
             <div class="errors" *ngIf="sampleAttributeForm.get('name').errors && sampleAttributeForm.get('name').errors['errors']">
               <div *ngFor="let error of sampleAttributeForm.get('name').errors['errors']">
-                {{error}}
+                {{ error }}
               </div>
             </div>
           </label>
@@ -37,7 +37,7 @@
 
             <div class="errors" *ngIf="sampleAttributeForm.get('value').errors && sampleAttributeForm.get('value').errors['errors']">
               <div *ngFor="let error of sampleAttributeForm.get('value').errors['errors']">
-                {{error}}
+                {{ error }}
               </div>
             </div>
           </label>
@@ -48,7 +48,7 @@
 
             <div class="errors" *ngIf="sampleAttributeForm.get('unit').errors && sampleAttributeForm.get('unit').errors['errors']">
                 <div *ngFor="let error of sampleAttributeForm.get('unit').errors['errors']">
-                  {{error}}
+                  {{ error }}
                 </div>
               </div>
           </label>
@@ -62,7 +62,7 @@
 
                   <div class="errors" *ngIf="sampleAttributeForm.get('terms').controls[i].errors && sampleAttributeForm.get('terms').controls[i].errors['errors'].length > 0">
                       <div *ngFor="let error of sampleAttributeForm.get('terms').controls[i].errors['errors']">
-                        {{error}}
+                        {{ error }}
                       </div>
                   </div>
                 </div>
@@ -102,7 +102,7 @@
 
             <div class="errors" *ngIf="sampleRelationsForm.get('alias').errors && sampleRelationsForm.get('alias').errors['errors']">
               <div *ngFor="let error of sampleRelationsForm.get('alias').errors['errors']">
-                {{error}}
+                {{ error }}
               </div>
             </div>
           </label>
@@ -113,7 +113,7 @@
 
             <div class="errors" *ngIf="sampleRelationsForm.get('team').errors && sampleRelationsForm.get('team').errors['errors']">
               <div *ngFor="let error of sampleRelationsForm.get('team').errors['errors']">
-                {{error}}
+                {{ error }}
               </div>
             </div>
           </label>
@@ -124,7 +124,7 @@
 
             <div class="errors" *ngIf="sampleRelationsForm.get('accession').errors && sampleRelationsForm.get('accession').errors['errors']">
               <div *ngFor="let error of sampleRelationsForm.get('accession').errors['errors']">
-                {{error}}
+                {{ error }}
               </div>
             </div>
           </label>
@@ -141,7 +141,7 @@
 
             <div class="errors" *ngIf="sampleRelationsForm.get('nature').errors && sampleRelationsForm.get('nature').errors['errors']">
               <div *ngFor="let error of sampleRelationsForm.get('nature').errors['errors']">
-                {{error}}
+                {{ error }}
               </div>
             </div>
           </label>
@@ -170,7 +170,7 @@
 
           <div class="errors" *ngIf="sampleForm.get('accession').errors && sampleForm.get('accession').errors['errors']">
             <div *ngFor="let error of sampleForm.get('accession').errors['errors']">
-              {{error}}
+              {{ error }}
             </div>
           </div>
         </label>
@@ -181,7 +181,7 @@
 
           <div class="errors" *ngIf="sampleForm.get('alias').errors && sampleForm.get('alias').errors['errors']">
             <div *ngFor="let error of sampleForm.get('alias').errors['errors']">
-              {{error}}
+              {{ error }}
             </div>
           </div>
         </label>
@@ -192,7 +192,7 @@
 
           <div class="errors" *ngIf="sampleForm.get('title').errors && sampleForm.get('title').errors['errors']">
             <div *ngFor="let error of sampleForm.get('title').errors['errors']">
-              {{error}}
+              {{ error }}
             </div>
           </div>
         </label>
@@ -203,7 +203,7 @@
 
           <div class="errors" *ngIf="sampleForm.get('description').errors && sampleForm.get('description').errors['errors']">
             <div *ngFor="let error of sampleForm.get('description').errors['errors']">
-              {{error}}
+              {{ error }}
             </div>
           </div>
         </label>
@@ -214,7 +214,7 @@
 
           <div class="errors" *ngIf="sampleForm.get('taxonId').errors && sampleForm.get('taxonId').errors['errors']">
             <div *ngFor="let error of sampleForm.get('taxonId').errors['errors']">
-              {{error}}
+              {{ error }}
             </div>
           </div>
         </label>
@@ -225,7 +225,7 @@
 
           <div class="errors" *ngIf="sampleForm.get('taxon').errors && sampleForm.get('taxon').errors['errors']">
             <div *ngFor="let error of sampleForm.get('taxon').errors['errors']">
-              {{error}}
+              {{ error }}
             </div>
           </div>
         </label>
@@ -236,7 +236,7 @@
 
           <div class="errors" *ngIf="sampleForm.get('releaseDate').errors && sampleForm.get('releaseDate').errors['errors']">
             <div *ngFor="let error of sampleForm.get('releaseDate').errors['errors']">
-              {{error}}
+              {{ error }}
             </div>
           </div>
         </label>
@@ -343,7 +343,7 @@
             <select name="template" (change)="onSelectTemplate($event)" *ngIf="templatesList">
               <option value="_none"> - Select Template - </option>
               <option *ngFor="let template of templatesList" value="{{template?.name}}" attr.data-href="{{template._links['spreadsheet-csv-download'].href}}">
-                {{template?.name}}
+                {{ template?.name }}
               </option>
             </select>
 
@@ -362,14 +362,14 @@
               <div class="row">
                 <div *ngIf="processingSheets.length > 0" class="sheet-items-wrapper">
                   <div *ngFor="let processingSheet of processingSheets; let i = index" class="sheet-item">
-                    Sheet #{{i + 1}} : Processing {{processingSheet.processedRowCount}} of {{processingSheet.totalRowCount}}
+                    Sheet #{{ i + 1 }} : Processing {{ processingSheet.processedRowCount }} of {{ processingSheet.totalRowCount }}
                   </div>
                 </div>
                 <div class="small-6 columns text-left">
-                  Page {{submittionSamples?.page?.number + 1}} of {{submittionSamples?.page?.totalPages}}
+                  Page {{ submittionSamples?.page?.number + 1 }} of {{ submittionSamples?.page?.totalPages }}
                 </div>
 
-                <div class="small-6 columns text-right"> {{submittionSamples?.page?.totalElements}} samples</div>
+                <div class="small-6 columns text-right"> {{ submittionSamples?.page?.totalElements }} samples</div>
               </div>
               <form [formGroup]="sampleForm">
                 <table class="margin-top-20 samples-table inline-editing-table">
@@ -377,7 +377,7 @@
                     <tr>
                       <th></th>
                       <ng-container *ngFor="let keyName of objectKeys(submittionSamples._embedded.samples[0])">
-                        <th *ngIf="blackListSampleFields.indexOf(keyName) < 0 && addSampleActiveKey(keyName)"> {{keyName | uppercase}}</th>
+                        <th *ngIf="blackListSampleFields.indexOf(keyName) < 0 && addSampleActiveKey(keyName)"> {{ keyName | uppercase }}</th>
                       </ng-container>
                     </tr>
                   </thead>
@@ -394,7 +394,7 @@
 
                       <td *ngFor="let key of activeSampleFields" [class.editable]="sampleForm.controls[key]">
                         <div class="info" *ngIf="!sample?.fields || !sample['fields'][key] || (sample['fields'] && sample['fields'][key] && !sample['fields'][key]['editMode'])" (click)="onSampleTableClickCell(sample, key, true)">
-                          {{sample[key]}}
+                          {{ sample[key] }}
                         </div>
 
                         <label *ngIf="sample?.accession && key == 'accession' && (sample['fields'] && sample['fields'][key] && sample['fields'][key]['editMode'])">
@@ -406,7 +406,7 @@
 
                           <div class="errors" *ngIf="sampleForm.get('accession').errors && sampleForm.get('accession').errors['errors']">
                             <div *ngFor="let error of sampleForm.get('accession').errors['errors']">
-                              {{error}}
+                              {{ error }}
                             </div>
                           </div>
                         </label>
@@ -420,7 +420,7 @@
 
                           <div class="errors" *ngIf="sampleForm.get('alias').errors && sampleForm.get('alias').errors['errors']">
                             <div *ngFor="let error of sampleForm.get('alias').errors['errors']">
-                              {{error}}
+                              {{ error }}
                             </div>
                           </div>
                         </label>
@@ -434,7 +434,7 @@
 
                           <div class="errors" *ngIf="sampleForm.get('title').errors && sampleForm.get('title').errors['errors']">
                             <div *ngFor="let error of sampleForm.get('title').errors['errors']">
-                              {{error}}
+                              {{ error }}
                             </div>
                           </div>
                         </label>
@@ -448,7 +448,7 @@
 
                           <div class="errors" *ngIf="sampleForm.get('description').errors && sampleForm.get('description').errors['errors']">
                             <div *ngFor="let error of sampleForm.get('description').errors['errors']">
-                              {{error}}
+                              {{ error }}
                             </div>
                           </div>
                         </label>
@@ -462,7 +462,7 @@
 
                           <div class="errors" *ngIf="sampleForm.get('taxonId').errors && sampleForm.get('taxonId').errors['errors']">
                             <div *ngFor="let error of sampleForm.get('taxonId').errors['errors']">
-                              {{error}}
+                              {{ error }}
                             </div>
                           </div>
                         </label>
@@ -476,7 +476,7 @@
 
                           <div class="errors" *ngIf="sampleForm.get('taxon').errors && sampleForm.get('taxon').errors['errors']">
                             <div *ngFor="let error of sampleForm.get('taxon').errors['errors']">
-                              {{error}}
+                              {{ error }}
                             </div>
                           </div>
                         </label>
@@ -490,7 +490,7 @@
 
                           <div class="errors" *ngIf="sampleForm.get('releaseDate').errors && sampleForm.get('releaseDate').errors['errors']">
                             <div *ngFor="let error of sampleForm.get('releaseDate').errors['errors']">
-                              {{error}}
+                              {{ error }}
                             </div>
                           </div>
                         </label>

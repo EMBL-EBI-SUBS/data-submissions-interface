@@ -23,7 +23,7 @@ import { FileService } from 'src/app/services/file.service';
 export class DataPageComponent implements OnInit {
   activeSubmission: any;
 
-  uploadEndpoint  = environment.uploadEndpoint;
+  uploadEndpoint = environment.uploadEndpoint;
   uploadUppy: any;
   files: any;
   userHasTeam = true;
@@ -51,7 +51,7 @@ export class DataPageComponent implements OnInit {
       }
     );
     this.uploadUppy = Uppy({
-      id :this.convertToSlug(this.activeSubmission.name + "-" + this.activeSubmission.projectName + "-data"),
+      id: this.convertToSlug(this.activeSubmission.name + '-' + this.activeSubmission.projectName + '-data'),
       autoProceed: true,
     });
 
@@ -61,24 +61,24 @@ export class DataPageComponent implements OnInit {
       target: '.uppy-drag-drop',
       note: 'Drag & drop filled out .CSV file'
     })
-    .use(Form, {
-      target: ".uppy-metadata",
-      getMetaFromForm: true,
-    })
-    .use(GoldenRetriever, {
-      serviceWorker: false,
-      indexedDB: { maxFileSize: Infinity, maxTotalSize: Infinity },
-    })
-    .use(Tus, {
-      resume: true,
-      autoRetry: true,
-      endpoint: this.uploadEndpoint
-    })
-    .run();
+      .use(Form, {
+        target: '.uppy-metadata',
+        getMetaFromForm: true,
+      })
+      .use(GoldenRetriever, {
+        serviceWorker: false,
+        indexedDB: { maxFileSize: Infinity, maxTotalSize: Infinity },
+      })
+      .use(Tus, {
+        resume: true,
+        autoRetry: true,
+        endpoint: this.uploadEndpoint
+      })
+      .run();
 
     this.uploadUppy.on('core:upload-success', (fileId, url) => {
-       // this.formDisabled = false;
-    })
+      // this.formDisabled = false;
+    });
 
   }
 
@@ -91,12 +91,12 @@ export class DataPageComponent implements OnInit {
 
     this.fileService.deleteFile(fileHref).subscribe(
       (response) => {
-          if (response.status === HttpStatus.NO_CONTENT ) {
-              console.debug(`File: ${file.filename} has been succcesfully deleted from the storage.`);
-              this.files = this.files.filter(item => item !== file)
-          } else {
-              console.log(`File deletion has failed. The reason: ${response.statusText}`);
-          }
+        if (response.status === HttpStatus.NO_CONTENT) {
+          // console.debug(`File: ${file.filename} has been succcesfully deleted from the storage.`);
+          this.files = this.files.filter(item => item !== file);
+        } else {
+          // console.log(`File deletion has failed. The reason: ${response.statusText}`);
+        }
       },
       (err) => {
         console.log(`File deletion has failed. The reason: ${err.error.title}, message: ${err.message}`);
@@ -109,7 +109,7 @@ export class DataPageComponent implements OnInit {
     this.submissionsService.deleteActiveProject();
     this.teamsService.deleteActiveTeam();
 
-    this.router.navigate(['/'])
+    this.router.navigate(['/']);
   }
 
   onSaveContinue() {
@@ -119,25 +119,23 @@ export class DataPageComponent implements OnInit {
   convertToSlug(Text) {
     return Text
       .toLowerCase()
-      .replace(/ /g,'-')
-      .replace(/[^\w-]+/g,'')
+      .replace(/ /g, '-')
+      .replace(/[^\w-]+/g, '')
       ;
   }
 
   /**
    * Replaces underscores with spaces in given string
-   * @param Text
    */
   cleanupUnderscores(Text) {
     return Text
-      .replace(/_/g,' ');
+      .replace(/_/g, ' ');
   }
 
   /**
    * Formats the specified file status text: replace underscores, convert to lowercase, uppercase first letter
-   * @param Text
    */
   formatFileStatus(Text) {
-    return this.cleanupUnderscores( Text.charAt(0).toUpperCase() + Text.substr(1).toLowerCase() );
+    return this.cleanupUnderscores(Text.charAt(0).toUpperCase() + Text.substr(1).toLowerCase());
   }
 }

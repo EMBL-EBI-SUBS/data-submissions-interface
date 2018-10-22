@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 
 import { MockRouter } from 'testing/mockrouter.tests';
-import { CommonTestModule } from  'testing/common.module';
+import { CommonTestModule } from 'testing/common.module';
 
 //  Import Components.
 import { EbiHeaderComponent } from './ebi-header.component';
@@ -18,10 +18,10 @@ describe('EbiHeaderComponent', () => {
         RouterTestingModule,
         CommonTestModule
       ],
-      declarations: [ EbiHeaderComponent ],
+      declarations: [EbiHeaderComponent],
       providers: []
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

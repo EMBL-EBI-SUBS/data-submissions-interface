@@ -6,7 +6,7 @@ import { map, catchError } from 'rxjs/operators';
 
 @Injectable()
 export class LoggedInGuard implements CanActivate {
-isAuthenticated: Observable < boolean > ;
+  isAuthenticated: Observable<boolean>;
 
   constructor(
     private router: Router,
@@ -19,20 +19,20 @@ isAuthenticated: Observable < boolean > ;
   canActivate(
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
-      return this.authService.isAuthenticated().pipe(
-        map(e => {
-          if (e) {
-            return true;
-          } else {
-            this.router.navigate(['/403']);
-            return false;
-          }
-        }),
-        catchError((err) => {
-          console.log(err);
+    return this.authService.isAuthenticated().pipe(
+      map(e => {
+        if (e) {
+          return true;
+        } else {
           this.router.navigate(['/403']);
-          return of(false);
-        })
-      );
+          return false;
+        }
+      }),
+      catchError((err) => {
+        console.log(err);
+        this.router.navigate(['/403']);
+        return of(false);
+      })
+    );
   }
 }
