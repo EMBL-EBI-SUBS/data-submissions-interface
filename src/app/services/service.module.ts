@@ -23,4 +23,4 @@ import { VariablesService } from './variables.service';
     VariablesService
   ],
 })
-export class ServiceModule {}
+export class ServiceModule { }

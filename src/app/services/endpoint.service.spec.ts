@@ -6,7 +6,7 @@ import { environment } from 'src/environments/environment';
 import { EndpointService } from './endpoint.service';
 
 describe('EndpointService', () => {
-  const mockedResponse = {_links: {userTeams: {href: 'https://dummy' }}};
+  const mockedResponse = { _links: { userTeams: { href: 'https://dummy' } } };
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -28,7 +28,7 @@ describe('EndpointService', () => {
     const http = TestBed.get(HttpTestingController);
     http.expectOne(environment.apiHost).flush(mockedResponse);
     let url: string | undefined;
-    service.find('userTeams').subscribe(result => url = result)
+    service.find('userTeams').subscribe(result => url = result);
     expect(url).toEqual('https://dummy');
   }));
 
@@ -36,7 +36,7 @@ describe('EndpointService', () => {
     const http = TestBed.get(HttpTestingController);
     http.expectOne(environment.apiHost).flush(mockedResponse);
     let url: string | undefined;
-    service.find('dummy').subscribe(result => url = result)
+    service.find('dummy').subscribe(result => url = result);
     expect(url).toBeUndefined();
   }));
 });

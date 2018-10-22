@@ -8,9 +8,9 @@ describe('EbiFooterComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ EbiFooterComponent ]
+      declarations: [EbiFooterComponent]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

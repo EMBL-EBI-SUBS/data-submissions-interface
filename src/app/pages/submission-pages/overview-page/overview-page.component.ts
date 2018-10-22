@@ -40,7 +40,7 @@ export class OverviewPageComponent implements OnInit {
     private requestsService: RequestsService,
     private router: Router,
     private _fb: FormBuilder
-  ) {}
+  ) { }
 
   public ngOnInit(): void {
     this._getUserTeams();
@@ -91,9 +91,9 @@ export class OverviewPageComponent implements OnInit {
       const updateSubmissionUrl = this.activeSubmission._links['self:update'].href;
       return this.requestsService.partialUpdate(updateSubmissionUrl, body).pipe(
         tap(data => {
-            this.submissionsService.deleteActiveSubmission();
-            // Save updated submission to the local storage
-            this.submissionsService.setActiveSubmission(data);
+          this.submissionsService.deleteActiveSubmission();
+          // Save updated submission to the local storage
+          this.submissionsService.setActiveSubmission(data);
         }),
       );
     } else {
@@ -126,15 +126,15 @@ export class OverviewPageComponent implements OnInit {
    * Get Submission Content.
    */
   private _getSubmissionContents(submission: any): void {
-     const submissionLinksRequestUrl = submission._links.contents.href;
-     this.submissionsService.get(submissionLinksRequestUrl).subscribe (
-       data => {
-         submission['_links']['contents']['_links'] = data['_links'];
-         submission['_links']['contents']['dataTypes'] = data['dataTypes'];
-         this.submissionsService.setActiveSubmission(submission);
-         this.activeSubmission = submission;
-        },
-     );
+    const submissionLinksRequestUrl = submission._links.contents.href;
+    this.submissionsService.get(submissionLinksRequestUrl).subscribe(
+      data => {
+        submission['_links']['contents']['_links'] = data['_links'];
+        submission['_links']['contents']['dataTypes'] = data['dataTypes'];
+        this.submissionsService.setActiveSubmission(submission);
+        this.activeSubmission = submission;
+      },
+    );
   }
 
   /**
@@ -144,7 +144,7 @@ export class OverviewPageComponent implements OnInit {
     this.userService.getUserTeams().pipe(
       pluck('_embedded', 'teams'),
       filter(teams => teams !== undefined),
-    ).subscribe (
+    ).subscribe(
       teams => {
         // TODO: Currently we set the first team as default one. We have to change this later on.
         if (teams[0].name) {
@@ -159,7 +159,7 @@ export class OverviewPageComponent implements OnInit {
    * Set active team.
    */
   private _setActiveTeam(name): void {
-    this.teamsService.getTeam(name).subscribe (
+    this.teamsService.getTeam(name).subscribe(
       data => {
         this._activeTeam = data;
         this.teamsService.setActiveTeam(data);

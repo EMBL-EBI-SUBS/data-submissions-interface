@@ -8,9 +8,9 @@ describe('EbiNavbarComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ EbiNavbarComponent ]
+      declarations: [EbiNavbarComponent]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

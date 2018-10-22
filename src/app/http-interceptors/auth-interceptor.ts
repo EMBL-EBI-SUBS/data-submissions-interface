@@ -10,7 +10,7 @@ import { environment } from 'src/environments/environment';
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
 
-  constructor(private tokenService: TokenService) {}
+  constructor(private tokenService: TokenService) { }
 
   intercept(req: HttpRequest<any>, next: HttpHandler) {
     if (!req.url.startsWith(environment.apiHost) && !req.url.startsWith(environment.authenticationHost)) {
@@ -26,6 +26,7 @@ export class AuthInterceptor implements HttpInterceptor {
       'Content-Type' : 'application/json',
       Accept : 'application/hal+json, application/json',
     };
+
     // Override header if sent through request.
     if (req.headers.keys().length > 0) {
       for (const headerKey of req.headers.keys()) {

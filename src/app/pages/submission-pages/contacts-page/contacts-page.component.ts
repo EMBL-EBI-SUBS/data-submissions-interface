@@ -18,10 +18,10 @@ export class ContactsPageComponent implements OnInit {
   activeProject: any;
 
   constructor(
-      private submissionsService: SubmissionsService,
-      private requestsService: RequestsService,
-      private teamsService: TeamsService,
-      private router: Router,
+    private submissionsService: SubmissionsService,
+    private requestsService: RequestsService,
+    private teamsService: TeamsService,
+    private router: Router,
   ) { }
 
   ngOnInit() {
@@ -43,7 +43,7 @@ export class ContactsPageComponent implements OnInit {
 
   onAddContact() {
     this.activeProject.contacts.push(this.contactForm.value);
-    let projectUpdateUrl = this.activeProject._links['self:update'].href;
+    const projectUpdateUrl = this.activeProject._links['self:update'].href;
     this.requestsService.update(projectUpdateUrl, this.activeProject).subscribe(
       (project) => {
         this.submissionsService.setActiveProject(project);
@@ -61,7 +61,7 @@ export class ContactsPageComponent implements OnInit {
 
   onDeleteContact(contactIndex: number) {
     this.activeProject.contacts.splice(contactIndex, 1);
-    let projectUpdateUrl = this.activeProject._links['self:update'].href;
+    const projectUpdateUrl = this.activeProject._links['self:update'].href;
     this.requestsService.update(projectUpdateUrl, this.activeProject).subscribe(
       (project) => {
         this.submissionsService.setActiveProject(project);
@@ -79,11 +79,11 @@ export class ContactsPageComponent implements OnInit {
     if (!this.activeProject && this.activeSubmission) {
       this.submissionsService.getActiveSubmissionProject().subscribe(
         (data) => {
-          if(data) {
+          if (data) {
             this.activeProject = data;
           }
         },
-        (error) =>  {
+        (error) => {
 
         }
       );
@@ -95,11 +95,11 @@ export class ContactsPageComponent implements OnInit {
     this.submissionsService.deleteActiveProject();
     this.teamsService.deleteActiveTeam();
 
-    this.router.navigate(['/'])
+    this.router.navigate(['/']);
   }
 
   onSaveContinue() {
-    this.router.navigate(['/submission/data'])
+    this.router.navigate(['/submission/data']);
   }
 
 }

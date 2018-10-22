@@ -3,7 +3,7 @@ import { DebugElement } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { MockRouter } from 'testing/mockrouter.tests';
-import { CommonTestModule } from  'testing/common.module';
+import { CommonTestModule } from 'testing/common.module';
 
 import { NotAuthenticatedPageComponent } from './not-authenticated-page.component';
 import { EbiHeaderComponent } from '../../components/ebi-header/ebi-header.component';
@@ -20,12 +20,12 @@ describe('NotAuthenticatedPageComponent', () => {
         NotAuthenticatedPageComponent,
         EbiHeaderComponent,
         UserLoginPageComponent
-       ],
+      ],
       providers: [
-        {provide: Router, useClass: MockRouter},
+        { provide: Router, useClass: MockRouter },
       ]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {
