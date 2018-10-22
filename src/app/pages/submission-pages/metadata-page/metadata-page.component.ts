@@ -1,20 +1,10 @@
 import {
   Component,
   OnInit,
-  NgModule,
-  ViewChildren,
   QueryList,
   ElementRef
 } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import {
-  FormGroup,
-  FormBuilder,
-  FormArray,
-  FormControl,
-  FormControlName,
-  Validators
-} from '@angular/forms';
 
 // Import Services.
 import { SubmissionsService } from '../../../services/submissions.service';
@@ -35,22 +25,13 @@ import { environment } from 'src/environments/environment';
   ]
 })
 export class MetadataPageComponent implements OnInit {
-  @ViewChildren('allSamples')
-  samplesRows: QueryList<any>;
-
   id: string;
   objectKeys = Object.keys;
-  sampleAttributes: any[] = [];
   activeSubmission: any;
-  activeSpreadsheet: any;
-  activeSample: any;
   activeDataType: any;
-  submittionSamples: any = {};
-  formPathStringMap: any = {};
-  errors = [];
+  submissionMetadata: any;
   templatesList: any;
   selectedTemplate: any = {};
-  activeTab = 'samples-upload';
 
   processingSheets = [];
   blackListSampleFields = [
@@ -63,24 +44,20 @@ export class MetadataPageComponent implements OnInit {
     'team',
     'attributes',
     'accession',
-    'editMode',
+    'projectRef',
+    'protocolRefs',
     '_embedded',
     '_links'
   ];
-  activeSampleFields = [];
-  activeSampleIndex: number;
-
-  validationSchemaUrl = environment.validationSchemaEndpoint;
-
+  activeMetadataFields = [];
+  activeMetadataIndex: number;
   public loading = false;
 
   constructor(
     private router: Router,
     private submissionsService: SubmissionsService,
-    private teamsService: TeamsService,
     private requestsService: RequestsService,
     private spreadsheetsService: SpreadsheetsService,
-    private fb: FormBuilder,
     private activatedRoute: ActivatedRoute,
     private elementRef: ElementRef
   ) {}
@@ -124,8 +101,8 @@ export class MetadataPageComponent implements OnInit {
       .subscribe(
         data => {
           Object.assign(this.activeDataType, data);
+          this.getSubmissionMetadata();
           this.getTemplatesList();
-          this.loading = false;
         },
         err => {
           console.log(err);
@@ -134,82 +111,75 @@ export class MetadataPageComponent implements OnInit {
       );
   }
 
-  onSaveExit() {
-    // this.submissionsService.deleteActiveSubmission();
-    // this.submissionsService.deleteActiveProject();
-    // this.teamsService.deleteActiveTeam();
-    // this.router.navigate(['/']);
+  /**
+   * Set metadata header columns based on first row keys.
+   * @param keyName string
+   */
+  addMetadataActiveKey(keyName) {
+    if (this.activeMetadataFields.indexOf(keyName) < 0) {
+      this.activeMetadataFields.push(keyName);
+    }
+    return true;
   }
 
-  addSampleActiveKey(keyName) {
-    // if (this.activeSampleFields.indexOf(keyName) < 0) {
-    //   this.activeSampleFields.push(keyName);
-    // }
-    // return true;
-  }
-
+  /**
+   * Get processing sheets status once user submit a sheet.
+   */
   checkProcessingSheets() {
-    // const samplesSheets = this.activeSubmission._links.contents._links['samplesSheets'].href;
-    // this.requestsService.get(samplesSheets).subscribe(
-    //   data => {
-    //     try {
-    //       if (data['_embedded']['sheets']['length'] > 0) {
-    //         const tempProcessingSheets = [];
-    //         for (const processingSheet of data['_embedded']['sheets']) {
-    //           if (processingSheet['status'] !== 'Completed') {
-    //             tempProcessingSheets.push(processingSheet);
-    //           }
-    //         }
-    //         if (tempProcessingSheets['length'] === 0) {
-    //           this.processingSheets = [];
-    //           this.getSubmissionSamples();
-    //         } else {
-    //           this.processingSheets = tempProcessingSheets;
-    //           const that = this;
-    //           setTimeout(function () {
-    //             that.checkProcessingSheets();
-    //           }, 10000);
-    //         }
-    //       }
-    //     } catch (e) {
-    //     }
-    //   },
-    //   err => {
-    //   }
-    // )
+    const metadataSheets = this.submissionMetadata._links['spreadsheets'].href;
+    this.requestsService.get(metadataSheets).subscribe(
+      data => {
+        try {
+          if (data['_embedded']['spreadsheets']['length'] > 0) {
+            const tempProcessingSheets = [];
+            for (const processingSheet of data['_embedded']['spreadsheets']) {
+              if (processingSheet['status'] !== 'Completed') {
+                tempProcessingSheets.push(processingSheet);
+              }
+            }
+            if (tempProcessingSheets['length'] === 0) {
+              this.processingSheets = [];
+              this.getSubmissionMetadata();
+            } else {
+              this.processingSheets = tempProcessingSheets;
+              const that = this;
+              setTimeout(function () {
+                that.checkProcessingSheets();
+              }, 10000);
+            }
+          }
+        } catch (e) {
+        }
+      },
+      err => {
+      }
+    )
   }
 
-  onSaveContinue() {
-    this.elementRef.nativeElement
-      .querySelector('li.tabs-title.active+li a')
-      .click();
-
-    // const submissionUpdateUrl = this.activeSubmission._links['self:update'].href;
-
-    // // Update the submission.
-    // this.requestsService.update(submissionUpdateUrl, this.activeSubmission).subscribe(
-    //   (data) => {
-    //     this.submissionsService.setActiveSubmission(data);
-    //   },
-    //   (err) => {
-    //     // TODO: Handle Errors.
-    //     console.log(err);
-    //   }
-    // );
-
-    // this.router.navigate(['/submission/protocols']);
+  /**
+   * Remove metadata object from the submission.
+   * @param metadata
+   * @param index
+   */
+  deleteMetadata(metadata: any, index: number) {
+    if (confirm('Are you sure you want to delete the item?')) {
+      this.loading = true;
+      this.requestsService.delete(metadata['_links']['self:delete'].href).subscribe(
+        data => {
+          this.submissionMetadata._embedded[Object.keys(this.submissionMetadata._embedded)[0]].splice(index, 1);
+          this.loading = false;
+        },
+        err => {
+          console.log(err);
+          this.loading = false;
+        }
+      )
+    }
   }
 
-  activateTab(tabName) {
-    this.activeTab = tabName;
-  }
-
-  convertToSlug(Text) {
-    return Text.toLowerCase()
-      .replace(/ /g, '-')
-      .replace(/[^\w-]+/g, '');
-  }
-
+  /**
+   * Retrieve list of active templates for existing metadata.
+   */
   getTemplatesList() {
     this.requestsService
       .get(this.activeDataType['_links'].checklists.href)
@@ -225,6 +195,10 @@ export class MetadataPageComponent implements OnInit {
       );
   }
 
+  /**
+   * Update local selectedTemplate object when user select a template.
+   * @param ev
+   */
   onSelectTemplate(ev) {
     const selectedOptionValue = ev.target.value;
 
@@ -243,6 +217,10 @@ export class MetadataPageComponent implements OnInit {
     }
   }
 
+  /**
+   * Read uploaded CSV and post it for processing.
+   * @param event
+   */
   previewCSVFile(event) {
     this.loading = true;
     const templateUploadLink = this.activeDataType[
@@ -266,8 +244,7 @@ export class MetadataPageComponent implements OnInit {
         .create(templateUploadLink, fileResults)
         .subscribe(
           data => {
-            console.log(this.activeDataType);
-            this.getSubmissionSamples();
+            this.getSubmissionMetadata();
             this.checkProcessingSheets();
             this.loading = false;
           },
@@ -282,24 +259,26 @@ export class MetadataPageComponent implements OnInit {
     reader.readAsDataURL(event.target.files[0]);
   }
 
-  getSubmissionSamples() {
-    // const submissionSamplesLink = this.activeSubmission._links.contents._links.samples.href;
-    // this.requestsService.get(submissionSamplesLink).subscribe(
-    //   data => {
-    //     this.submittionSamples = data;
-    //     this.loading = false;
-    //     try {
-    //       if (data['_embedded']['samples'] && data['_embedded']['samples']['length'] > 0) {
-    //         this.activateTab('samples-view');
-    //       }
-    //     } catch (e) {
-    //     }
-    //   },
-    //   err => {
-    //     console.log(err);
-    //     this.loading = false;
-    //   }
-    // )
+  /**
+   * Retrieve active metadata obejct.
+   */
+  getSubmissionMetadata() {
+    const submissionMetadataLink = this.activeDataType._links.self.href;
+    this.requestsService.get(submissionMetadataLink).subscribe(
+      data => {
+        this.loading = false;
+        try {
+          if (data['_embedded'][Object.keys(data['_embedded'])[0]] && data['_embedded'][Object.keys(data['_embedded'])[0]]['length'] > 0) {
+            this.submissionMetadata = data;
+          }
+        } catch (e) {
+        }
+      },
+      err => {
+        console.log(err);
+        this.loading = false;
+      }
+    )
   }
 
   /**
@@ -308,17 +287,21 @@ export class MetadataPageComponent implements OnInit {
    */
   onPagerClick(action: string) {
     this.loading = true;
-    const getSubmissionSamplesUrl = this.submittionSamples._links[action].href;
-    this.submittionSamples = this.getUserSubmissionsSamplesByUrl(
-      getSubmissionSamplesUrl
+    const getSubmissionMetadataUrl = this.submissionMetadata._links[action].href;
+    this.submissionMetadata = this.getUserSubmissionsMetadataByUrl(
+      getSubmissionMetadataUrl
     );
   }
 
-  getUserSubmissionsSamplesByUrl(serviceUrl) {
+  /**
+   * Retrieve the new metadata object when pager clicked.
+   * @param serviceUrl string
+   */
+  getUserSubmissionsMetadataByUrl(serviceUrl) {
     this.requestsService.get(serviceUrl).subscribe(
       data => {
         // Store active submission in a local variable.
-        this.submittionSamples = data;
+        this.submissionMetadata = data;
         this.loading = false;
       },
       err => {
@@ -329,10 +312,25 @@ export class MetadataPageComponent implements OnInit {
     );
   }
 
+  /**
+   * Open upload popup when click on 'Upload filled template' button.
+   */
   triggerUpload() {
     this.elementRef.nativeElement
       .querySelector('input[name=\'csv-template\']')
       .click();
     return false;
+  }
+
+  onSaveContinue() {
+    this.elementRef.nativeElement
+      .querySelector('li.tabs-title.active+li a')
+      .click();
+  }
+
+  onSaveExit() {
+    this.submissionsService.deleteActiveSubmission();
+    this.submissionsService.deleteActiveProject();
+    this.router.navigate(['/dashboard']);
   }
 }
