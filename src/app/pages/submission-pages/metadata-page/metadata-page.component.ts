@@ -323,14 +323,21 @@ export class MetadataPageComponent implements OnInit {
   }
 
   onSaveContinue() {
+    this.resetVariables();
     this.elementRef.nativeElement
       .querySelector('li.tabs-title.active+li a')
       .click();
   }
 
   onSaveExit() {
+    this.resetVariables();
     this.submissionsService.deleteActiveSubmission();
     this.submissionsService.deleteActiveProject();
     this.router.navigate(['/dashboard']);
+  }
+
+  resetVariables() {
+    delete this.submissionMetadata;
+    delete this.activeDataType;
   }
 }
