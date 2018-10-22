@@ -13,14 +13,6 @@ import { SpreadsheetsService } from '../../services/spreadsheets.service';
   selector: 'app-dashboard-page',
   templateUrl: './dashboard-page.component.html',
   styleUrls: ['./dashboard-page.component.scss'],
-  providers: [
-    AuthService,
-    TeamsService,
-    SubmissionsService,
-    RequestsService,
-    UserService,
-    SpreadsheetsService
-  ]
 })
 export class DashboardPageComponent implements OnInit {
   submissions: any;

@@ -1,21 +1,21 @@
-import { RouterModule, PreloadAllModules } from '@angular/router';
-import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { RouterModule, PreloadAllModules } from '@angular/router';
+import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-
 
 import { AuthModule } from 'angular-aap-auth';
 import { JwtModule } from '@auth0/angular-jwt';
 import { ToastrModule } from 'ngx-toastr';
 
-import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
+import { ServiceModule } from './services/service.module';
 import { environment } from 'src/environments/environment';
 
 // Import Pages.
+import { AppComponent } from './app.component';
 import { UserPageComponent } from './pages/user-page/user-page.component';
 import { UserLoginPageComponent } from './pages/user-login-page/user-login-page.component';
 import { NotFoundPageComponent } from './pages/not-found-page/not-found-page.component';
@@ -47,10 +47,9 @@ import { LoggedInGuard } from './guards/logged-in/logged-in.guard';
 import { LoadingModule, ANIMATION_TYPES } from 'ngx-loading';
 import { FileSizeModule } from 'ngx-filesize';
 
-import { EndpointService } from './services/endpoint.service';
-
 // Import Interceptors.
 import { httpInterceptorProviders } from './http-interceptors/index';
+import { YesNoPipe } from './pipes/yes-no.pipe';
 
 export function getToken(): string {
   return localStorage.getItem('jwt_token') || '';
@@ -86,7 +85,8 @@ export function removeToken(): void {
     FAQPageComponent,
     HelpPageComponent,
     ProjectsPageComponent,
-    ProjectCreatePageComponent
+    ProjectCreatePageComponent,
+    YesNoPipe
   ],
   imports: [
     BrowserModule,
@@ -119,11 +119,11 @@ export function removeToken(): void {
       maxOpened: 5,
       preventDuplicates: true,
       resetTimeoutOnDuplicate: true
-    })
+    }),
+    ServiceModule
   ],
   providers: [
     LoggedInGuard,
-    EndpointService,
     httpInterceptorProviders,
   ],
   bootstrap: [AppComponent]

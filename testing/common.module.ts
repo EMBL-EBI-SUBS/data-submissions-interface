@@ -4,8 +4,10 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 import { JwtModule } from '@auth0/angular-jwt';
 import { AuthModule } from 'angular-aap-auth';
 import { ToastrModule } from 'ngx-toastr';
-
+import { ServiceModule } from 'src/app/services/service.module';
 import { environment } from 'src/environments/environment';
+
+import { YesNoPipe } from 'src/app/pipes/yes-no.pipe';
 
 export const jwtName = 'test_usi';
 export function getToken(): string {
@@ -20,29 +22,32 @@ export function removeToken(): void {
 
 @NgModule({
     imports: [
-        HttpClientTestingModule,
-        JwtModule.forRoot({
-            config: {
-                tokenGetter: getToken,
-                whitelistedDomains: [],
-            }
-        }),
-        AuthModule.forRoot({
-            aapURL: '',
-            tokenGetter: getToken,
-            tokenUpdater: updateToken,
-            tokenRemover: removeToken
-        }),
-        ToastrModule.forRoot({
-          positionClass: 'toast-bottom-center',
-          closeButton: true,
-          maxOpened: 5,
-          preventDuplicates: true,
-          resetTimeoutOnDuplicate: true
-        })
+      HttpClientTestingModule,
+      JwtModule.forRoot({
+        config: {
+          tokenGetter: getToken,
+          whitelistedDomains: [],
+        }
+      }),
+      AuthModule.forRoot({
+        aapURL: '',
+        tokenGetter: getToken,
+        tokenUpdater: updateToken,
+        tokenRemover: removeToken
+      }),
+      ToastrModule.forRoot({
+        positionClass: 'toast-top-right',
+        closeButton: true,
+        maxOpened: 5,
+        preventDuplicates: true,
+        resetTimeoutOnDuplicate: true
+      }),
+      ServiceModule
     ],
     exports: [],
     providers: [],
-    declarations: [],
+    declarations: [
+      YesNoPipe
+    ],
 })
 export class CommonTestModule {}

@@ -12,12 +12,6 @@ import { RequestsService } from '../../../services/requests.service';
   selector: 'app-project-page',
   templateUrl: './project-page.component.html',
   styleUrls: ['./project-page.component.scss'],
-  providers: [
-    SubmissionsService,
-    TeamsService,
-    UserService,
-    RequestsService
-  ]
 })
 export class ProjectPageComponent implements OnInit {
   projectForm : FormGroup;

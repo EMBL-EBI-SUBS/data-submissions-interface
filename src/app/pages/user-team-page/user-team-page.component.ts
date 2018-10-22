@@ -13,13 +13,6 @@ import { SubmissionsService } from "../../services/submissions.service";
   selector: "app-user-team-page",
   templateUrl: "./user-team-page.component.html",
   styleUrls: ["./user-team-page.component.scss"],
-  providers: [
-    AuthService,
-    TeamsService,
-    EndpointService,
-    RequestsService,
-    SubmissionsService
-  ]
 })
 export class UserTeamPageComponent implements OnInit {
   teams = {};
