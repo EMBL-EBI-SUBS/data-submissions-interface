@@ -31,6 +31,26 @@ export class OverviewPageComponent implements OnInit {
   public locked = false;
   public lockedPlan = false;
 
+  get gdpr(): string{
+    return this.overviewForm.get('uiData.overview.gdpr').value;
+  }
+
+  get human(): string{
+    return this.overviewForm.get('uiData.overview.human').value;
+  }
+
+  get controlled(): string{
+    return this.overviewForm.get('uiData.overview.controlled').value;
+  }
+
+  get submissionPlanName(): string{
+    return this.overviewForm.get('uiData.overview.submissionPlan').value['displayName'];
+  }
+
+  get name(): string{
+    return this.overviewForm.get('name').value;
+  }
+
   private _activeTeam;
 
   constructor(
