@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { HttpParams } from '@angular/common/http';
 import { flatMap, map } from 'rxjs/operators';
-import { EMPTY } from 'rxjs'
+import { EMPTY } from 'rxjs';
 
 
 // Import Service Variables.
@@ -38,7 +38,7 @@ export class SubmissionsService {
     // Post an Empty object to create submission.
     const body = JSON.stringify(bodyData);
 
-    const requestUrl =  url;
+    const requestUrl = url;
     const response = this.http.post(
       requestUrl,
       body,
@@ -51,7 +51,7 @@ export class SubmissionsService {
    * List Projects for Current Logged in user.
    */
   getSubmissionPlansResponse() {
-    const requestUrl =  this.SubmissionPlansEndpoint;
+    const requestUrl = this.SubmissionPlansEndpoint;
     const response = this.http.get(requestUrl);
     return response;
   }
@@ -66,7 +66,7 @@ export class SubmissionsService {
       submissionPlanUIData['href'] = submissionPlan._links.self.href;
 
       submissionPlansUIData.push(submissionPlanUIData);
-    };
+    }
 
     return submissionPlansUIData;
   }
@@ -106,8 +106,12 @@ export class SubmissionsService {
           return this.http.get(projectsUrl);
         }),
         map(res => {
-          this.setActiveProject(res);
-          return res;
+          if (res['_embedded']['projects']) {
+            const activeProject = res['_embedded']['projects'][0];
+            this.setActiveProject(activeProject);
+            return activeProject;
+          }
+
         })
       );
     } else {

@@ -3,7 +3,7 @@ import { DebugElement } from '@angular/core';
 import { RouterTestingModule } from '@angular/router/testing';
 
 import { MockRouter } from 'testing/mockrouter.tests';
-import { CommonTestModule } from  'testing/common.module';
+import { CommonTestModule } from 'testing/common.module';
 
 import { NotFoundPageComponent } from './not-found-page.component';
 import { EbiHeaderComponent } from '../../components/ebi-header/ebi-header.component';
@@ -15,14 +15,14 @@ describe('NotFoundPageComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ NotFoundPageComponent, EbiHeaderComponent ],
+      declarations: [NotFoundPageComponent, EbiHeaderComponent],
       imports: [
         RouterTestingModule,
         CommonTestModule
       ],
       providers: []
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

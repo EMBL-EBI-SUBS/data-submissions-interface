@@ -12,11 +12,6 @@ import { FileService } from 'src/app/services/file.service';
   selector: 'app-submit-page',
   templateUrl: './submit-page.component.html',
   styleUrls: ['./submit-page.component.scss'],
-  providers: [
-    SubmissionsService,
-    RequestsService,
-    FileService
-  ]
 })
 export class SubmitPageComponent implements OnInit {
   token: string;
@@ -97,8 +92,8 @@ export class SubmitPageComponent implements OnInit {
   onSubmitSubmission() {
     const activeSubmissionUpdateEndpoint = this.activeSubmission._links.submissionStatus.href;
     const updateObj = {
-      'status' : 'Submitted',
-    }
+      'status': 'Submitted',
+    };
     this.requestsService.update(activeSubmissionUpdateEndpoint, updateObj).subscribe(
       (data) => {
         // If updating status successfully done. redirect to dashboard.

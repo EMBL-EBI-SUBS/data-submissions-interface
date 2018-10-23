@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { AuthService } from 'angular-aap-auth';
 import { Router } from '@angular/router';
 
-// Import Services.
 import { TeamsService } from '../../services/teams.service';
 import { SubmissionsService } from '../../services/submissions.service';
 import { RequestsService } from '../../services/requests.service';
@@ -13,14 +12,6 @@ import { SpreadsheetsService } from '../../services/spreadsheets.service';
   selector: 'app-dashboard-page',
   templateUrl: './dashboard-page.component.html',
   styleUrls: ['./dashboard-page.component.scss'],
-  providers: [
-    AuthService,
-    TeamsService,
-    SubmissionsService,
-    RequestsService,
-    UserService,
-    SpreadsheetsService
-  ]
 })
 export class DashboardPageComponent implements OnInit {
   submissions: any;
@@ -43,18 +34,18 @@ export class DashboardPageComponent implements OnInit {
     this.teamService.deleteActiveTeam();
 
     // Get all submissions.
-    if(!this.submissions) {
+    if (!this.submissions) {
       this.getUserSubmissions();
     }
 
     // Get submissions summary.
-    if(!this.submissionsSummary) {
+    if (!this.submissionsSummary) {
       this.getUserSubmissionsSummary();
     }
   }
 
   onStartSubmission() {
-    this.router.navigate(["/user/teams"]);
+    this.router.navigate(['/user/teams']);
   }
 
 
@@ -62,7 +53,7 @@ export class DashboardPageComponent implements OnInit {
    * Loop across the teams and get submissions for each team and put it in array.
    */
   getUserSubmissionsByUrl(serviceUrl) {
-    this.submissionsService.get(serviceUrl).subscribe (
+    this.submissionsService.get(serviceUrl).subscribe(
       (data) => {
         // Store active submission in a local variable.
         this.submissions = data;
@@ -78,10 +69,10 @@ export class DashboardPageComponent implements OnInit {
    * Get User submissions.
    */
   getUserSubmissions() {
-    this.userService.geUserSubmissions().subscribe (
+    this.userService.geUserSubmissions().subscribe(
       (data) => {
         // Store active submission in a local variable.
-       this.submissions = data;
+        this.submissions = data;
       },
       (err) => {
         // TODO: Handle Errors.
@@ -94,7 +85,7 @@ export class DashboardPageComponent implements OnInit {
    * Get User submissions summary.
    */
   getUserSubmissionsSummary() {
-    this.userService.geUserSubmissionsSummary().subscribe (
+    this.userService.geUserSubmissionsSummary().subscribe(
       (data) => {
         // Store active submission in a local variable.
         this.submissionsSummary = data;
@@ -108,16 +99,15 @@ export class DashboardPageComponent implements OnInit {
 
   /**
    * When click on pager, update submissions.
-   * @param {string} action
    */
   onPagerClick(action: string) {
-    let getSubmissionUrl = this.submissions._links[action].href;
+    const getSubmissionUrl = this.submissions._links[action].href;
     this.submissions = this.getUserSubmissionsByUrl(getSubmissionUrl);
   }
 
   onEditDraftSubmission(submissionItem: any) {
-    let submissionLinkEndpoint = submissionItem._links['self'].href;
-    this.requestsService.get(submissionLinkEndpoint).subscribe (
+    const submissionLinkEndpoint = submissionItem._links['self'].href;
+    this.requestsService.get(submissionLinkEndpoint).subscribe(
       (data) => {
         this.submissionsService.setActiveSubmission(data);
         this.teamService.setActiveTeam(data['team']);
@@ -140,7 +130,7 @@ export class DashboardPageComponent implements OnInit {
 
   onDeleteSubmission(submissionItem: any) {
     const deleteLinkEndpoint = submissionItem._links['self:delete'].href;
-    this.requestsService.delete(deleteLinkEndpoint).subscribe (
+    this.requestsService.delete(deleteLinkEndpoint).subscribe(
       (data) => {
         // Update submissions list.
         this.submissions._embedded.submissions = this.submissions._embedded.submissions.filter(obj => obj !== submissionItem);

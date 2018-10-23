@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'ebi-footer',
+  selector: 'app-ebi-footer',
   templateUrl: './ebi-footer.component.html',
   styleUrls: ['./ebi-footer.component.scss']
 })

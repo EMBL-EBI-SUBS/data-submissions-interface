@@ -4,45 +4,50 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 import { JwtModule } from '@auth0/angular-jwt';
 import { AuthModule } from 'angular-aap-auth';
 import { ToastrModule } from 'ngx-toastr';
-
+import { ServiceModule } from 'src/app/services/service.module';
 import { environment } from 'src/environments/environment';
+
+import { YesNoPipe } from 'src/app/pipes/yes-no.pipe';
 
 export const jwtName = 'test_usi';
 export function getToken(): string {
-    return localStorage.getItem(jwtName) || '';
+  return localStorage.getItem(jwtName) || '';
 }
 export function updateToken(newToken: string): void {
-    return localStorage.setItem(jwtName, newToken);
+  return localStorage.setItem(jwtName, newToken);
 }
 export function removeToken(): void {
-    return localStorage.removeItem(jwtName);
+  return localStorage.removeItem(jwtName);
 }
 
 @NgModule({
-    imports: [
-        HttpClientTestingModule,
-        JwtModule.forRoot({
-            config: {
-                tokenGetter: getToken,
-                whitelistedDomains: [],
-            }
-        }),
-        AuthModule.forRoot({
-            aapURL: '',
-            tokenGetter: getToken,
-            tokenUpdater: updateToken,
-            tokenRemover: removeToken
-        }),
-        ToastrModule.forRoot({
-          positionClass: 'toast-bottom-center',
-          closeButton: true,
-          maxOpened: 5,
-          preventDuplicates: true,
-          resetTimeoutOnDuplicate: true
-        })
-    ],
-    exports: [],
-    providers: [],
-    declarations: [],
+  imports: [
+    HttpClientTestingModule,
+    JwtModule.forRoot({
+      config: {
+        tokenGetter: getToken,
+        whitelistedDomains: [],
+      }
+    }),
+    AuthModule.forRoot({
+      aapURL: '',
+      tokenGetter: getToken,
+      tokenUpdater: updateToken,
+      tokenRemover: removeToken
+    }),
+    ToastrModule.forRoot({
+      positionClass: 'toast-top-right',
+      closeButton: true,
+      maxOpened: 5,
+      preventDuplicates: true,
+      resetTimeoutOnDuplicate: true
+    }),
+    ServiceModule
+  ],
+  exports: [],
+  providers: [],
+  declarations: [
+    YesNoPipe
+  ],
 })
-export class CommonTestModule {}
+export class CommonTestModule { }

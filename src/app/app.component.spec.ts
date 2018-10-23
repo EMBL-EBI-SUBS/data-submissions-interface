@@ -2,7 +2,7 @@
 import { TestBed, async } from '@angular/core/testing';
 import { AppComponent } from './app.component';
 import {
-    RouterTestingModule
+  RouterTestingModule
 } from '@angular/router/testing';
 // Import Components.
 import { EbiHeaderComponent } from './components/ebi-header/ebi-header.component';

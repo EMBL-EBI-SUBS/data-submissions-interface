@@ -59,12 +59,12 @@ export class RequestsService {
 
     // Post an Empty object to create submission.
     const body = JSON.stringify(data);
-    const requestUrl =  url;
+    const requestUrl = url;
 
     return this.http.patch(
-        requestUrl,
-        body,
-        { params: httpParams }
+      requestUrl,
+      body,
+      { params: httpParams }
     );
   }
 
@@ -77,8 +77,8 @@ export class RequestsService {
       {
         observe: 'response',
         responseType: 'json'
-       }
-      );
+      }
+    );
     return response;
   }
 }

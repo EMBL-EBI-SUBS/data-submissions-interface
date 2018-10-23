@@ -24,7 +24,6 @@
     "@angular/core": "6.1.8",
     "@angular/flex-layout": "6.0.0-beta.18",
     "@angular/forms": "6.1.8",
-    "@angular/http": "6.1.8",
     "@angular/material": "^7.0.0-beta.2",
     "@angular/platform-browser": "6.1.8",
     "@angular/platform-browser-dynamic": "6.1.8",
@@ -49,6 +48,7 @@
     "node-sass": "^4.7.2",
     "rxjs": "^6.3.2",
     "ts-helpers": "^1.1.1",
+    "tslint-angular": "^1.1.2",
     "tus-js-client": "^1.4.5",
     "uppy": "0.27.5",
     "zone.js": "^0.8.26"
