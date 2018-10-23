@@ -1,30 +1,28 @@
 // export for convenience.
-export { ActivatedRoute, Router, RouterLink, RouterOutlet} from '@angular/router';
+export { ActivatedRoute, Router, RouterLink, RouterOutlet } from '@angular/router';
 
-import { Component, Directive, Injectable, Input } from '@angular/core';
+import { Component, Directive, Injectable, Input, HostListener } from '@angular/core';
 import { NavigationExtras } from '@angular/router';
 
 @Directive({
- selector: '[routerLink]',
- host: {
-   '(click)': 'onClick()'
- }
+  selector: '[routerLink]',
 })
 export class RouterLinkStubDirective {
- @Input('routerLink') linkParams: any;
- navigatedTo: any = null;
+  @Input('routerLink') linkParams: any;
+  navigatedTo: any = null;
 
- onClick() {
-   this.navigatedTo = this.linkParams;
- }
+  @HostListener('click')
+  onClick() {
+    this.navigatedTo = this.linkParams;
+  }
 }
 
-@Component({selector: 'router-outlet', template: ''})
+@Component({ selector: 'app-router-outlet', template: '' })
 export class RouterOutletStubComponent { }
 
 @Injectable()
 export class RouterStub {
- navigate(commands: any[], extras?: NavigationExtras) { }
+  navigate(commands: any[], extras?: NavigationExtras) { }
 }
 
 
@@ -35,24 +33,23 @@ import { convertToParamMap, ParamMap } from '@angular/router';
 @Injectable()
 export class ActivatedRouteStub {
 
- // ActivatedRoute.paramMap is Observable
- private subject = new BehaviorSubject(convertToParamMap(this.testParamMap));
- paramMap = this.subject.asObservable();
+  // ActivatedRoute.paramMap is Observable
+  private subject = new BehaviorSubject(convertToParamMap(this.testParamMap));
+  paramMap = this.subject.asObservable();
 
- // Test parameters
- private _testParamMap: ParamMap;
- get testParamMap() { return this._testParamMap; }
- set testParamMap(params: {}) {
-   this._testParamMap = convertToParamMap(params);
-   this.subject.next(this._testParamMap);
- }
+  // Test parameters
+  private _testParamMap: ParamMap;
+  get testParamMap() { return this._testParamMap; }
+  set testParamMap(params: {}) {
+    this._testParamMap = convertToParamMap(params);
+    this.subject.next(this._testParamMap);
+  }
 
- // ActivatedRoute.snapshot.paramMap
- get snapshot() {
-   return { paramMap: this.testParamMap };
- }
+  // ActivatedRoute.snapshot.paramMap
+  get snapshot() {
+    return { paramMap: this.testParamMap };
+  }
 }
-
 
 /*
 Copyright 2017 Google Inc. All Rights Reserved.

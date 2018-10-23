@@ -12,7 +12,7 @@ interface DataType {
 }
 
 interface Submission {
-  _links:{
+  _links: {
     contents: {
       href: string;
       _links: Object;
@@ -22,7 +22,7 @@ interface Submission {
 }
 
 @Component({
-  selector: 'ebi-submission-menu',
+  selector: 'app-ebi-submission-menu',
   templateUrl: './ebi-submission-menu.component.html',
   styleUrls: ['./ebi-submission-menu.component.scss'],
 })
@@ -33,11 +33,11 @@ export class EbiSubmissionMenuComponent implements OnInit {
   public isTabsDisabled = true;
 
   public tabLinks: TabLinks[] = [
-    {title: 'Overview', href: '/submission/overview'},
-    {title: 'Project', href: '/submission/project'},
-    {title: 'Contacts', href: '/submission/contacts'},
-    {title: 'Data', href: '/submission/data'},
-    {title: 'Submit', href: '/submission/submit'},
+    { title: 'Overview', href: '/submission/overview' },
+    { title: 'Project', href: '/submission/project' },
+    { title: 'Contacts', href: '/submission/contacts' },
+    { title: 'Data', href: '/submission/data' },
+    { title: 'Submit', href: '/submission/submit' },
   ];
 
   constructor(
@@ -51,7 +51,7 @@ export class EbiSubmissionMenuComponent implements OnInit {
 
       const dataTypes = this.activeSubmission._links.contents.dataTypes; // undefined | DataType[]
 
-      if (dataTypes === undefined){
+      if (dataTypes === undefined) {
         this.getSubmissionContents();
       } else {
         this.updateDataTypeLinks(dataTypes);
@@ -64,7 +64,7 @@ export class EbiSubmissionMenuComponent implements OnInit {
    */
   updateDataTypeLinks(dataTypes: DataType[]): void {
     for (const dataType of dataTypes) {
-      this.tabLinks.splice(4, 0, {title: dataType.displayNamePlural, href: `/submission/metadata/${dataType.id}`});
+      this.tabLinks.splice(4, 0, { title: dataType.displayNamePlural, href: `/submission/metadata/${dataType.id}` });
     }
   }
 
@@ -73,13 +73,13 @@ export class EbiSubmissionMenuComponent implements OnInit {
    */
   getSubmissionContents(): void {
     const submissionLinksRequestUrl = this.activeSubmission._links.contents.href;
-    this._submissionsService.get(submissionLinksRequestUrl).subscribe (
+    this._submissionsService.get(submissionLinksRequestUrl).subscribe(
       data => {
         this.activeSubmission._links.contents._links = data['_links'];
         this.activeSubmission._links.contents.dataTypes = data['dataTypes'];
         this.updateDataTypeLinks(data['dataTypes']);
         this._submissionsService.setActiveSubmission(this.activeSubmission);
-       }
+      }
     );
   }
 }

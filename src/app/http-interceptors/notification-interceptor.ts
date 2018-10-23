@@ -1,4 +1,5 @@
-import { Injectable
+import {
+  Injectable
 } from '@angular/core';
 import { HttpEvent, HttpInterceptor, HttpHandler, HttpRequest, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
@@ -8,9 +9,9 @@ import { ToastrService } from 'ngx-toastr';
 
 @Injectable()
 export class NotificationInterceptor implements HttpInterceptor {
-  constructor(private _notify: ToastrService) {}
+  constructor(private _notify: ToastrService) { }
 
-  intercept(req: HttpRequest < any > , next: HttpHandler): Observable < HttpEvent < any >> {
+  intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     return next.handle(req).pipe(
       catchError(error => {
         if (error instanceof HttpErrorResponse) {

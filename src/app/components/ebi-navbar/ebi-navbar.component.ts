@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'ebi-navbar',
+  selector: 'app-ebi-navbar',
   templateUrl: './ebi-navbar.component.html',
   styleUrls: ['./ebi-navbar.component.scss']
 })

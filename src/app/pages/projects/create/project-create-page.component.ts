@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 
 @Component({
-  selector: 'project-create-page',
+  selector: 'app-project-create-page',
   templateUrl: './project-create-page.component.html',
   styleUrls: ['./project-create-page.component.scss']
 })
