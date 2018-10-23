@@ -113,9 +113,8 @@ export class MetadataPageComponent implements OnInit {
 
   /**
    * Set metadata header columns based on first row keys.
-   * @param keyName string
    */
-  addMetadataActiveKey(keyName) {
+  addMetadataActiveKey(keyName: string) {
     if (this.activeMetadataFields.indexOf(keyName) < 0) {
       this.activeMetadataFields.push(keyName);
     }
@@ -153,13 +152,11 @@ export class MetadataPageComponent implements OnInit {
       },
       err => {
       }
-    )
+    );
   }
 
   /**
    * Remove metadata object from the submission.
-   * @param metadata
-   * @param index
    */
   deleteMetadata(metadata: any, index: number) {
     if (confirm('Are you sure you want to delete the item?')) {
@@ -173,7 +170,7 @@ export class MetadataPageComponent implements OnInit {
           console.log(err);
           this.loading = false;
         }
-      )
+      );
     }
   }
 
@@ -197,7 +194,6 @@ export class MetadataPageComponent implements OnInit {
 
   /**
    * Update local selectedTemplate object when user select a template.
-   * @param ev
    */
   onSelectTemplate(ev) {
     const selectedOptionValue = ev.target.value;
@@ -219,7 +215,6 @@ export class MetadataPageComponent implements OnInit {
 
   /**
    * Read uploaded CSV and post it for processing.
-   * @param event
    */
   previewCSVFile(event) {
     this.loading = true;
@@ -278,12 +273,11 @@ export class MetadataPageComponent implements OnInit {
         console.log(err);
         this.loading = false;
       }
-    )
+    );
   }
 
   /**
    * When click on pager, update submissions.
-   * @param {string} action
    */
   onPagerClick(action: string) {
     this.loading = true;
@@ -295,9 +289,8 @@ export class MetadataPageComponent implements OnInit {
 
   /**
    * Retrieve the new metadata object when pager clicked.
-   * @param serviceUrl string
    */
-  getUserSubmissionsMetadataByUrl(serviceUrl) {
+  getUserSubmissionsMetadataByUrl(serviceUrl: string) {
     this.requestsService.get(serviceUrl).subscribe(
       data => {
         // Store active submission in a local variable.

@@ -20,7 +20,7 @@
         <option value="_none"> - Select Template - </option>
         <option *ngFor="let template of templatesList" value="{{template?.id}}" attr.data-description="{{template?.description}}"
           attr.data-href="{{template._links['spreadsheet-csv-download'].href}}">
-          {{template?.displayName}}
+          {{ template?.displayName }}
         </option>
       </select>
 
@@ -31,7 +31,7 @@
 
       <!-- If user selected the template he wants to upload. -->
       <div *ngIf="selectedTemplate?.name && templatesList?.length > 0">
-        <div class="margin-bottom-20">{{selectedTemplate?.description}}</div>
+        <div class="margin-bottom-20">{{ selectedTemplate?.description }}</div>
 
         <a href="{{selectedTemplate.href}}" target="_blank" class="hollow button uppercase margin-right-10">Download
           The Template</a>
@@ -50,17 +50,17 @@
           <div class="row">
             <div *ngIf="processingSheets.length > 0" class="sheet-items-wrapper">
               <div *ngFor="let processingSheet of processingSheets; let i = index" class="sheet-item">
-                Sheet #{{i + 1}} : Processing {{processingSheet.processedRowCount}} of
-                {{processingSheet.totalRowCount}}
+                Sheet #{{ i + 1 }} : Processing {{ processingSheet.processedRowCount }} of
+                {{ processingSheet.totalRowCount }}
               </div>
             </div>
 
             <div class="small-6 columns text-left">
-              Page {{submissionMetadata?.page?.number + 1}} of {{submissionMetadata?.page?.totalPages}}
+              Page {{ submissionMetadata?.page?.number + 1 }} of {{ submissionMetadata?.page?.totalPages }}
             </div>
 
-            <div class="small-6 columns text-right"> {{submissionMetadata?.page?.totalElements}}
-              {{activeDataType.displayNamePlural}}</div>
+            <div class="small-6 columns text-right"> {{ submissionMetadata?.page?.totalElements }}
+              {{ activeDataType.displayNamePlural }}</div>
           </div>
 
           <table class="margin-top-20 samples-table inline-editing-table">
@@ -83,7 +83,7 @@
                 </td>
 
                 <td *ngFor="let key of activeMetadataFields">
-                  {{metaData[key]}}
+                  {{ metaData[key] }}
                 </td>
               </tr>
             </tbody>
@@ -107,7 +107,7 @@
         </div>
 
         <div *ngIf="!submissionMetadata?._embedded[objectKeys(submissionMetadata?._embedded)[0]]">
-          No {{activeDataType.displayNamePlural}} has been uploaded yet. If you just uploaded the spreadsheet then it
+          No {{ activeDataType.displayNamePlural }} has been uploaded yet. If you just uploaded the spreadsheet then it
           may take a while to appears.
         </div>
       </div>
