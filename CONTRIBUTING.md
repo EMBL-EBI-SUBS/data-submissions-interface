@@ -33,14 +33,14 @@ All the commits should pass the `ng lint` command. Therefore, we recommend that
 you set a `pre-commit` git hook in this way:
 
 ```
-ln -s githooks/pre-commit  .git/hooks/pre-commit
+ln -s ../../githooks/pre-commit  .git/hooks/pre-commit
 ```
 
 Additionally, to help you to adhere to the standard commit messages in the repo
 we recommend the use of the following `prepare-commit-msg` git hook:
 
 ```
-ln -s githooks/prepare-commit-msg  .git/hooks/prepare-commit-msg
+ln -s ../../githooks/prepare-commit-msg  .git/hooks/prepare-commit-msg
 ```
 
 ## Development server
