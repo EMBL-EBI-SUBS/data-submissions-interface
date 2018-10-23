@@ -6,9 +6,23 @@
 
     <ebi-submission-menu [activeSubmission]="activeSubmission"></ebi-submission-menu>
 
+    <h3>Submit page</h3>
 
-    Submit page
+    <div *ngIf="hasBlockers() then blockersBlock else noBlockersBlock"></div>
+
+   <ng-template #blockersBlock>
+    <h3>Summary of issues blocking the submission</h3>
+    {{filesNotReadyToSubmitCount}} files uploading<br>
+    {{totalMetadataBlockers}} metadata problems to solve:<br>
+    
+    {{validationIssuesPerDataTypeId}}<br>
     <br>
-    <button type="button" class=" button" (click)="onSubmitSubmission()">Submit Things</button>
+  </ng-template>
+
+  <ng-template #noBlockersBlock>
+    <h4>You don't have any blocking issues to submit your submission.</h4>
+  </ng-template>
+
+    <button type="button" class=" button" (click)="onSubmitSubmission()">Submit Submission</button>
   </section>
 </div>

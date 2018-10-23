@@ -23,31 +23,75 @@ export class SubmitPageComponent implements OnInit {
   activeSubmission: any;
   files: any;
   filesNotReadyToSubmitCount = 0;
+  validationIssuesPerDataTypeId = {};
+  totalMetadataBlockers: number;
+  submissionIsEmpty: boolean;
+  anyPendingValidationResult: boolean;
 
   constructor(
     private submissionsService: SubmissionsService,
     private requestsService: RequestsService,
     private fileService: FileService,
-    private router: Router,
+    private router: Router
   ) { }
 
   ngOnInit() {
     this.activeSubmission = this.submissionsService.getActiveSubmission();
-    this.getFileStatusInformation();
+    this.getSubmissionBlockersSummary();
   }
 
-  getFileStatusInformation() {
-    this.fileService.getActiveSubmissionsFiles(this.activeSubmission).subscribe(
-      (response) => {
-        this.files = response['_embedded']['files'];
-        // format the file status string and store it as status_label for display
-        this.files.forEach(file => {
-          if (file.status !== FileStatus.READY_FOR_ARCHIVE) {
-            this.filesNotReadyToSubmitCount++;
-          }
-        });
+  getSubmissionBlockersSummary() {
+    // this.fileService.getActiveSubmissionsFiles(this.activeSubmission).subscribe(
+    //   (response) => {
+    //     this.files = response['_embedded']['files'];
+    //     // format the file status string and store it as status_label for display
+    //     this.files.forEach(file => {
+    //       if (file.status !== FileStatus.READY_FOR_ARCHIVE) {
+    //         this.filesNotReadyToSubmitCount++;
+    //       }
+    //     });
+    //   }
+    // )
+    this.filesNotReadyToSubmitCount = 4;
+    this.validationIssuesPerDataTypeId = {
+      'samples':
+        {
+          'displayName': 'samples',
+          'count': 2
+        },
+      'projects':
+        {
+          'displayName': 'ENA studies',
+          'count': 1
+        }
+    };
+    this.totalMetadataBlockers = 0;
+    this.submissionIsEmpty = false;
+    this.anyPendingValidationResult = false;
+
+  }
+
+  hasBlockers(): boolean {
+    if (this.filesNotReadyToSubmitCount === 0
+        && this.totalMetadataBlockers === 0
+        && this.submissionIsEmpty === false
+        && this.anyPendingValidationResult === false
+      ) {
+        return false;
       }
-    )
+
+    return true;
+  }
+
+  getSubmissionIssuesSummary() {
+    this.submissionsService.getSubmissionIssuesSummary().subscribe(
+      (response) => {
+        this.filesNotReadyToSubmitCount = response['notReadyFileCount'];
+        this.validationIssuesPerDataTypeId = response['validationIssuesPerDataTypeId'];
+        this.submissionIsEmpty =  response['emptySubmission'];
+        this.anyPendingValidationResult = response['anyPendingValidationResult'];
+      }
+    );
   }
 
   onSubmitSubmission() {
