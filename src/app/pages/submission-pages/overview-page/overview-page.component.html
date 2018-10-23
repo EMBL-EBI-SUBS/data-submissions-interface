@@ -46,7 +46,7 @@
             <fieldset class="large-form padding-bottom-large padding-top-large">
               <legend>Does it require controlled access once it becomes public?</legend>
               <div *ngIf="locked; else showControlled">
-                You have selected: <span class="font-weight-bold">{{ controlled.value | yesno }}</span>
+                You have selected: <span class="font-weight-bold">{{ controlled | yesno }}</span>
               </div>
               <ng-template #showControlled>
                 <input type="radio" value="1" formControlName="controlled" id="controlled-yes">
