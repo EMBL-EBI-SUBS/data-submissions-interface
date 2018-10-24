@@ -11,7 +11,6 @@ import { SubmissionsService } from '../../../services/submissions.service';
 import { TeamsService } from '../../../services/teams.service';
 import { RequestsService } from '../../../services/requests.service';
 import { SpreadsheetsService } from '../../../services/spreadsheets.service';
-import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-metadata-page',
@@ -31,7 +30,7 @@ export class MetadataPageComponent implements OnInit {
   activeDataType: any;
   submissionMetadata: any;
   templatesList: any;
-  selectedTemplate: any = {};
+  selectedTemplate: any;
 
   processingSheets = [];
   blackListSampleFields = [
@@ -63,9 +62,9 @@ export class MetadataPageComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.activeSubmission = this.submissionsService.getActiveSubmission();
-
     this.activatedRoute.params.subscribe(params => {
+      this.resetVariables();
+      this.activeSubmission = this.submissionsService.getActiveSubmission();
       this.id = params.id;
       this.templatesList = [];
       this.loading = true;
@@ -196,20 +195,14 @@ export class MetadataPageComponent implements OnInit {
    * Update local selectedTemplate object when user select a template.
    */
   onSelectTemplate(ev) {
-    const selectedOptionValue = ev.target.value;
-
-    if (selectedOptionValue !== '_none') {
+    if (ev !== undefined) {
       try {
-        this.selectedTemplate['name'] = selectedOptionValue;
-        this.selectedTemplate['href'] =
-          ev.target.selectedOptions[0].dataset.href;
-        this.selectedTemplate['description'] =
-          ev.target.selectedOptions[0].dataset.description;
+        this.selectedTemplate = ev;
       } catch (e) {
         console.log(e);
       }
     } else {
-      this.selectedTemplate = {};
+      delete this.selectedTemplate;
     }
   }
 
@@ -220,7 +213,7 @@ export class MetadataPageComponent implements OnInit {
     this.loading = true;
     const templateUploadLink = this.activeDataType[
       '_links'
-    ].sheetUpload.href.replace('{checklistId}', this.selectedTemplate['name']);
+    ].sheetUpload.href.replace('{checklistId}', this.selectedTemplate['id']);
     const reader = new FileReader();
     reader.onload = (e: any) => {
       let fileResults: any;
@@ -332,5 +325,6 @@ export class MetadataPageComponent implements OnInit {
   resetVariables() {
     delete this.submissionMetadata;
     delete this.activeDataType;
+    this.activeMetadataFields = [];
   }
 }
