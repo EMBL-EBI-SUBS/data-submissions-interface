@@ -381,6 +381,15 @@ div.ds-tabs {
   }
 }
 
+.ng-select.style-ebi {
+  margin: 10px 0;
+
+  .ng-select-container {
+    border-radius: 0;
+    min-height: 45px;
+  }
+}
+
 .buttons-wrapper {
   li {
     list-style-type: none;
