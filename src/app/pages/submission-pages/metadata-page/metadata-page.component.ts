@@ -1,10 +1,11 @@
 import {
   Component,
   OnInit,
-  QueryList,
   ElementRef
 } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
+import { FormBuilder } from '@angular/forms';
+
 
 // Import Services.
 import { SubmissionsService } from '../../../services/submissions.service';
@@ -31,6 +32,9 @@ export class MetadataPageComponent implements OnInit {
   submissionMetadata: any;
   templatesList: any;
   selectedTemplate: any;
+  templateForm = this._fb.group({
+    selectedTemplate: [''],
+  });
 
   processingSheets = [];
   blackListSampleFields = [
@@ -58,7 +62,8 @@ export class MetadataPageComponent implements OnInit {
     private requestsService: RequestsService,
     private spreadsheetsService: SpreadsheetsService,
     private activatedRoute: ActivatedRoute,
-    private elementRef: ElementRef
+    private elementRef: ElementRef,
+    private _fb: FormBuilder
   ) {}
 
   ngOnInit() {
@@ -95,6 +100,11 @@ export class MetadataPageComponent implements OnInit {
    * Get DataType content links.
    */
   getDataTypeContent() {
+    if (!this.activeSubmission) {
+      this.router.navigate(['/dashboard']);
+      return false;
+    }
+
     this.requestsService
       .get(this.activeSubmission._links.contents._links[this.id].href)
       .subscribe(
@@ -124,6 +134,10 @@ export class MetadataPageComponent implements OnInit {
    * Get processing sheets status once user submit a sheet.
    */
   checkProcessingSheets() {
+    if (!this.submissionMetadata) {
+      return false;
+    }
+
     const metadataSheets = this.submissionMetadata._links['spreadsheets'].href;
     this.requestsService.get(metadataSheets).subscribe(
       data => {
@@ -210,6 +224,10 @@ export class MetadataPageComponent implements OnInit {
    * Read uploaded CSV and post it for processing.
    */
   previewCSVFile(event) {
+    if (!event.target.files || event.target.files.length === 0) {
+      return false;
+    }
+
     this.loading = true;
     const templateUploadLink = this.activeDataType[
       '_links'
@@ -256,10 +274,9 @@ export class MetadataPageComponent implements OnInit {
       data => {
         this.loading = false;
         try {
-          if (data['_embedded'][Object.keys(data['_embedded'])[0]] && data['_embedded'][Object.keys(data['_embedded'])[0]]['length'] > 0) {
-            this.submissionMetadata = data;
-          }
+          this.submissionMetadata = data;
         } catch (e) {
+          console.log(e);
         }
       },
       err => {
@@ -325,6 +342,10 @@ export class MetadataPageComponent implements OnInit {
   resetVariables() {
     delete this.submissionMetadata;
     delete this.activeDataType;
+    delete this.selectedTemplate;
+    delete this.templatesList;
+    this.processingSheets = [];
     this.activeMetadataFields = [];
+    this.templateForm.reset();
   }
 }
