@@ -14,15 +14,18 @@
       <p>
         Based on your selection above, you might find the following community sample templates helpful:
       </p>
-
-      <ng-select *ngIf="templatesList"
-        [items]="templatesList"
-        placeholder="Select template"
-        bindLabel="displayName"
-        bindValue="id"
-        class="style-ebi"
-        (change)="onSelectTemplate($event)">
-      </ng-select>
+      <form [formGroup]="templateForm" novalidate>
+          <ng-select
+          *ngIf="templatesList"
+          [items]="templatesList"
+          placeholder="Select template"
+          bindLabel="displayName"
+          bindValue="id"
+          class="style-ebi"
+          formControlName="selectedTemplate"
+          (change)="onSelectTemplate($event)">
+        </ng-select>
+      </form>
 
       <!-- If there is no templates available for existing metadata. -->
       <div *ngIf="templatesList.length === 0">
@@ -30,13 +33,13 @@
       </div>
 
       <!-- If user selected the template he wants to upload. -->
-      <div *ngIf="selectedTemplate">
+      <div *ngIf="selectedTemplate && selectedTemplate.hasOwnProperty('id')">
         <div class="margin-bottom-20">{{ selectedTemplate?.description }}</div>
 
         <a href="{{selectedTemplate?._links['spreadsheet-csv-download'].href}}" target="_blank" class="hollow button uppercase margin-right-10">Download
           The Template</a>
 
-        <a href="#" (click)="triggerUpload()" target="_blank" class="button primary uppercase">Upload Filled Template</a>
+        <button href="#" (click)="triggerUpload()" target="_blank" [disabled]="!submissionMetadata" class="button primary uppercase">Upload Filled Template</button>
         <input type="file" name="csv-template" (change)="previewCSVFile($event)" class="hide" />
       </div>
     </fieldset>
@@ -46,7 +49,7 @@
       <legend>View Uploaded {{ activeDataType.displayNamePlural }}</legend>
 
       <div required class="large-form padding-bottom-large padding-top-large ds-tabs">
-        <div *ngIf="submissionMetadata?._embedded[objectKeys(submissionMetadata?._embedded)[0]] && submissionMetadata?._embedded[objectKeys(submissionMetadata?._embedded)[0]].length > 0">
+        <div *ngIf="submissionMetadata && submissionMetadata.hasOwnProperty('_embedded')">
           <div class="row">
             <div *ngIf="processingSheets.length > 0" class="sheet-items-wrapper">
               <div *ngFor="let processingSheet of processingSheets; let i = index" class="sheet-item">
@@ -106,7 +109,7 @@
           </ul>
         </div>
 
-        <div *ngIf="!submissionMetadata?._embedded[objectKeys(submissionMetadata?._embedded)[0]]">
+        <div *ngIf="submissionMetadata && !submissionMetadata.hasOwnProperty('_embedded')">
           No {{ activeDataType.displayNamePlural }} has been uploaded yet. If you just uploaded the spreadsheet then it
           may take a while to appears.
         </div>
