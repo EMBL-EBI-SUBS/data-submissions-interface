@@ -398,3 +398,17 @@ div.ds-tabs {
     display: inline;
   }
 }
+
+i.errors {
+  color: $form-error;
+}
+
+.metadata-error-row {
+  border-bottom: 1px solid $tabs-inactive;
+  padding: 10px 0;
+  color: $form-error;
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
