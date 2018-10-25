@@ -11,7 +11,7 @@
     <ngx-smart-modal #myModal identifier="myModal">
         <div *ngIf="activeMetadataRow && activeMetadataRow.errors.length > 0">
             <div *ngFor="let metadataError of activeMetadataRow.errors" class="metadata-error-row">
-              {{metadataError}}
+              {{ metadataError }}
             </div>
         </div>
     </ngx-smart-modal>
