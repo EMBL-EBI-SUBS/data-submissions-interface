@@ -5,7 +5,7 @@ import {
 } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder } from '@angular/forms';
-
+import { NgxSmartModalService } from 'ngx-smart-modal';
 
 // Import Services.
 import { SubmissionsService } from '../../../services/submissions.service';
@@ -28,6 +28,7 @@ export class MetadataPageComponent implements OnInit {
   id: string;
   objectKeys = Object.keys;
   activeSubmission: any;
+  activeMetadataRow: any;
   activeDataType: any;
   submissionMetadata: any;
   templatesList: any;
@@ -47,6 +48,8 @@ export class MetadataPageComponent implements OnInit {
     'team',
     'attributes',
     'accession',
+    'errors',
+    'contacts',
     'projectRef',
     'protocolRefs',
     '_embedded',
@@ -63,7 +66,8 @@ export class MetadataPageComponent implements OnInit {
     private spreadsheetsService: SpreadsheetsService,
     private activatedRoute: ActivatedRoute,
     private elementRef: ElementRef,
-    private _fb: FormBuilder
+    private _fb: FormBuilder,
+    public ngxSmartModalService: NgxSmartModalService
   ) {}
 
   ngOnInit() {
@@ -185,6 +189,25 @@ export class MetadataPageComponent implements OnInit {
         }
       );
     }
+  }
+
+  /**
+   * On showing errors for a specific metadata row.
+   */
+  showMetadataErrors(metadata: any, index: number) {
+    this.activeMetadataRow = metadata;
+    this.activeMetadataRow.errors = [];
+    for (const metadataErrorGroup in metadata._embedded.validationResult.errorMessages) {
+      if (metadata._embedded.validationResult.errorMessages[metadataErrorGroup].length > 0) {
+        for (const metadataError in metadata._embedded.validationResult.errorMessages[metadataErrorGroup]) {
+          if (typeof metadata._embedded.validationResult.errorMessages[metadataErrorGroup][metadataError] === 'string') {
+            this.activeMetadataRow.errors.push(metadata._embedded.validationResult.errorMessages[metadataErrorGroup][metadataError]);
+          }
+        }
+      }
+    }
+
+    this.ngxSmartModalService.getModal('myModal').open();
   }
 
   /**
@@ -344,6 +367,7 @@ export class MetadataPageComponent implements OnInit {
     delete this.activeDataType;
     delete this.selectedTemplate;
     delete this.templatesList;
+    delete this.activeMetadataRow;
     this.processingSheets = [];
     this.activeMetadataFields = [];
     this.templateForm.reset();
