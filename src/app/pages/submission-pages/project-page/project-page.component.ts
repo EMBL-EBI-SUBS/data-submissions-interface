@@ -52,21 +52,22 @@ export class ProjectPageComponent implements OnInit {
       'description': this.projectForm.value.projectDescription
     };
 
-    try {
-      // Create new project.
-      const submissionProjectUpdateUrl = this.activeSubmission._links.contents._links['projects:create'].href;
-      this.requestsService.create(submissionProjectUpdateUrl, submissionProjectDataObject).subscribe(
+    if (this.activeProject) {
+      // Update existing project.
+      const submissionProjectUpdateUrl = this.activeProject._links['self:update'].href;
+      this.requestsService.partialUpdate(submissionProjectUpdateUrl, submissionProjectDataObject).subscribe(
         (data) => {
           this.submissionsService.setActiveProject(data);
         },
         (err) => {
           // TODO: Handle Errors.
+          console.log(err);
         }
       );
-    } catch (err) {
-      // Update existing project.
-      const submissionProjectUpdateUrl = this.activeProject._links['self:update'].href;
-      this.requestsService.partialUpdate(submissionProjectUpdateUrl, submissionProjectDataObject).subscribe(
+    } else {
+      // Create new project.
+      const submissionProjectUpdateUrl = this.activeSubmission._links.contents._links['projects:create'].href;
+      this.requestsService.create(submissionProjectUpdateUrl, submissionProjectDataObject).subscribe(
         (data) => {
           this.submissionsService.setActiveProject(data);
         },
@@ -111,10 +112,10 @@ export class ProjectPageComponent implements OnInit {
       'description': this.projectForm.value.projectDescription
     };
 
-    try {
-      // Create new project.
-      const submissionProjectUpdateUrl = this.activeSubmission._links.contents._links['projects:create'].href;
-      this.requestsService.create(submissionProjectUpdateUrl, submissionProjectDataObject).subscribe(
+    if (this.activeProject) {
+      // Update existing project.
+      const submissionProjectUpdateUrl = this.activeProject._links['self:update'].href;
+      this.requestsService.partialUpdate(submissionProjectUpdateUrl, submissionProjectDataObject).subscribe(
         (data) => {
           this.submissionsService.setActiveProject(data);
         },
@@ -123,10 +124,10 @@ export class ProjectPageComponent implements OnInit {
           console.log(err);
         }
       );
-    } catch (err) {
-      // Update existing project.
-      const submissionProjectUpdateUrl = this.activeProject._links['self:update'].href;
-      this.requestsService.partialUpdate(submissionProjectUpdateUrl, submissionProjectDataObject).subscribe(
+    } else {
+      // Create new project.
+      const submissionProjectUpdateUrl = this.activeSubmission._links.contents._links['projects:create'].href;
+      this.requestsService.create(submissionProjectUpdateUrl, submissionProjectDataObject).subscribe(
         (data) => {
           this.submissionsService.setActiveProject(data);
         },
