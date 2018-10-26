@@ -34,7 +34,7 @@ export class ProjectPageComponent implements OnInit {
       projectDescription: new FormControl(''),
       projectShortName: new FormControl('', Validators.required),
       submissionShortName: new FormControl('', Validators.required),
-      releaseDate: new FormControl('',Validators.required),
+      releaseDate: new FormControl('', Validators.required),
       submissionPublication: new FormControl(''),
     });
     // Load list of projects.
@@ -192,7 +192,12 @@ export class ProjectPageComponent implements OnInit {
         (data) => {
           if (data) {
             this.activeProject = data;
-            this.updateProjectForm(this.activeProject.alias, this.activeProject.title, this.activeProject.description, this.activeProject.releaseDate);
+            this.updateProjectForm(
+              this.activeProject.alias,
+              this.activeProject.title,
+              this.activeProject.description,
+              this.activeProject.releaseDate
+            );
           }
 
         },
@@ -200,7 +205,12 @@ export class ProjectPageComponent implements OnInit {
         }
       );
     } else {
-      this.updateProjectForm(this.activeProject.alias, this.activeProject.title, this.activeProject.description, this.activeProject.releaseDate);
+      this.updateProjectForm(
+        this.activeProject.alias,
+        this.activeProject.title,
+        this.activeProject.description,
+        this.activeProject.releaseDate
+      );
     }
   }
 
