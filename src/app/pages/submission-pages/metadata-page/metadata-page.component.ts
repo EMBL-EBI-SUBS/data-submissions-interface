@@ -218,7 +218,7 @@ export class MetadataPageComponent implements OnInit {
       .get(this.activeDataType['_links'].checklists.href)
       .subscribe(
         (data: any) => {
-          if (data.page.totalElements > 0) {
+          if (data._embedded.checklists) {
             this.templatesList = data._embedded.checklists;
           }
         },
