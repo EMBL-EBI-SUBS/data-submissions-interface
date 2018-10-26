@@ -19,11 +19,11 @@
       <input type="hidden" name="jwtToken" value="{{token}}" />
     </form>
 
-    <h3>Data Files</h3>
-
-    <div *ngIf="files?.length && files.length > 0; then filesBlock else noFilesBlock"></div>
+    <div *ngIf="files?._embedded?.files.length && files?._embedded?.files.length > 0; then filesBlock"></div>
 
     <ng-template #filesBlock>
+      <h3>Data Files</h3>
+
       <table class="hover">
         <thead class="fixed">
           <tr>
@@ -35,7 +35,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let file of files">
+          <tr *ngFor="let file of files._embedded.files">
             <td>{{ file.filename }}</td>
             <td>{{ file.uploadStartDate }}</td>
             <td>{{ file.totalSize | filesize }}</td>
@@ -44,10 +44,22 @@
           </tr>
         </tbody>
       </table>
-    </ng-template>
 
-    <ng-template #noFilesBlock>
-      No files uploaded
+      <ul class="pagination" *ngIf="files && files.page.totalPages > 0">
+        <li class="arrow">
+          <a (click)="onPagerClick('first')" *ngIf="!(files.page.number == 0)">&laquo; First</a>
+        </li>
+        <li class="arrow">
+          <a (click)="onPagerClick('prev')" *ngIf="files._links.prev">&laquo; Previous</a>
+        </li>
+        <li class="arrow">
+          <a (click)="onPagerClick('next')" *ngIf="files._links.next">Next &raquo;</a>
+        </li>
+        <li class="arrow">
+          <a (click)="onPagerClick('last')" *ngIf="(files.page.totalPages - files.page.number) > 1">Last
+            &raquo;</a>
+        </li>
+      </ul>
     </ng-template>
 
     <div>
