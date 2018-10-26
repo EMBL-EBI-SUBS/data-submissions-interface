@@ -64,7 +64,9 @@ export class EbiSubmissionMenuComponent implements OnInit {
    */
   updateDataTypeLinks(dataTypes: DataType[]): void {
     for (const dataType of dataTypes) {
-      this.tabLinks.splice(4, 0, { title: dataType.displayNamePlural, href: `/submission/metadata/${dataType.id}` });
+      if (dataType.id != 'projects') {
+        this.tabLinks.splice(4, 0, { title: dataType.displayNamePlural, href: `/submission/metadata/${dataType.id}` });
+      }
     }
   }
 
