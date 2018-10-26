@@ -208,6 +208,7 @@ export class ProjectPageComponent implements OnInit {
     this.projectForm.controls['projectShortName'].setValue(alias);
     this.projectForm.controls['projectTitle'].setValue(title);
     this.projectForm.controls['projectDescription'].setValue(description);
+    this.projectForm.controls['releaseDate'].setValue(releaseDate);
   }
 
   /**
