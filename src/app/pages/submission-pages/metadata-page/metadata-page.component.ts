@@ -1,17 +1,17 @@
 import {
   Component,
   OnInit,
-  QueryList,
   ElementRef
 } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
+import { FormBuilder } from '@angular/forms';
+import { NgxSmartModalService } from 'ngx-smart-modal';
 
 // Import Services.
 import { SubmissionsService } from '../../../services/submissions.service';
 import { TeamsService } from '../../../services/teams.service';
 import { RequestsService } from '../../../services/requests.service';
 import { SpreadsheetsService } from '../../../services/spreadsheets.service';
-import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-metadata-page',
@@ -28,10 +28,14 @@ export class MetadataPageComponent implements OnInit {
   id: string;
   objectKeys = Object.keys;
   activeSubmission: any;
+  activeMetadataRow: any;
   activeDataType: any;
   submissionMetadata: any;
   templatesList: any;
-  selectedTemplate: any = {};
+  selectedTemplate: any;
+  templateForm = this._fb.group({
+    selectedTemplate: [''],
+  });
 
   processingSheets = [];
   blackListSampleFields = [
@@ -44,6 +48,8 @@ export class MetadataPageComponent implements OnInit {
     'team',
     'attributes',
     'accession',
+    'errors',
+    'contacts',
     'projectRef',
     'protocolRefs',
     '_embedded',
@@ -59,13 +65,15 @@ export class MetadataPageComponent implements OnInit {
     private requestsService: RequestsService,
     private spreadsheetsService: SpreadsheetsService,
     private activatedRoute: ActivatedRoute,
-    private elementRef: ElementRef
+    private elementRef: ElementRef,
+    private _fb: FormBuilder,
+    public ngxSmartModalService: NgxSmartModalService
   ) {}
 
   ngOnInit() {
-    this.activeSubmission = this.submissionsService.getActiveSubmission();
-
     this.activatedRoute.params.subscribe(params => {
+      this.resetVariables();
+      this.activeSubmission = this.submissionsService.getActiveSubmission();
       this.id = params.id;
       this.templatesList = [];
       this.loading = true;
@@ -96,6 +104,11 @@ export class MetadataPageComponent implements OnInit {
    * Get DataType content links.
    */
   getDataTypeContent() {
+    if (!this.activeSubmission) {
+      this.router.navigate(['/dashboard']);
+      return false;
+    }
+
     this.requestsService
       .get(this.activeSubmission._links.contents._links[this.id].href)
       .subscribe(
@@ -125,6 +138,10 @@ export class MetadataPageComponent implements OnInit {
    * Get processing sheets status once user submit a sheet.
    */
   checkProcessingSheets() {
+    if (!this.submissionMetadata) {
+      return false;
+    }
+
     const metadataSheets = this.submissionMetadata._links['spreadsheets'].href;
     this.requestsService.get(metadataSheets).subscribe(
       data => {
@@ -175,6 +192,25 @@ export class MetadataPageComponent implements OnInit {
   }
 
   /**
+   * On showing errors for a specific metadata row.
+   */
+  showMetadataErrors(metadata: any, index: number) {
+    this.activeMetadataRow = metadata;
+    this.activeMetadataRow.errors = [];
+    for (const metadataErrorGroup in metadata._embedded.validationResult.errorMessages) {
+      if (metadata._embedded.validationResult.errorMessages[metadataErrorGroup].length > 0) {
+        for (const metadataError in metadata._embedded.validationResult.errorMessages[metadataErrorGroup]) {
+          if (typeof metadata._embedded.validationResult.errorMessages[metadataErrorGroup][metadataError] === 'string') {
+            this.activeMetadataRow.errors.push(metadata._embedded.validationResult.errorMessages[metadataErrorGroup][metadataError]);
+          }
+        }
+      }
+    }
+
+    this.ngxSmartModalService.getModal('myModal').open();
+  }
+
+  /**
    * Retrieve list of active templates for existing metadata.
    */
   getTemplatesList() {
@@ -182,7 +218,7 @@ export class MetadataPageComponent implements OnInit {
       .get(this.activeDataType['_links'].checklists.href)
       .subscribe(
         (data: any) => {
-          if (data.page.totalElements > 0) {
+          if (data._embedded.checklists) {
             this.templatesList = data._embedded.checklists;
           }
         },
@@ -196,20 +232,14 @@ export class MetadataPageComponent implements OnInit {
    * Update local selectedTemplate object when user select a template.
    */
   onSelectTemplate(ev) {
-    const selectedOptionValue = ev.target.value;
-
-    if (selectedOptionValue !== '_none') {
+    if (ev !== undefined) {
       try {
-        this.selectedTemplate['name'] = selectedOptionValue;
-        this.selectedTemplate['href'] =
-          ev.target.selectedOptions[0].dataset.href;
-        this.selectedTemplate['description'] =
-          ev.target.selectedOptions[0].dataset.description;
+        this.selectedTemplate = ev;
       } catch (e) {
         console.log(e);
       }
     } else {
-      this.selectedTemplate = {};
+      delete this.selectedTemplate;
     }
   }
 
@@ -217,10 +247,14 @@ export class MetadataPageComponent implements OnInit {
    * Read uploaded CSV and post it for processing.
    */
   previewCSVFile(event) {
+    if (!event.target.files || event.target.files.length === 0) {
+      return false;
+    }
+
     this.loading = true;
     const templateUploadLink = this.activeDataType[
       '_links'
-    ].sheetUpload.href.replace('{checklistId}', this.selectedTemplate['name']);
+    ].sheetUpload.href.replace('{checklistId}', this.selectedTemplate['id']);
     const reader = new FileReader();
     reader.onload = (e: any) => {
       let fileResults: any;
@@ -263,10 +297,9 @@ export class MetadataPageComponent implements OnInit {
       data => {
         this.loading = false;
         try {
-          if (data['_embedded'][Object.keys(data['_embedded'])[0]] && data['_embedded'][Object.keys(data['_embedded'])[0]]['length'] > 0) {
-            this.submissionMetadata = data;
-          }
+          this.submissionMetadata = data;
         } catch (e) {
+          console.log(e);
         }
       },
       err => {
@@ -332,5 +365,11 @@ export class MetadataPageComponent implements OnInit {
   resetVariables() {
     delete this.submissionMetadata;
     delete this.activeDataType;
+    delete this.selectedTemplate;
+    delete this.templatesList;
+    delete this.activeMetadataRow;
+    this.processingSheets = [];
+    this.activeMetadataFields = [];
+    this.templateForm.reset();
   }
 }

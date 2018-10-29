@@ -9,6 +9,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { AuthModule } from 'angular-aap-auth';
 import { JwtModule } from '@auth0/angular-jwt';
 import { ToastrModule } from 'ngx-toastr';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { NgxSmartModalModule } from 'ngx-smart-modal';
 
 import { AppRoutingModule } from './app-routing.module';
 import { ServiceModule } from './services/service.module';
@@ -94,6 +96,8 @@ export function removeToken(): void {
     AppRoutingModule,
     ReactiveFormsModule,
     BrowserAnimationsModule,
+    NgSelectModule,
+    NgxSmartModalModule.forRoot(),
     AuthModule.forRoot({
       aapURL: environment.authenticationHost,
       tokenGetter: getToken,
