@@ -7,11 +7,9 @@ import { EMPTY } from 'rxjs';
 
 // Import Service Variables.
 import { VariablesService } from './variables.service';
-import { RequestsService } from './requests.service';
 
 @Injectable()
 export class SubmissionsService {
-  requestService: RequestsService;
   variables = new VariablesService;
   SubmissionPlansEndpoint = this.variables.host + 'submissionPlans';
 
