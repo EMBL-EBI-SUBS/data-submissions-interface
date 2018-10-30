@@ -71,18 +71,6 @@ export class SubmissionsService {
     return submissionPlansUIData;
   }
 
-  getSubmittablesMetadataProblemInformation() {
-    const activeSubmission = this.getActiveSubmission();
-
-    if (!activeSubmission) {
-      return EMPTY;
-    }
-
-    const contentsLinks = activeSubmission['_links']['contents']['href'];
-
-    this.http.get(contentsLinks)
-  }
-
   /**
    * Get Project for Submission.
    */
@@ -137,18 +125,6 @@ export class SubmissionsService {
         })
       );
     }
-  }
-
-  getSubmissionIssuesSummary() {
-    const activeSubmission = this.getActiveSubmission();
-
-    if (!activeSubmission) {
-      return EMPTY;
-    }
-
-    const issuesSummaryLinks = activeSubmission['_links']['contents']['issuesSummary']['href'];
-
-    return this.requestService.get(issuesSummaryLinks);
   }
 
   /**

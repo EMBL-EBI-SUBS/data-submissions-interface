@@ -58,17 +58,6 @@ export class SubmitPageComponent implements OnInit {
         && this.anyPendingValidationResult === false);
   }
 
-  getSubmissionIssuesSummary() {
-    this.submissionsService.getSubmissionIssuesSummary().subscribe(
-      (response) => {
-        this.filesNotReadyToSubmitCount = response['notReadyFileCount'];
-        this.validationIssuesPerDataTypeId = response['validationIssuesPerDataTypeId'];
-        this.submissionIsEmpty =  response['emptySubmission'];
-        this.anyPendingValidationResult = response['anyPendingValidationResult'];
-      }
-    );
-  }
-
   onSubmitSubmission() {
     const activeSubmissionUpdateEndpoint = this.activeSubmission._links.submissionStatus.href;
     const updateObj = {
