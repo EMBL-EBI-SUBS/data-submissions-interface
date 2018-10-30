@@ -14,10 +14,10 @@
       <ng-template #blockersBlock>
         <h3>Summary of issues blocking the submission</h3>
         <div *ngIf="filesNotReadyToSubmitCount > 0">
-          <h4>{{filesNotReadyToSubmitCount}} files uploading</h4>
+          <h4>{{ filesNotReadyToSubmitCount }} files uploading</h4>
         </div>
         <div *ngIf="totalMetadataBlockers > 0">
-          <h4>{{totalMetadataBlockers}} metadata problems to solve:</h4>
+          <h4>{{ totalMetadataBlockers }} metadata problems to solve:</h4>
           <ul>
             <li *ngFor="let dataTypeProp of validationIssuesPerDataTypeId">
               {{ dataTypeProp.displayName }} ({{ dataTypeProp.count }})
