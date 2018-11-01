@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 // Import Services.
-import { SubmissionsService } from '../../../services/submissions.service';
-import { RequestsService } from '../../../services/requests.service';
+import { SubmissionsService } from 'src/app/services/submissions.service';
+import { RequestsService } from 'src/app/services/requests.service';
 
 @Component({
   selector: 'app-submit-page',
@@ -13,15 +13,49 @@ import { RequestsService } from '../../../services/requests.service';
 export class SubmitPageComponent implements OnInit {
   token: string;
   activeSubmission: any;
+  files: any;
+  filesNotReadyToSubmitCount = 0;
+  validationIssuesPerDataTypeId = [];
+  totalMetadataBlockers: number;
+  submissionIsEmpty: boolean;
+  anyPendingValidationResult: boolean;
 
   constructor(
     private submissionsService: SubmissionsService,
     private requestsService: RequestsService,
-    private router: Router,
+    private router: Router
   ) { }
 
   ngOnInit() {
     this.activeSubmission = this.submissionsService.getActiveSubmission();
+    this.getSubmissionBlockersSummary();
+  }
+
+  getSubmissionBlockersSummary() {
+    const submissionBlockersSummaryLink = this.activeSubmission['_links']['submissionBlockersSummary']['href'];
+
+    this.requestsService.get(submissionBlockersSummaryLink).subscribe(
+      (response) => {
+        this.filesNotReadyToSubmitCount = response['notReadyFileCount'];
+        this.totalMetadataBlockers = response['totalMetadataBlockers'];
+        this.submissionIsEmpty = response['emptySubmission'];
+        this.anyPendingValidationResult = response['anyPendingValidationResult'];
+
+        const blockerEntityTypes = Object.keys(response['validationIssuesPerDataTypeId']);
+
+        blockerEntityTypes.forEach(entityType => {
+          this.validationIssuesPerDataTypeId.push(
+              response['validationIssuesPerDataTypeId'][entityType]);
+        });
+      }
+    );
+  }
+
+  hasBlockers(): boolean {
+    return !(this.filesNotReadyToSubmitCount === 0
+        && this.totalMetadataBlockers === 0
+        && this.submissionIsEmpty === false
+        && this.anyPendingValidationResult === false);
   }
 
   onSubmitSubmission() {

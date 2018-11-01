@@ -44,14 +44,11 @@ export class DataPageComponent implements OnInit {
     this.activeSubmission = this.submissionsService.getActiveSubmission();
     this.token = this.tokenService.getToken();
 
-    this.submissionsService.getActiveSubmissionsFiles().subscribe(data => {
-      this.files = data;
-      // format the file status string and store it as status_label for display
-      this.files['_embedded']['files'].forEach(element => {
-        element.status_label = this.formatFileStatus(element.status);
-      });
-    });
-
+    this.fileService.getActiveSubmissionsFiles(this.activeSubmission).subscribe(
+      (response) => {
+        this.files = response;
+      }
+    );
     this.uploadUppy = Uppy({
       id: this.convertToSlug(
         this.activeSubmission.name +

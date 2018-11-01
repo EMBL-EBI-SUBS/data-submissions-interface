@@ -6,9 +6,41 @@
 
     <app-ebi-submission-menu [activeSubmission]="activeSubmission"></app-ebi-submission-menu>
 
+    <legend>Submit your submission</legend>
 
-    Submit page
-    <br>
-    <button type="button" class=" button" (click)="onSubmitSubmission()">Submit Things</button>
+    <fieldset required class="large-form padding-bottom-large padding-top-large">
+      <div *ngIf="hasBlockers() then blockersBlock else noBlockersBlock"></div>
+
+      <ng-template #blockersBlock>
+        <h3>Summary of issues blocking the submission</h3>
+        <div *ngIf="filesNotReadyToSubmitCount > 0">
+          <h4>{{ filesNotReadyToSubmitCount }} files uploading</h4>
+        </div>
+        <div *ngIf="totalMetadataBlockers > 0">
+          <h4>{{ totalMetadataBlockers }} metadata problems to solve:</h4>
+          <ul>
+            <li *ngFor="let dataTypeProp of validationIssuesPerDataTypeId">
+              {{ dataTypeProp.displayName }} ({{ dataTypeProp.count }})
+            </li>
+          </ul>
+        </div>
+        <div *ngIf="submissionIsEmpty">
+          <h4>Submission has not got any contents to submit.</h4>
+        </div>
+        <div *ngIf="anyPendingValidationResult === true">
+          <h4>The validation process is not completed for every items.</h4>
+        </div>
+        <div>
+          <h4>You cannot submit until all files have been uploaded and all problems have been resolved.</h4>
+        </div>
+      </ng-template>
+
+      <ng-template #noBlockersBlock>
+        <h4>You don't have any blocking issues to submit your submission.</h4>
+        <h4>Once you clicked submit, your submission will be locked while we deposit your data with the specialist archives at EMBL-EBI.</h4>
+      </ng-template>
+    </fieldset>
+
+    <button type="button" class=" button" (click)="onSubmitSubmission()" [disabled]="hasBlockers()">Submit Submission</button>
   </section>
 </div>

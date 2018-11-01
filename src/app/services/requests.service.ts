@@ -12,46 +12,38 @@ export class RequestsService {
   /**
    * Get record.
    */
-  get(url, options = {}) {
-    const requestUrl = url;
-    const response = this.http.get(requestUrl, options);
-    return response;
+  get(requestUrl, options = {}) {
+    return this.http.get(requestUrl, options);
   }
 
   /**
    * Create new record.
    */
-  create(url, data) {
+  create(requestUrl, data) {
     // Post an Empty object to create submission.
     const body = JSON.stringify(data);
 
-    const requestUrl = url;
-    const response = this.http.post(requestUrl, body);
-    return response;
+    return this.http.post(requestUrl, body);
   }
 
-  /**
-  * Create new record.
-  */
-  createNoAuth(url, data) {
+   /**
+   * Create new record.
+   */
+  createNoAuth(requestUrl, data) {
     // Post an Empty object to create submission.
     const body = JSON.stringify(data);
 
-    const requestUrl = url;
-    const response = this.http.post(requestUrl, body);
-    return response;
+    return this.http.post(requestUrl, body);
   }
 
   /**
    * Update an existing record.
    */
-  update(url, data) {
+  update(requestUrl, data) {
     // Post an Empty object to create submission.
     const body = JSON.stringify(data);
 
-    const requestUrl = url;
-    const response = this.http.put(requestUrl, body);
-    return response;
+    return this.http.put(requestUrl, body);
   }
 
   /**

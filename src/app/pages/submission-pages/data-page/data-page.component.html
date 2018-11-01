@@ -39,7 +39,7 @@
             <td>{{ file.filename }}</td>
             <td>{{ file.uploadStartDate }}</td>
             <td>{{ file.totalSize | filesize }}</td>
-            <td>{{ file.status_label }}</td>
+            <td>{{ formatFileStatus(file.status) }}</td>
             <td><button class="button" (click)="onDeleteFile($event, file)">Delete</button></td>
           </tr>
         </tbody>
