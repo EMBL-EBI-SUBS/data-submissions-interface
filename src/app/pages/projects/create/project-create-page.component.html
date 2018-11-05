@@ -1,0 +1,40 @@
+<div id="content">
+    <app-ebi-header></app-ebi-header>
+
+    <section id="main-content-area" class="row padding-top-xsmall padding-bottom-xsmall" role="main">
+        <form novalidate [formGroup]="projectForm" >
+            <!-- Project Details Fieldset. -->
+            <fieldset required class="large-form padding-bottom-large padding-top-large">
+              <legend>Create new Project</legend>
+
+              <label>Project title
+                <input type="text" required placeholder="e.g. “Parallelism in Fish”" class="form-control" name="projectTitle" formControlName="projectTitle"/>
+                <span class="form-error" *ngIf="projectForm.get('projectTitle').hasError('required')">
+              Yo, you had better fill this out, it's required.
+              </span>
+              </label>
+
+              <label>Project description
+                <textarea rows="5" placeholder="Enter project description here"  name="projectDescription" formControlName="projectDescription"></textarea>
+                <span class="form-error">
+              Yo, you had better fill this out, it's required.
+              </span>
+              </label>
+
+              <label>Project short name (for easy reference)
+                <input type="text" placeholder="e.g. &quot;RAD sequencing - 2004 Liverpool&quot;"  name="projectShortName" formControlName="projectShortName"/>
+                <span class="form-error">
+              Yo, you had better fill this out, it's required.
+              </span>
+              </label>
+
+            </fieldset>
+
+
+            <div>
+              <button class="button secondary-color white-background" [routerLink]="['/projects']">Cancel</button>
+              <button class="button readmore" (click)="onCreateProject()" [disabled]="projectForm.invalid">Create</button>
+            </div>
+          </form>
+    </section>
+  </div>

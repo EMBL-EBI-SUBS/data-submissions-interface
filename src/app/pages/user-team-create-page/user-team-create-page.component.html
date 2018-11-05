@@ -1,0 +1,29 @@
+<div id="content">
+  <app-ebi-header></app-ebi-header>
+
+  <section id="main-content-area" class="row padding-top-xsmall padding-bottom-xsmall" role="main">
+    <h2 class="padding-top-xlarge">Create new Team</h2>
+
+
+    <form novalidate [formGroup]="teamCreateForm" >
+      <!-- Team Details Fieldset. -->
+      <fieldset required class="large-form padding-bottom-large padding-top-large">
+        <label>Institute / Project Name *
+          <input type="text" required placeholder="Enter institue or project name" class="form-control" name="centreName" formControlName="centreName"/>
+          <span class="form-error" *ngIf="teamCreateForm.get('centreName').hasError('required')">
+        Institute / Project name field is required.
+          </span>
+        </label>
+
+        <label>Team Description
+          <input type="text" placeholder="Enter description of your team" class="form-control" name="description" formControlName="description"/>
+        </label>
+      </fieldset>
+
+      <div>
+        <button class="button secondary-color white-background float-left" (click)="onExit()">Back</button>
+        <button class="button readmore float-right" (click)="onCreateTeam()" [disabled]="teamCreateForm.invalid">Save &amp; continue</button>
+      </div>
+    </form>
+  </section>
+</div>

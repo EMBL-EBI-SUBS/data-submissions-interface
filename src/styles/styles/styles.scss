@@ -1,3 +1,4 @@
+
 /* file management */
 .submission-file-attach table {
   width: 100%;
@@ -24,13 +25,18 @@ fieldset {
 legend {
   color: rgb(0,124,130);
   margin: 0;
-  /*font-size: 1rem;*/
+  font-size: 1.3rem;
   padding: 1.5rem 0 0;
 }
 /* progress meter */
 .progress {
   height: 1.5rem;
 }
+
+a.disabled {
+  pointer-events: none;
+}
+
 
 .progress-meter-text {
   top: 50%;
@@ -41,18 +47,26 @@ legend {
   border: none;
 }
 
-.tabs-title > a {
-  color: #888;
-  font-size: 1rem;
-  margin: 0 1.25rem;
-  padding: 1.25rem 0.25rem 0.5rem;
+.tabs-title {
+  float: none;
+  display: inline-block;
+
+  & > a {
+    color: $tabs-dark-gray;
+    font-size: 1rem;
+    margin: 0 1.25rem;
+    padding: 1.25rem 0.25rem 0.5rem;
+  }
+}
+
+.button:focus {
+  background: $button-primary;
 }
 
 .button.hover,
 .button.primary:focus,
 .button.primary:hover,
 .button:active,
-.button:focus,
 .button:hover,
 .tabs-title > a:hover {
   background: none;
@@ -224,3 +238,177 @@ legend {
 .large-form > input[type=radio]:disabled:checked + label:hover:before:active,
 .large-form > input[type=radio]:focus:disabled:checked + label:before,
 .large-form > input[type=radio]:hover:disabled:checked + label:before {}
+
+.pagination {
+  li {
+    min-height: 30px;
+    min-width: 100px;
+  }
+}
+
+fieldset {
+  fieldset {
+    border-left: none;
+  }
+}
+
+.drag-drop-wrapper {
+  background-color: $drag-drop-background;
+  position: relative;
+  min-height: 300px;
+
+  .drag-drop-inner {
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  i.large-icon {
+    font-size: $font-size-large-icon;
+    position: absolute;
+    left: -50px;
+    top: 10%;
+  }
+}
+
+.tabs-panel.is-active {
+  display: block;
+}
+
+.form-wrapper-error {
+  label,
+  &label,
+  .errors {
+    color: $form-error;
+  }
+
+  input,
+  select,
+  textarea{
+    border-color: $form-error;
+  }
+}
+
+div.ds-tabs {
+  .tabs {
+    li.tabs-title a {
+      padding: 15px;
+      background: $tabs-inactive;
+      margin: 0 5px 0 0;
+    }
+
+    li.is-active a {
+      background: $tabs-active;
+      color: $white;
+    }
+  }
+
+  .tabs-content {
+    border: 1px solid $tabs-inactive;
+  }
+}
+
+.no-horz-padding {
+  padding-right: 0;
+  padding-left: 0;
+}
+
+.margin-20 {
+  margin: 20px;
+}
+
+.margin-left-15 {
+  margin-left: 15px;
+}
+
+.margin-top-50 {
+  margin-top: 50px;
+}
+
+.margin-top-20 {
+  margin-top: 20px;
+}
+
+.margin-right-10 {
+  margin-right: 10px;
+}
+
+.margin-bottom-0 {
+  margin-bottom: 0;
+}
+
+.margin-bottom-15 {
+  margin-bottom: 15px;
+}
+
+.margin-bottom-20 {
+  margin-bottom: 20px;
+}
+
+
+.font-weight-bold {
+  font-weight: bold;
+}
+
+.submission-plan-button {
+  background: $button-secondary;
+  margin-right: 10px;
+  display: inline;
+  opacity: .4;
+
+  &.selected,
+  &:hover,
+  &:active {
+    background: $button-primary;
+    color: $white;
+    opacity: 1;
+  }
+}
+
+.inline-editing-table .editable {
+  cursor: pointer;
+  max-width: 100px;
+
+  .info {
+    min-width: 100px;
+    min-height: 20px;
+  }
+
+  textarea {
+    margin: 0;
+  }
+}
+
+.ng-select.style-ebi {
+  margin: 10px 0;
+
+  .ng-select-container {
+    border-radius: 0;
+    min-height: 45px;
+  }
+}
+
+.buttons-wrapper {
+  li {
+    list-style-type: none;
+  }
+  label {
+    display: inline;
+  }
+}
+
+i.errors {
+  color: $form-error;
+}
+
+.metadata-error-row {
+  border-bottom: 1px solid $tabs-inactive;
+  padding: 10px 0;
+  color: $form-error;
+
+  &:last-child {
+    border-bottom: none;
+  }
+}

@@ -1,9 +1,13 @@
-/* tslint:disable:no-unused-variable */
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
-import { DebugElement } from '@angular/core';
+import { Router } from '@angular/router';
 
+import { CommonTestModule } from 'testing/common.module';
+import { MockRouter } from 'testing/mockrouter.tests';
+
+// Import Components.
 import { HelpPageComponent } from './help-page.component';
+import { EbiHeaderComponent } from '../../components/ebi-header/ebi-header.component';
+import { environment } from 'src/environments/environment';
 
 describe('HelpPageComponent', () => {
   let component: HelpPageComponent;
@@ -11,9 +15,18 @@ describe('HelpPageComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ HelpPageComponent ]
+      imports: [
+        CommonTestModule
+      ],
+      declarations: [
+        HelpPageComponent,
+        EbiHeaderComponent
+      ],
+      providers: [
+        { provide: Router, useClass: MockRouter },
+      ]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

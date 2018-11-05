@@ -1,23 +1,31 @@
 <div id="content">
-  <ebi-header title="User Login"></ebi-header>
+  <app-ebi-header></app-ebi-header>
 
   <section id="main-content-area" class="row padding-top-xsmall padding-bottom-xsmall" role="main">
-    <h2 class="padding-top-xlarge text-center">Log in with you email account</h2>
+    <div class="login-form" *ngIf="!(authService.isAuthenticated() | async)">
+      <h2 class="padding-top-xlarge text-center">Log in with you email account</h2>
 
-    <form class="login-form">
-      <label>Email
-        <input type="email" placeholder="Somebody@example.com"/>
-      </label>
+      <form class="login-form">
+        <label>Email
+          <input type="email" placeholder="Somebody@example.com" autocomplete="username">
+        </label>
 
-      <label>Password
-        <input type="password" placeholder="Password">
-      </label>
+        <label>Password
+          <input type="password" placeholder="Password" autocomplete="current-password">
+        </label>
 
-      <p>
-        <input type="submit" class="button expanded" value="Log in"/>
-      </p>
+        <p>
+          <input type="submit" class="button expanded" value="Log in"/>
+        </p>
 
-      <p class="text-center"><a href="#">Forgot your password?</a></p>
-    </form>
+        <p class="text-center"><a [href]="authService.getSSOURL()" target="_blank">Login with SSO</a></p>
+      </form>
+    </div>
+
+    <div *ngIf="authService.isAuthenticated() | async" class="text-center padding-top-large">
+      You are already logged in.
+      <br><br>
+      <a class="button primary" routerLink="/dashboard">Visit Your Dashboard</a>
+    </div>
   </section>
 </div>

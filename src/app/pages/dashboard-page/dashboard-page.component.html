@@ -1,7 +1,69 @@
 <div id="content">
-  <ebi-header title="Dashboard"></ebi-header>
+  <app-ebi-header></app-ebi-header>
 
-  <section id="main-content-area" class="row padding-top-xsmall padding-bottom-xsmall" role="main">
-    Dashboard Page
+  <section id="main-content-area" class="row padding-top-xs padding-bottom-xsmall" role="main">
+    <h2 class="padding-top-xlarge">Hi {{ authService.realname() | async }}</h2>
+
+    <div class="row">
+      <div class="columns small-9">
+        <p>
+          This is your dashboard. You currently have {{ submissionsSummary?.Draft }} active draft submissions, using 300 GB of space.
+          <br>
+          You have successfully completed 4 submissions to our archives.
+          Thanks for contributing to the future of science.
+        </p>
+      </div>
+
+      <div class="columns small-3 text-right">
+        <a class="button" (click)="onStartSubmission()">Start a new Submission</a>
+      </div>
+    </div>
+
+    <table class="stack" *ngIf="submissions?._embedded?.submissions?.length > 0">
+      <thead>
+        <tr>
+          <th>Updated</th>
+          <th>Submission</th>
+          <th>Project</th>
+          <th>Status</th>
+          <th></th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let submissionItem of submissions._embedded.submissions">
+          <td class="col-date">{{ submissionItem.lastModifiedDate | date: 'd-MMM-yy' }}</td>
+          <td class="col-title">{{ submissionItem?.name }}</td>
+          <td class="col-project">{{ submissionItem?.projectName }}</td>
+          <td class="col-status status-{{submissionItem.submissionStatus | lowercase}}">{{ submissionItem.submissionStatus }}</td>
+          <td>
+            <!-- TODO: Update actions based on correct status names -->
+            <!-- Delete Submission -->
+            <a (click)="onDeleteSubmission(submissionItem)">Delete ></a>
+            <!-- Edit Draft Action -->
+            <a *ngIf="submissionItem.submissionStatus == 'Draft'" (click)="onEditDraftSubmission(submissionItem)">Edit ></a>
+            <!-- Edit Submitted Action -->
+            <a *ngIf="submissionItem.submissionStatus == 'Submitted'" (click)="onEditSubmittedSubmission(submissionItem)">Edit ></a>
+            <!-- View Completed Action -->
+            <a *ngIf="submissionItem.submissionStatus == 'Completed'" (click)="onViewCompletedSubmission(submissionItem)">Public ></a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <ul class="pagination" *ngIf="submissions && submissions.page.totalPages > 1">
+      <li class="arrow">
+        <a (click)="onPagerClick('first')" *ngIf="!(submissions.page.number == 0)">&laquo; First</a>
+      </li>
+      <li class="arrow">
+        <a (click)="onPagerClick('prev')" *ngIf="submissions._links.prev">&laquo; Previous</a>
+      </li>
+      <li class="arrow">
+        <a (click)="onPagerClick('next')" *ngIf="submissions._links.next">Next &raquo;</a>
+      </li>
+      <li class="arrow">
+        <a (click)="onPagerClick('last')" *ngIf="(submissions.page.totalPages - submissions.page.number) > 1">Last &raquo;</a>
+      </li>
+    </ul>
   </section>
 </div>

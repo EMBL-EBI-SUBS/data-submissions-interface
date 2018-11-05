@@ -1,6 +1,16 @@
+sudo: required
+dist: trusty
 language: node_js
 node_js:
-  - "8.7.0"
+  - "10.11.0"
+
+addons:
+  apt:
+    sources:
+      - google-chrome
+    packages:
+      - google-chrome-stable
+      - google-chrome-beta
 
 branches:
   only:
@@ -8,17 +18,11 @@ branches:
     - develop
 
 before_script:
-  - npm install -g angular-cli
-  - npm install -g angular-cli-ghpages
-  - npm install -g karma
-  - npm install
-  - ng build
+  - npm run build:prod
 
 script:
-  - ng build --prod --base-href "https://embl-ebi-subs.github.io/data-submissions-interface/"
-
-after_success:
-  - ngh
+  - npm run lint
+  - npm run test:chromium
 
 notifications:
   email:

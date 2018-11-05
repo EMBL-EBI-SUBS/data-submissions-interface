@@ -1,9 +1,13 @@
-/* tslint:disable:no-unused-variable */
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
+import { Router } from '@angular/router';
+
+import { MockRouter } from 'testing/mockrouter.tests';
+import { CommonTestModule } from 'testing/common.module';
 
 import { NotAuthenticatedPageComponent } from './not-authenticated-page.component';
+import { EbiHeaderComponent } from '../../components/ebi-header/ebi-header.component';
+import { UserLoginPageComponent } from '../user-login-page/user-login-page.component';
 
 describe('NotAuthenticatedPageComponent', () => {
   let component: NotAuthenticatedPageComponent;
@@ -11,9 +15,17 @@ describe('NotAuthenticatedPageComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ NotAuthenticatedPageComponent ]
+      imports: [CommonTestModule],
+      declarations: [
+        NotAuthenticatedPageComponent,
+        EbiHeaderComponent,
+        UserLoginPageComponent
+      ],
+      providers: [
+        { provide: Router, useClass: MockRouter },
+      ]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

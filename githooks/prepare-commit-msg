@@ -1,0 +1,8 @@
+#!/bin/sh
+content=`cat "$1"`
+cat <<-EOF > "$1"
+#[Trello number]: short description -------------|
+
+#[what/why]
+$content
+EOF

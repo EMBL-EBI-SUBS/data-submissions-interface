@@ -1,0 +1,26 @@
+.sheet-items-wrapper {
+  margin-top: -15px;
+  margin-bottom: 30px;
+}
+
+.sheet-item {
+  padding: 15px;
+  background: #fafafa;
+  border-bottom: 1px solid #eee;
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.row-errors {
+  margin-left: 15px;
+}
+
+th.actions {
+    width: 100px;
+}
+
+button {
+  cursor: pointer;
+}

@@ -1,29 +1,15 @@
-/**
- * Angular 2 decorators and services
- */
-import {
-  Component,
-  OnInit
-} from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 
-declare var $;
-
-/**
- * App Component
- * Top Level Component
- */
 @Component({
   selector: 'app-root',
-  styleUrls: [
-    './app.component.scss'
-  ],
+  styleUrls: ['./app.component.scss'],
   templateUrl: './app.component.html'
 })
-export class AppComponent {
-  constructor() {}
+export class AppComponent implements AfterViewInit {
+  constructor() { }
 
   ngAfterViewInit() {
-    $(document).foundation();
-    $(document).foundationExtendEBI();
+    jQuery(document).foundation();
+    jQuery(document).foundationExtendEBI();
   }
 }

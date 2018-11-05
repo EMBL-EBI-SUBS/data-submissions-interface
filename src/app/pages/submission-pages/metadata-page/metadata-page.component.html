@@ -1,0 +1,141 @@
+<div id="content">
+  <app-ebi-header></app-ebi-header>
+
+  <section id="main-content-area" class="row padding-top-xsmall padding-bottom-xsmall" role="main">
+    <h2 class="padding-top-xlarge">New data submission</h2>
+
+    <app-ebi-submission-menu [activeSubmission]="activeSubmission"></app-ebi-submission-menu>
+
+    <ngx-loading [show]="loading" [config]=""></ngx-loading>
+
+    <ngx-smart-modal #myModal identifier="myModal">
+        <div *ngIf="activeMetadataRow && activeMetadataRow.errors.length > 0">
+            <div *ngFor="let metadataError of activeMetadataRow.errors" class="metadata-error-row">
+              {{ metadataError }}
+            </div>
+        </div>
+    </ngx-smart-modal>
+
+    <!-- Uploading metaData sheet fieldset. -->
+    <fieldset required class="large-form padding-bottom-large padding-top-large">
+      <legend>Upload {{ activeDataType.displayNamePlural }} Sheet</legend>
+
+      <p>
+        Based on your selection above, you might find the following community sample templates helpful:
+      </p>
+      <form [formGroup]="templateForm" novalidate>
+          <ng-select
+          *ngIf="templatesList"
+          [items]="templatesList"
+          placeholder="Select template"
+          bindLabel="displayName"
+          bindValue="id"
+          class="style-ebi"
+          formControlName="selectedTemplate"
+          (change)="onSelectTemplate($event)">
+        </ng-select>
+      </form>
+
+      <!-- If there is no templates available for existing metadata. -->
+      <div *ngIf="templatesList.length === 0">
+        No templates available for {{ activeDataType.displayNamePlural }}.
+      </div>
+
+      <!-- If user selected the template he wants to upload. -->
+      <div *ngIf="selectedTemplate && selectedTemplate.hasOwnProperty('id')">
+        <div class="margin-bottom-20">{{ selectedTemplate?.description }}</div>
+
+        <a href="{{selectedTemplate?._links['spreadsheet-csv-download'].href}}" target="_blank" class="hollow button uppercase margin-right-10">Download
+          The Template</a>
+
+        <button href="#" (click)="triggerUpload()" target="_blank" [disabled]="!submissionMetadata" class="button primary uppercase">Upload Filled Template</button>
+        <input type="file" name="csv-template" (change)="previewCSVFile($event)" class="hide" />
+      </div>
+    </fieldset>
+
+    <!-- View uploaded metadata. -->
+    <fieldset required class="large-form padding-bottom-large padding-top-large">
+      <legend>View Uploaded {{ activeDataType.displayNamePlural }}</legend>
+
+      <div required class="large-form padding-bottom-large padding-top-large ds-tabs">
+        <div *ngIf="submissionMetadata && submissionMetadata.hasOwnProperty('_embedded')">
+          <div class="row">
+            <div *ngIf="processingSheets.length > 0" class="sheet-items-wrapper">
+              <div *ngFor="let processingSheet of processingSheets; let i = index" class="sheet-item">
+                Sheet #{{ i + 1 }} : Processing {{ processingSheet.processedRowCount }} of
+                {{ processingSheet.totalRowCount }}
+              </div>
+            </div>
+
+            <div class="small-6 columns text-left">
+              Page {{ submissionMetadata?.page?.number + 1 }} of {{ submissionMetadata?.page?.totalPages }}
+            </div>
+
+            <div class="small-6 columns text-right"> {{ submissionMetadata?.page?.totalElements }}
+              {{ activeDataType.displayNamePlural }}</div>
+          </div>
+
+          <table class="margin-top-20 samples-table inline-editing-table">
+            <thead>
+              <tr>
+                <th class="actions"></th>
+                <ng-container *ngFor="let keyName of objectKeys(submissionMetadata._embedded[objectKeys(submissionMetadata?._embedded)[0]][0])">
+                  <th *ngIf="blackListSampleFields.indexOf(keyName) < 0 && addMetadataActiveKey(keyName)"> {{keyName |
+                    uppercase}}</th>
+                </ng-container>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr *ngFor="let metaData of submissionMetadata?._embedded[objectKeys(submissionMetadata?._embedded)[0]]; let last = last; let i = index;">
+                <td class="text-center actions">
+                  <button type='button' (click)="deleteMetadata(metaData, i)">
+                    <i class="icon icon-functional" data-icon="x"></i>
+                  </button>
+
+                  <button class="reveal-button"
+                    data-open="metadata-errors"
+                    type='button'
+                    *ngIf="metaData._embedded.validationResult.errorMessages && objectKeys(metaData._embedded.validationResult.errorMessages)[0].length > 0"
+                    (click)="showMetadataErrors(metaData, i)">
+                    <i class="icon icon-generic errors row-errors" data-icon="l"></i>
+                  </button>
+                </td>
+
+                <td *ngFor="let key of activeMetadataFields">
+                  {{ metaData[key] }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <ul class="pagination" *ngIf="submissionMetadata && submissionMetadata.page.totalPages > 0">
+            <li class="arrow">
+              <a (click)="onPagerClick('first')" *ngIf="!(submissionMetadata.page.number == 0)">&laquo; First</a>
+            </li>
+            <li class="arrow">
+              <a (click)="onPagerClick('prev')" *ngIf="submissionMetadata._links.prev">&laquo; Previous</a>
+            </li>
+            <li class="arrow">
+              <a (click)="onPagerClick('next')" *ngIf="submissionMetadata._links.next">Next &raquo;</a>
+            </li>
+            <li class="arrow">
+              <a (click)="onPagerClick('last')" *ngIf="(submissionMetadata.page.totalPages - submissionMetadata.page.number) > 1">Last
+                &raquo;</a>
+            </li>
+          </ul>
+        </div>
+
+        <div *ngIf="submissionMetadata && !submissionMetadata.hasOwnProperty('_embedded')">
+          No {{ activeDataType.displayNamePlural }} has been uploaded yet. If you just uploaded the spreadsheet then it
+          may take a while to appears.
+        </div>
+      </div>
+
+    </fieldset>
+    <div>
+      <button class="button secondary-color white-background" (click)="onSaveExit()">Save &amp; exit</button>
+      <button class="button readmore" (click)="onSaveContinue()">Save &amp; continue</button>
+    </div>
+  </section>
+</div>

@@ -1,0 +1,113 @@
+<div id="content">
+  <app-ebi-header></app-ebi-header>
+
+  <section id="main-content-area" class="row padding-top-xsmall padding-bottom-xsmall" role="main">
+    <h2 class="padding-top-xlarge">Contacts</h2>
+
+    <app-ebi-submission-menu [activeSubmission]="activeSubmission"></app-ebi-submission-menu>
+
+    <div *ngIf="!activeProject" class="row callout notice margin-20">
+      Please <a class="font-weight-bold" (click)="onCreateProject()">select project first</a> to be able to create contacts.
+    </div>
+
+    <form *ngIf="activeProject" [formGroup]="contactForm" novalidate class="conditional-form">
+
+      <!-- Print Team Field -->
+      <fieldset required class="large-form padding-bottom-large padding-top-large ">
+        <legend>Add new Contact</legend>
+
+        <div class="row">
+          <div class="small-4 columns">
+            <Label>First Name *
+              <input type="text" name="firstName" formControlName="firstName" placeholder="First name" required>
+            </Label>
+          </div>
+          <div class="small-4 columns">
+            <Label>Middle Name
+              <input type="text" name="middleInitials" formControlName="middleInitials" placeholder="Middle name">
+            </Label>
+          </div>
+          <div class="small-4 columns">
+            <Label>Last Name *
+              <input type="text" name="lastName" formControlName="lastName" placeholder="Last name" required>
+            </Label>
+          </div>
+
+          <div class="small-6 columns">
+            <Label>Email *
+              <input type="email" name="email" formControlName="email" placeholder="email" required>
+            </Label>
+          </div>
+
+          <div class="small-6 columns">
+            <Label>Address *
+              <input type="text" name="address" formControlName="address" placeholder="Address information.." required>
+            </Label>
+          </div>
+
+          <div class="small-6 columns">
+            <Label>Phone *
+              <input type="tel" name="phone" formControlName="phone" placeholder="Phone number" required>
+            </Label>
+          </div>
+
+          <div class="small-6 columns">
+            <Label>Fax
+              <input type="tel" name="fax" formControlName="fax" placeholder="Fax number">
+            </Label>
+          </div>
+
+          <div class="small-6 columns">
+            <Label>Affiliation Organization *
+              <input type="text" name="affiliation" formControlName="affiliation" placeholder="Affiliation Organization" required>
+            </Label>
+          </div>
+
+          <div class="small-6 columns">
+            <Label>ORCID
+              <input type="text" name="orcid" formControlName="orcid" placeholder="ORCID">
+            </Label>
+          </div>
+        </div>
+      </fieldset>
+
+      <button class="button secondary-color white-background" (click)="onAddContact()" [disabled]="contactForm.invalid"><i class="icon icon-functional" data-icon="+"></i> Add New Contact</button>
+    </form>
+
+    <div *ngIf="activeProject?.contacts?.length > 0">
+      <h3>Contacts</h3>
+      <table class="hover">
+        <thead class="fixed">
+          <tr>
+            <th>Full Name</th>
+            <th>Email</th>
+            <th>Address</th>
+            <th>Phone</th>
+            <th>Fax</th>
+            <th>Affiliation Organization</th>
+            <th>ORCID</th>
+            <th></th>
+          </tr>
+        </thead>
+
+        <tbody>
+        <tr *ngFor="let contact of activeProject.contacts; let i = index">
+          <td>{{ contact.firstName }} {{ contact.middleInitials }} {{ contact.lastName }}</td>
+          <td>{{ contact.email }}</td>
+          <td>{{ contact.address }}</td>
+          <td>{{ contact.phone }}</td>
+          <td>{{ contact.fax }}</td>
+          <td>{{ contact.affiliation }}</td>
+          <td>{{ contact.orcid }}</td>
+          <td class="text-center"><i class="icon icon-functional" data-icon="d" (click)="onDeleteContact(i)"></i></td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div>
+      <button class="button secondary-color white-background" (click)="onSaveExit()">Save & exit</button>
+      <button class="button readmore" (click)="onSaveContinue()">Save &amp; continue</button>
+    </div>
+  </section>
+</div>

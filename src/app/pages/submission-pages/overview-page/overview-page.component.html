@@ -1,15 +1,94 @@
 <div id="content">
-  <ebi-header title="New Submission"></ebi-header>
+  <app-ebi-header></app-ebi-header>
 
   <section id="main-content-area" class="row padding-top-xsmall padding-bottom-xsmall" role="main">
     <h2 class="padding-top-xlarge">New data submission</h2>
 
-    <ul class="tabs" id="example-tabs">
-      <li *ngFor="let link of tabLinks" routerLinkActive="active is-active" class="tabs-title">
-        <a [routerLink]="link.href" routerLinkActive="active">{{link.title}}</a>
-      </li>
-    </ul>
-    
-    Overview page
+    <app-ebi-submission-menu [activeSubmission]="activeSubmission"></app-ebi-submission-menu>
+
+    <form [formGroup]="overviewForm" novalidate class="conditional-form">
+
+      <fieldset required class="large-form padding-bottom-large padding-top-large">
+        <ng-container formGroupName="uiData">
+          <ng-container formGroupName="overview">
+            <legend>Before you begin</legend>
+
+            <fieldset class="large-form padding-bottom-large padding-top-large">
+              <legend>This service requires limited processing of your personal
+                data in order to function.<br>By using the site you are agreeing
+                to this as outlined in our
+                <a href="https://www.ebi.ac.uk/data-protection/privacy-notice/ebi-wide-submission" target="_blank">Privacy Notice</a>
+                and <a href="https://www.ebi.ac.uk/about/terms-of-use" target="_blank">Terms of Use</a>
+              </legend>
+              <div *ngIf="locked; else showGPDR">
+               You have selected: <span class="font-weight-bold">{{ gdpr | yesno:'I agree':'I don\'t agree' }}</span>
+              </div>
+              <ng-template #showGPDR>
+                <!-- TODO: this should be a checkbox rather than radio button, but need to create styles for it match -->
+                <input type="radio" value="1" formControlName="gdpr" id="gdpr">
+                <label for="gdpr">I agree</label>
+              </ng-template>
+            </fieldset>
+
+            <fieldset class="large-form padding-bottom-large padding-top-large">
+              <legend>Is your study on human research subjects?</legend>
+              <div *ngIf="locked; else showHuman">
+                You have selected: <span class="font-weight-bold">{{ human.value | yesno }}</span>
+              </div>
+              <ng-template #showHuman>
+                <input type="radio" value="1" formControlName="human" id="human-yes">
+                <label for="human-yes">Yes</label>
+                <input type="radio" value="0" formControlName="human" id="human-no">
+                <label for="human-no">No</label>
+              </ng-template>
+            </fieldset>
+
+            <fieldset class="large-form padding-bottom-large padding-top-large">
+              <legend>Does it require controlled access once it becomes public?</legend>
+              <div *ngIf="locked; else showControlled">
+                You have selected: <span class="font-weight-bold">{{ controlled | yesno }}</span>
+              </div>
+              <ng-template #showControlled>
+                <input type="radio" value="1" formControlName="controlled" id="controlled-yes">
+                <label for="controlled-yes">Yes</label>
+                <input type="radio" value="0" formControlName="controlled" id="controlled-no">
+                <label for="controlled-no">No</label>
+              </ng-template>
+            </fieldset>
+
+            <fieldset class="large-form padding-bottom-large padding-top-large">
+              <legend>What type of data are you submitting?</legend>
+              <div *ngIf="locked; else showPlan">
+                You have selected: <span class="font-weight-bold">{{ submissionPlanName }}</span>
+              </div>
+              <ng-template #showPlan>
+                <ng-container *ngFor="let plan of submissionPlans; let i = index">
+                  <!-- TODO: this should be a checkbox rather than radio button, but need to create styles for it match -->
+                  <input type="radio" [value]="plan" formControlName="submissionPlan" id="{{ 'plan-' + i }}">
+                  <label for="{{ 'plan-' + i }}" data-tooltip title="{{ plan.description }}">{{ plan.displayName }}</label>
+                </ng-container>
+              </ng-template>
+            </fieldset>
+          </ng-container>
+        </ng-container>
+
+        <fieldset required class="large-form padding-bottom-large padding-top-large">
+          <legend>Submission short name (for easy reference)</legend>
+          <div *ngIf="lockedPlan; else showName">
+            You have selected: <span class="font-weight-bold">{{ name }}</span><a (click)="onChangeField()"> (change)</a>
+          </div>
+          <ng-template #showName>
+            <input type="text" placeholder="e.g. &quot;RAD sequencing - 2004 Liverpool&quot;" formControlName="name">
+            <span>This name will show in your dashboard.</span>
+          </ng-template>
+        </fieldset>
+
+      </fieldset>
+
+      <div>
+        <button class="button secondary-color white-background" (click)="onSaveExit()" [disabled]="overviewForm.invalid">Save & exit</button>
+        <button class="button readmore" (click)="onSaveContinue()" [disabled]="overviewForm.invalid">Save &amp; continue</button>
+      </div>
+    </form>
   </section>
 </div>
