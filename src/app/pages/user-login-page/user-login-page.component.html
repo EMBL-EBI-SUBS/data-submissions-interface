@@ -33,7 +33,7 @@
             <b> Login has failed. Double-check your username and password. </b>
           </div>
           <div *ngIf="errorMessage==500" class="default-error">
-            AAP internal server error. Please contact '{{environment.email}}'.
+            AAP internal server error. Please contact '{{ environment.email }}'.
           </div>
           <!-- end error message -->
           <div class="form-group item-login" [ngClass]="{'has-error':user.invalid && user.touched,
