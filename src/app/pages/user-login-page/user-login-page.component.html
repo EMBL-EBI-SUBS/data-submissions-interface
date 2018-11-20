@@ -2,30 +2,70 @@
   <app-ebi-header></app-ebi-header>
 
   <section id="main-content-area" class="row padding-top-xsmall padding-bottom-xsmall" role="main">
-    <div class="login-form" *ngIf="!(authService.isAuthenticated() | async)">
-      <h2 class="padding-top-xlarge text-center">Log in with you email account</h2>
-
-      <form class="login-form">
-        <label>Email
-          <input type="email" placeholder="Somebody@example.com" autocomplete="username">
-        </label>
-
-        <label>Password
-          <input type="password" placeholder="Password" autocomplete="current-password">
-        </label>
-
-        <p>
-          <input type="submit" class="button expanded" value="Log in"/>
-        </p>
-
-        <p class="text-center"><a [href]="authService.getSSOURL()" target="_blank">Login with SSO</a></p>
-      </form>
-    </div>
-
     <div *ngIf="authService.isAuthenticated() | async" class="text-center padding-top-large">
       You are already logged in.
       <br><br>
       <a class="button primary" routerLink="/dashboard">Visit Your Dashboard</a>
+    </div>
+
+    <div *ngIf="!(authService.isAuthenticated() | async)" class="flex-container">
+      <div style="padding-left:25px;padding-right:25px;padding-bottom:40px;" class="item-sso">
+        <p style="margin-bottom: 2rem;"><b>Single Sign On using your ELIXIR identity!</b></p>
+        <a href="{{getSSOURL()}}" target="_blank"><img src="assets/img/elixir_login-button-small-orange.png"></a>
+        <span>
+          <br>
+          <br>
+          <p>You can use the <a href="https://www.elixir-europe.org/services/compute/aai">ELIXIR identity</a> service
+            and other ELIXIR services with the freely available <br>ELIXIR identity,
+            which integrates with Google, ORCID and most academic institutions.
+          </p>
+          <p>
+            Obtain your ELIXIR identity <a href="https://www.elixir-europe.org/register">here</a>.
+          </p>
+        </span>
+      </div>
+  
+      <div class="item-login" style="padding-left:25px;padding-right:25px;padding-top:10px;">
+        <form>
+          <p><b>Existing AAP account</b></p>
+          <!-- error messages based on http status code -->
+          <div class="default-error" *ngIf="errorMessage==401" style="color:red">
+            <b> Login has failed. Double-check your username and password. </b>
+          </div>
+          <div *ngIf="errorMessage==500" class="default-error">
+            AAP internal server error. Please contact '{{environment.email}}'.
+          </div>
+          <!-- end error message -->
+          <div class="form-group item-login" [ngClass]="{'has-error':user.invalid && user.touched,
+          'has-success':user.valid && user.touched}">
+            <label for="username" class="default-label">User Name:</label>
+            <input class="form-control" type="text" style="width: 100%;" id="username" placeholder="username" [(ngModel)]="username" name="username"
+              #user="ngModel" required>
+            <span class="help-block" *ngIf="user.invalid && user.touched">
+                Username is required
+          </span>
+          </div>
+          <div class="form-group" [ngClass]="{'has-error':pwd.invalid && pwd.touched,
+          'has-success':pwd.valid && pwd.touched}">
+            <label for="password" class="default-label">Password :</label>
+            <input class="form-control" type="password" [(ngModel)]="password" style="width: 100%;" id="password" placeholder="password"
+              name="password" #pwd="ngModel" required  (keydown.enter)="authenticateUser()">
+            <span class="help-block" *ngIf="pwd.invalid && pwd.touched">
+                Password is required
+            </span>
+          </div>
+    
+          <div>
+            <a class="btn btn-primary" style="font-size:20px; padding: 9px 36px;" type="button" (click)="authenticateUser();" target="_blank">Sign In</a>
+          </div>
+          <br>
+          <div>
+            If you can not get an ELIXIR account,<a href="{{getRegisterNewAAPUserURL()}}" style="cursor: pointer" target="_blank">
+            create an AAP account»</a>
+          </div>
+          <br>
+        </form>
+      </div>
     </div>
   </section>
 </div>
