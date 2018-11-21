@@ -128,7 +128,7 @@ export function removeToken(): void {
   ],
   providers: [
     LoggedInGuard,
-    httpInterceptorProviders,
+    httpInterceptorProviders
   ],
   bootstrap: [AppComponent]
 })

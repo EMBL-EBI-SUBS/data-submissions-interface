@@ -7,8 +7,7 @@ import { map, catchError } from 'rxjs/operators';
 @Component({
   selector: 'app-ebi-header',
   templateUrl: './ebi-header.component.html',
-  styleUrls: ['./ebi-header.component.scss'],
-  providers: [AuthService]
+  styleUrls: ['./ebi-header.component.scss']
 })
 export class EbiHeaderComponent {
 

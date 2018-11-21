@@ -2,7 +2,6 @@ import { RequestsService } from 'src/app/services/requests.service';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from 'angular-aap-auth';
-import {FormsModule} from '@angular/forms';
 import { environment } from 'src/environments/environment';
 
 // Import Services.
@@ -80,8 +79,8 @@ export class UserLoginPageComponent implements OnInit {
           token => {
             console.log('[LoginComponent] Obtained token %O', token);
             updateToken(token);
-            localStorage.setItem('AngularAapAuthUpdated', '' + Date.now());
-            window.setTimeout(_ => {this.router.navigate(['']); }, 1000);
+            (this.authService as any)._updateCredentials();
+            this.router.navigate(['/dashboard']);
           },
           error => {
             console.log('error: ' + error);
