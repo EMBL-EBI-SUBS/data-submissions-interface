@@ -79,7 +79,11 @@ export class UserLoginPageComponent implements OnInit {
           token => {
             console.log('[LoginComponent] Obtained token %O', token);
             updateToken(token);
+
+            // TODO karoly remove this hack,
+            // after web dev fixed the angular-aap-auth library (version: 1.0.0-alpha.11)
             (this.authService as any)._updateCredentials();
+
             this.router.navigate(['/dashboard']);
           },
           error => {
