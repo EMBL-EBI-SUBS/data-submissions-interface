@@ -1,3 +1,4 @@
+import { FormsModule } from '@angular/forms';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -16,7 +17,8 @@ describe('UserTeamPageComponent', () => {
     TestBed.configureTestingModule({
       imports: [
         RouterTestingModule,
-        CommonTestModule
+        CommonTestModule,
+        FormsModule
       ],
       declarations: [UserLoginPageComponent, EbiHeaderComponent],
       providers: []

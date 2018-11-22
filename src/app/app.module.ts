@@ -106,7 +106,7 @@ export function removeToken(): void {
     }),
     JwtModule.forRoot({
       config: {
-        tokenGetter: getToken,
+        tokenGetter: getToken
       }
     }),
     LoadingModule.forRoot({
@@ -128,7 +128,7 @@ export function removeToken(): void {
   ],
   providers: [
     LoggedInGuard,
-    httpInterceptorProviders,
+    httpInterceptorProviders
   ],
   bootstrap: [AppComponent]
 })

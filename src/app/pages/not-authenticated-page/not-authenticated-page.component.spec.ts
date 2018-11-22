@@ -1,3 +1,4 @@
+import { FormsModule } from '@angular/forms';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
 import { Router } from '@angular/router';
@@ -15,14 +16,17 @@ describe('NotAuthenticatedPageComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [CommonTestModule],
+      imports: [
+        CommonTestModule,
+        FormsModule
+      ],
       declarations: [
         NotAuthenticatedPageComponent,
         EbiHeaderComponent,
         UserLoginPageComponent
       ],
       providers: [
-        { provide: Router, useClass: MockRouter },
+        { provide: Router, useClass: MockRouter }
       ]
     })
       .compileComponents();
