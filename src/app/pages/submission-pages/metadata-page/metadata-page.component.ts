@@ -37,6 +37,8 @@ export class MetadataPageComponent implements OnInit {
     selectedTemplate: [''],
   });
 
+  metadataTableHeaders = [];
+
   processingSheets = [];
   blackListSampleFields = [
     'fields',
@@ -124,6 +126,17 @@ export class MetadataPageComponent implements OnInit {
       );
   }
 
+  processMetadataTableHeaders() {
+    const originalHeaders = this.objectKeys(this.submissionMetadata._embedded[this.objectKeys(this.submissionMetadata._embedded)[0]][0]);
+
+    for (const keyName of originalHeaders) {
+      if (this.blackListSampleFields.indexOf(keyName) < 0) {
+        this.addMetadataActiveKey(keyName);
+        this.metadataTableHeaders.push(keyName);
+      }
+    }
+  }
+
   /**
    * Set metadata header columns based on first row keys.
    */
@@ -131,7 +144,6 @@ export class MetadataPageComponent implements OnInit {
     if (this.activeMetadataFields.indexOf(keyName) < 0) {
       this.activeMetadataFields.push(keyName);
     }
-    return true;
   }
 
   /**
@@ -181,13 +193,12 @@ export class MetadataPageComponent implements OnInit {
       this.requestsService.delete(metadata['_links']['self:delete'].href).subscribe(
         data => {
           this.submissionMetadata._embedded[Object.keys(this.submissionMetadata._embedded)[0]].splice(index, 1);
-          this.loading = false;
         },
         err => {
           console.log(err);
-          this.loading = false;
         }
       );
+      this.loading = false;
     }
   }
 
@@ -295,12 +306,13 @@ export class MetadataPageComponent implements OnInit {
     const submissionMetadataLink = this.activeDataType._links.self.href;
     this.requestsService.get(submissionMetadataLink).subscribe(
       data => {
-        this.loading = false;
         try {
           this.submissionMetadata = data;
+          this.processMetadataTableHeaders();
         } catch (e) {
           console.log(e);
         }
+        this.loading = false;
       },
       err => {
         console.log(err);

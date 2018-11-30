@@ -79,10 +79,7 @@
             <thead>
               <tr>
                 <th class="actions"></th>
-                <ng-container *ngFor="let keyName of objectKeys(submissionMetadata._embedded[objectKeys(submissionMetadata?._embedded)[0]][0])">
-                  <th *ngIf="blackListSampleFields.indexOf(keyName) < 0 && addMetadataActiveKey(keyName)"> {{keyName |
-                    uppercase}}</th>
-                </ng-container>
+                <th *ngFor="let headerName of metadataTableHeaders">{{headerName | uppercase}}</th>
               </tr>
             </thead>
 
