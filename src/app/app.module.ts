@@ -46,7 +46,7 @@ import { EbiSubmissionMenuComponent } from './components/ebi-submission-menu/ebi
 import { LoggedInGuard } from './guards/logged-in/logged-in.guard';
 
 // Imports
-import { LoadingModule, ANIMATION_TYPES } from 'ngx-loading';
+import { NgxLoadingModule } from 'ngx-loading';
 import { FileSizeModule } from 'ngx-filesize';
 
 // Import Interceptors.
@@ -106,10 +106,10 @@ export function removeToken(): void {
     }),
     JwtModule.forRoot({
       config: {
-        tokenGetter: getToken,
+        tokenGetter: getToken
       }
     }),
-    LoadingModule.forRoot({
+    NgxLoadingModule.forRoot({
       backdropBackgroundColour: 'rgba(0,0,0,0.6)',
       primaryColour: '#ffffff',
       secondaryColour: '#ffffff',
@@ -128,7 +128,7 @@ export function removeToken(): void {
   ],
   providers: [
     LoggedInGuard,
-    httpInterceptorProviders,
+    httpInterceptorProviders
   ],
   bootstrap: [AppComponent]
 })
