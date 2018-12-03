@@ -126,23 +126,28 @@ export class MetadataPageComponent implements OnInit {
       );
   }
 
+  /**
+   * Set metadata header columns based on first row keys.
+   */
   processMetadataTableHeaders() {
     const originalHeaders = this.objectKeys(this.submissionMetadata._embedded[this.objectKeys(this.submissionMetadata._embedded)[0]][0]);
 
     for (const keyName of originalHeaders) {
       if (this.blackListSampleFields.indexOf(keyName) < 0) {
-        this.addMetadataActiveKey(keyName);
-        this.metadataTableHeaders.push(keyName);
+        this.pushIfNotExist(this.activeMetadataFields, keyName);
+        this.pushIfNotExist(this.metadataTableHeaders, keyName);
       }
     }
   }
 
   /**
-   * Set metadata header columns based on first row keys.
+   * Push a new item into an array if it is not exists.
+   * @param array the array to push the new item into
+   * @param newItem the new item
    */
-  addMetadataActiveKey(keyName: string) {
-    if (this.activeMetadataFields.indexOf(keyName) < 0) {
-      this.activeMetadataFields.push(keyName);
+  pushIfNotExist(array: string[], newItem: string) {
+    if (array.indexOf(newItem) < 0) {
+      array.push(newItem);
     }
   }
 
@@ -192,7 +197,12 @@ export class MetadataPageComponent implements OnInit {
       this.loading = true;
       this.requestsService.delete(metadata['_links']['self:delete'].href).subscribe(
         data => {
-          this.submissionMetadata._embedded[Object.keys(this.submissionMetadata._embedded)[0]].splice(index, 1);
+          const remainedMetadata = this.submissionMetadata._embedded[Object.keys(this.submissionMetadata._embedded)[0]];
+          remainedMetadata.splice(index, 1);
+          if (remainedMetadata.length < 1 ) {
+            this.metadataTableHeaders = [];
+            delete this.submissionMetadata._embedded;
+          }
         },
         err => {
           console.log(err);
@@ -382,6 +392,7 @@ export class MetadataPageComponent implements OnInit {
     delete this.activeMetadataRow;
     this.processingSheets = [];
     this.activeMetadataFields = [];
+    this.metadataTableHeaders = [];
     this.templateForm.reset();
   }
 }
