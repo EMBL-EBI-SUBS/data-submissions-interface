@@ -9,11 +9,9 @@
     <ngx-loading [show]="loading" [config]=""></ngx-loading>
 
     <ngx-smart-modal #myModal identifier="myModal">
-        <div *ngIf="activeMetadataRow && activeMetadataRow.errors.length > 0">
-            <div *ngFor="let metadataError of activeMetadataRow.errors" class="metadata-error-row">
-              {{ metadataError }}
-            </div>
-        </div>
+      <div *ngFor="let metadataError of selectedMetadataErrorMessages" class="metadata-error-row">
+        {{ metadataError }}
+      </div>
     </ngx-smart-modal>
 
     <!-- Uploading metaData sheet fieldset. -->
@@ -79,28 +77,27 @@
             <thead>
               <tr>
                 <th class="actions"></th>
-                <th *ngFor="let headerName of metadataTableHeaders">{{headerName | uppercase}}</th>
+                <th *ngFor="let headerName of metadataTableHeaders">{{ headerName | uppercase }}</th>
               </tr>
             </thead>
 
             <tbody>
-              <tr *ngFor="let metaData of submissionMetadata?._embedded[objectKeys(submissionMetadata?._embedded)[0]]; let last = last; let i = index;">
+              <tr *ngFor="let metadataRow of metadataValues; let last = last; let i = index;">
                 <td class="text-center actions">
-                  <button type='button' (click)="deleteMetadata(metaData, i)">
+                  <button type='button' (click)="deleteMetadata(i)">
                     <i class="icon icon-functional" data-icon="x"></i>
                   </button>
 
                   <button class="reveal-button"
                     data-open="metadata-errors"
                     type='button'
-                    *ngIf="metaData._embedded.validationResult.errorMessages && objectKeys(metaData._embedded.validationResult.errorMessages)[0].length > 0"
-                    (click)="showMetadataErrors(metaData, i)">
+                    *ngIf="metadataRow.errorMessages"
+                    (click)="showMetadataErrors(metadataRow.errorMessages)">
                     <i class="icon icon-generic errors row-errors" data-icon="l"></i>
                   </button>
                 </td>
-
-                <td *ngFor="let key of activeMetadataFields">
-                  {{ metaData[key] }}
+                <td *ngFor="let header of metadataTableHeaders">
+                  {{ metadataRow[header] }}
                 </td>
               </tr>
             </tbody>
