@@ -29,6 +29,7 @@ export class MetadataPageComponent implements OnInit {
   objectKeys = Object.keys;
   activeSubmission: any;
   selectedMetadataErrorMessages = [];
+  selectedMetadataAttributes = new Object;
   activeDataType: any;
   submissionMetadata: any;
   templatesList: any;
@@ -41,6 +42,7 @@ export class MetadataPageComponent implements OnInit {
 
   processingSheets = [];
   blackListSampleFields = [
+    'attributes',
     'fields',
     'createdBy',
     'createdDate',
@@ -48,7 +50,6 @@ export class MetadataPageComponent implements OnInit {
     'lastModifiedDate',
     'sampleRelationships',
     'team',
-    'attributes',
     'accession',
     'errors',
     'contacts',
@@ -71,6 +72,7 @@ export class MetadataPageComponent implements OnInit {
     'projectRef': ['alias']
   };
   metadataValues = [];
+  metadataAttributes = [];
 
   constructor(
     private router: Router,
@@ -230,7 +232,16 @@ export class MetadataPageComponent implements OnInit {
   showMetadataErrors(errorMessage: any) {
     this.selectedMetadataErrorMessages = [];
     this.selectedMetadataErrorMessages.push(errorMessage);
-    this.ngxSmartModalService.getModal('myModal').open();
+    this.ngxSmartModalService.getModal('metadataErrorWindow').open();
+  }
+
+  /**
+   * Show attributes of a selected metadata row.
+   * @param attributes the attributes to display
+   */
+  showAttributes(attributes: Object) {
+    this.selectedMetadataAttributes = attributes;
+    this.ngxSmartModalService.getModal('attributesWindow').open();
   }
 
   /**
@@ -341,11 +352,12 @@ export class MetadataPageComponent implements OnInit {
       this.metadataValues[index] = [];
       for (const metadataKey of this.metadataTableHeaders) {
         let value = tempMetadata;
-        if (!this.dataFieldMappingWithArray.hasOwnProperty(metadataKey) && !this.dataFieldMappingSimple.hasOwnProperty(metadataKey)) {
+        if (!this.dataFieldMappingWithArray.hasOwnProperty(metadataKey)
+                  && !this.dataFieldMappingSimple.hasOwnProperty(metadataKey)) {
           value = this.getEmbeddedValue(value, metadataKey);
         } else {
           if (this.dataFieldMappingSimple.hasOwnProperty(metadataKey)) {
-            value = this.getEmbeddedValue(tempMetadata[metadataKey], this.dataFieldMappingSimple[metadataKey]);
+          value = this.getEmbeddedValue(tempMetadata[metadataKey], this.dataFieldMappingSimple[metadataKey]);
           } else {
             const metadataObjectPath = this.getMetaDataObjectPath(metadataKey, tempMetadata[metadataKey].length);
             value = this.getMetadataObjectValue(metadataObjectPath, tempMetadata);
@@ -353,6 +365,10 @@ export class MetadataPageComponent implements OnInit {
         }
 
         this.metadataValues[index][metadataKey] = value;
+      }
+
+      if (tempMetadata.hasOwnProperty('attributes')) {
+        this.metadataAttributes[tempMetadata['alias']] = this.getAttributes(tempMetadata['attributes']);
       }
 
       const errorObject = tempMetadata._embedded.validationResult.errorMessages;
@@ -386,8 +402,16 @@ export class MetadataPageComponent implements OnInit {
     return finalMetadataValue.join(', ');
   }
 
-  getEmbeddedValue(object: any, key: string): string {
-    return object[key];
+  getAttributes(attributesObject: Object): Object {
+    const attributes = new Object();
+    for (const attributeName of this.objectKeys(attributesObject)) {
+      const attributeValue = attributesObject[attributeName][0].value;
+      if (attributeValue) {
+        attributes[attributeName] = attributeValue;
+      }
+    }
+
+    return attributes;
   }
 
   getErrorMessages(errorObject: any): string {
@@ -398,6 +422,10 @@ export class MetadataPageComponent implements OnInit {
     }
 
     return errorMessage;
+  }
+
+  getEmbeddedValue(object: any, key: string): string {
+    return object[key];
   }
 
   /**
@@ -459,10 +487,12 @@ export class MetadataPageComponent implements OnInit {
     delete this.selectedTemplate;
     delete this.templatesList;
     this.selectedMetadataErrorMessages = [];
+    delete this.selectedMetadataAttributes;
     this.processingSheets = [];
     this.activeMetadataFieldsPath = [];
     this.metadataTableHeaders = [];
     this.metadataValues = [];
+    this.metadataAttributes = [];
     this.templateForm.reset();
   }
 }

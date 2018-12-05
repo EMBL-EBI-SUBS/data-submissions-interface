@@ -8,13 +8,34 @@
 
     <ngx-loading [show]="loading" [config]=""></ngx-loading>
 
-    <ngx-smart-modal #myModal identifier="myModal">
+    <ngx-smart-modal #metadataErrorWindow identifier="metadataErrorWindow">
       <div *ngFor="let metadataError of selectedMetadataErrorMessages" class="metadata-error-row">
         {{ metadataError }}
       </div>
     </ngx-smart-modal>
 
-    <!-- Uploading metaData sheet fieldset. -->
+    <ngx-smart-modal #attributesWindow identifier="attributesWindow">
+        <legend align="center">Attributes</legend>
+        <br/>
+        <table>
+          <thead>
+            <tr>
+              <th>Type</th>
+              <th>Value</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr *ngFor="let attribute of selectedMetadataAttributes | keyvalue">
+              <td>{{ attribute.key }}</td>
+              <td>{{ attribute.value }}</td>
+            </tr>
+          </tbody>
+        </table>
+        
+      </ngx-smart-modal>
+
+      <!-- Uploading metaData sheet fieldset. -->
     <fieldset required class="large-form padding-bottom-large padding-top-large">
       <legend>Upload {{ activeDataType.displayNamePlural }} Sheet</legend>
 
@@ -77,7 +98,8 @@
             <thead>
               <tr>
                 <th class="actions"></th>
-                <th *ngFor="let headerName of metadataTableHeaders">{{ headerName | uppercase }}</th>
+                <th *ngFor="let headerName of metadataTableHeaders">{{ headerName | titlecase }}</th>
+                <th *ngIf="metadataAttributes && objectKeys(metadataAttributes).length > 0">Attributes</th>
               </tr>
             </thead>
 
@@ -98,6 +120,10 @@
                 </td>
                 <td *ngFor="let header of metadataTableHeaders">
                   {{ metadataRow[header] }}
+                </td>
+                <td *ngIf="metadataAttributes && objectKeys(metadataAttributes).length > 0">
+                    <button *ngIf="metadataAttributes && metadataAttributes[metadataRow['alias']]"
+                            type='button' (click)="showAttributes(metadataAttributes[metadataRow['alias']])" class="">Show</button>
                 </td>
               </tr>
             </tbody>
