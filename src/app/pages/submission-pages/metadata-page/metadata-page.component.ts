@@ -143,6 +143,10 @@ export class MetadataPageComponent implements OnInit {
    * Set metadata header columns based on first row keys.
    */
   processMetadataTableHeaders() {
+    if (!this.submissionMetadata._embedded) {
+      return;
+    }
+
     const originalHeaders = this.objectKeys(this.submissionMetadata._embedded[this.objectKeys(this.submissionMetadata._embedded)[0]][0]);
 
     for (const keyName of originalHeaders) {
@@ -216,6 +220,8 @@ export class MetadataPageComponent implements OnInit {
               if (remainedMetadata.length < 1 ) {
                 this.metadataTableHeaders = [];
                 delete this.submissionMetadata._embedded;
+              } else {
+                this.metadataValues.splice(index, 1);
               }
             },
             err => {
@@ -346,6 +352,10 @@ export class MetadataPageComponent implements OnInit {
   }
 
   processMetaDataValues() {
+    if (!this.submissionMetadata._embedded) {
+      return;
+    }
+
     this.metadataValues = [];
     for (const tempMetadata of this.submissionMetadata._embedded[this.objectKeys(this.submissionMetadata._embedded)[0]]) {
       const index = this.metadataValues.length;
