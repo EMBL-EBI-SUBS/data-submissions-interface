@@ -67,7 +67,7 @@
         <a href="{{selectedTemplate?._links['spreadsheet-csv-download'].href}}" target="_blank" class="hollow button uppercase margin-right-10">Download
           The Template</a>
 
-        <button href="#" (click)="triggerUpload()" target="_blank" [disabled]="!submissionMetadata" class="button primary uppercase">Upload Filled Template</button>
+        <button href="#" (click)="triggerUpload()" target="_blank" class="button primary uppercase">Upload Filled Template</button>
         <input type="file" name="csv-template" (change)="previewCSVFile($event)" class="hide" />
       </div>
     </fieldset>
@@ -77,9 +77,9 @@
       <legend>View Uploaded {{ activeDataType.displayNamePlural }}</legend>
 
       <div required class="large-form padding-bottom-large padding-top-large ds-tabs">
-        <div *ngIf="submissionMetadata && submissionMetadata.hasOwnProperty('_embedded')">
-          <div class="row">
-            <div *ngIf="processingSheets.length > 0" class="sheet-items-wrapper">
+        <div>
+          <div *ngIf="processingSheets.length > 0" class="row">
+            <div class="sheet-items-wrapper">
               <div *ngFor="let processingSheet of processingSheets; let i = index" class="sheet-item">
                 Sheet #{{ i + 1 }} : Processing {{ processingSheet.processedRowCount }} of
                 {{ processingSheet.totalRowCount }}
@@ -94,7 +94,7 @@
               {{ activeDataType.displayNamePlural }}</div>
           </div>
 
-          <table class="margin-top-20 samples-table inline-editing-table">
+          <table *ngIf="submissionMetadata && submissionMetadata.hasOwnProperty('_embedded')" class="margin-top-20 samples-table inline-editing-table">
             <thead>
               <tr>
                 <th class="actions"></th>
@@ -146,7 +146,7 @@
           </ul>
         </div>
 
-        <div *ngIf="submissionMetadata && !submissionMetadata.hasOwnProperty('_embedded')">
+        <div *ngIf="!submissionMetadata || !submissionMetadata.hasOwnProperty('_embedded')">
           No {{ activeDataType.displayNamePlural }} has been uploaded yet. If you just uploaded the spreadsheet then it
           may take a while to appears.
         </div>

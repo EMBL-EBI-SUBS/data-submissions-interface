@@ -219,7 +219,7 @@ export class MetadataPageComponent implements OnInit {
               remainedMetadata.splice(index, 1);
               if (remainedMetadata.length < 1 ) {
                 this.metadataTableHeaders = [];
-                delete this.submissionMetadata._embedded;
+                delete this.submissionMetadata;
               } else {
                 this.metadataValues.splice(index, 1);
               }
