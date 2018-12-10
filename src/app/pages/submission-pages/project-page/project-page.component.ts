@@ -1,3 +1,4 @@
+import { PublicationStatus } from './../../../models/publication-status';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
@@ -160,7 +161,7 @@ export class ProjectPageComponent implements OnInit {
       }
     );
 
-    this.router.navigate(['/submission/contacts']);
+    this.router.navigate(['/submission/publications']);
   }
 
   /**
@@ -258,7 +259,6 @@ export class ProjectPageComponent implements OnInit {
       this.updateProjectForm('', '', '', '');
     }
   }
-
 
   /**
    * This function set default value for forms and load submission content data.

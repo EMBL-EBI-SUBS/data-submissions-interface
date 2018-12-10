@@ -1,0 +1,96 @@
+<div id="content">
+
+  <app-ebi-header></app-ebi-header>
+
+  <section id="main-content-area" class="row padding-top-xsmall padding-bottom-xsmall" role="main">
+    <h2 class="padding-top-xlarge">Publications</h2>
+
+    <app-ebi-submission-menu [activeSubmission]="activeSubmission"></app-ebi-submission-menu>
+
+    <form novalidate [formGroup]="publicationForm" >
+      <!-- Publications Fieldset. -->
+      <fieldset required class="large-form padding-bottom-large padding-top-large">
+        <legend>Publication</legend>
+
+        <div class="small-12 column">
+          <label>Title of the article *
+            <input type="text" name="articleTitle" formControlName="articleTitle" placeholder="Article title" required>
+          </label>
+        </div>
+
+        <div class="small-12 column">
+          <label>Authors *
+            <input type="text" name="authors" formControlName="authors" placeholder="Name of the authors" required>
+          </label>
+        </div>
+
+        <div class="small-6 column">
+          <label>Title of the Journal *
+            <input type="text" name="journalTitle" formControlName="journalTitle" placeholder="Journal title" required>
+          </label>
+        </div>
+
+        <div class="small-6 column">
+          <label>ISSN of the Journal *
+            <input type="text" name="journalIssn" formControlName="journalIssn" placeholder="ISSN number" required>
+          </label>
+        </div>
+
+        <div class="small-6 column">
+          <label>Issue of the Journal
+            <input type="text" name="issue" formControlName="issue" placeholder="Journal Issue Number">
+          </label>
+        </div>
+
+        <div class="small-6 column">
+          <label>Year of the Journal
+            <input type="text" name="year" formControlName="year" placeholder="Journal Year Information">
+          </label>
+        </div>
+
+        <div class="small-6 column">
+          <label>Volume of the Journal
+            <input type="text" name="volume" formControlName="volume" placeholder="Journal Volume Information">
+          </label>
+        </div>
+
+        <div class="small-6 column">
+          <label>Page Information
+            <input type="text" name="pageInfo" formControlName="pageInfo" placeholder="Page Information">
+          </label>
+        </div>
+
+        <div class="small-6 column">
+          <label>PubmedId *
+            <input type="text" name="pubmedid" formControlName="pubmedid" placeholder="12345678" required>
+          </label>
+        </div>
+
+        <div class="small-6 column">
+          <label>DOI *
+            <input type="text" name="doi" formControlName="doi" placeholder="DOI Information..." required>
+          </label>
+        </div>
+
+        <div class="row">
+          <div class="small-6 column">
+            <label>Status *
+              <select name="pubStatus" required>
+                <option *ngFor="let status of publicationStatuses">
+                  {{ status }}
+                </option>
+              </select>
+            </label>
+          </div>
+        </div>
+
+      </fieldset>
+      <div>
+        <button class="button secondary-color white-background" (click)="onSaveExit()" [disabled]="publicationForm.invalid">Save &amp; exit</button>
+        <button class="button readmore" (click)="onSaveContinue()" [disabled]="publicationForm.invalid">Save &amp; continue</button>
+      </div>
+    </form>
+
+
+  </section>
+</div>

@@ -1,3 +1,4 @@
+import { PublicationPageComponent } from './pages/submission-pages/publication-page/publication-page.component';
 import { Routes } from '@angular/router';
 // Import Pages.
 import { NotFoundPageComponent } from './pages/not-found-page/not-found-page.component';
@@ -31,9 +32,10 @@ export const ROUTES: Routes = [
   { path: 'submission', redirectTo: 'submission/overview', pathMatch: 'full', canActivate: [LoggedInGuard] },
   { path: 'submission/overview', component: OverviewPageComponent, canActivate: [LoggedInGuard] },
   { path: 'submission/project', component: ProjectPageComponent, canActivate: [LoggedInGuard] },
+  { path: 'submission/publications', component: PublicationPageComponent, canActivate: [LoggedInGuard] },
+  { path: 'submission/contacts', component: ContactsPageComponent, canActivate: [LoggedInGuard] },
   { path: 'submission/data', component: DataPageComponent, canActivate: [LoggedInGuard] },
   { path: 'submission/metadata/:id', component: MetadataPageComponent, canActivate: [LoggedInGuard] },
-  { path: 'submission/contacts', component: ContactsPageComponent, canActivate: [LoggedInGuard] },
   { path: 'submission/submit', component: SubmitPageComponent, canActivate: [LoggedInGuard] },
   { path: 'dashboard', component: DashboardPageComponent, canActivate: [LoggedInGuard] },
   { path: 'user/login', component: UserLoginPageComponent },
