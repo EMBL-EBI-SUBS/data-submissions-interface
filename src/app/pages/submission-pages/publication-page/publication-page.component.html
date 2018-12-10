@@ -7,76 +7,92 @@
 
     <app-ebi-submission-menu [activeSubmission]="activeSubmission"></app-ebi-submission-menu>
 
-    <form novalidate [formGroup]="publicationForm" >
+    <div *ngIf="!activeProject" class="row callout notice margin-20">
+      Please <a class="font-weight-bold" (click)="onCreateProject()">select project first</a> to be able to create publications.
+    </div>
+
+    <form *ngIf="activeProject" novalidate [formGroup]="publicationForm" >
       <!-- Publications Fieldset. -->
       <fieldset required class="large-form padding-bottom-large padding-top-large">
         <legend>Publication</legend>
 
-        <div class="small-12 column">
-          <label>Title of the article *
-            <input type="text" name="articleTitle" formControlName="articleTitle" placeholder="Article title" required>
-          </label>
+        <div class="row">
+          <div class="small-12 column">
+            <label>Title of the article *
+              <input type="text" name="articleTitle" formControlName="articleTitle" placeholder="Article title" required>
+            </label>
+          </div>
         </div>
 
-        <div class="small-12 column">
-          <label>Authors *
-            <input type="text" name="authors" formControlName="authors" placeholder="Name of the authors" required>
-          </label>
+        <div class="row">
+          <div class="small-12 column">
+            <label>Authors *
+              <input type="text" name="authors" formControlName="authors" placeholder="Name of the authors" required>
+            </label>
+          </div>
         </div>
 
-        <div class="small-6 column">
-          <label>Title of the Journal *
-            <input type="text" name="journalTitle" formControlName="journalTitle" placeholder="Journal title" required>
-          </label>
+        <div class="row">
+          <div class="small-6 column">
+            <label>Title of the Journal *
+              <input type="text" name="journalTitle" formControlName="journalTitle" placeholder="Journal title" required>
+            </label>
+          </div>
+
+          <div class="small-6 column">
+            <label>ISSN of the Journal *
+              <input type="text" name="journalIssn" formControlName="journalIssn" placeholder="ISSN number" required>
+            </label>
+          </div>
         </div>
 
-        <div class="small-6 column">
-          <label>ISSN of the Journal *
-            <input type="text" name="journalIssn" formControlName="journalIssn" placeholder="ISSN number" required>
-          </label>
+        <div class="row">
+          <div class="small-6 column">
+            <label>Issue of the Journal
+              <input type="text" name="issue" formControlName="issue" placeholder="Journal Issue Number">
+            </label>
+          </div>
+
+          <div class="small-6 column">
+            <label>Year of the Journal
+              <input type="text" name="year" formControlName="year" placeholder="Journal Year Information">
+            </label>
+          </div>
         </div>
 
-        <div class="small-6 column">
-          <label>Issue of the Journal
-            <input type="text" name="issue" formControlName="issue" placeholder="Journal Issue Number">
-          </label>
+        <div class="row">
+          <div class="small-6 column">
+            <label>Volume of the Journal
+              <input type="text" name="volume" formControlName="volume" placeholder="Journal Volume Information">
+            </label>
+          </div>
+
+          <div class="small-6 column">
+            <label>Page Information
+              <input type="text" name="pageInfo" formControlName="pageInfo" placeholder="Page Information">
+            </label>
+          </div>
         </div>
 
-        <div class="small-6 column">
-          <label>Year of the Journal
-            <input type="text" name="year" formControlName="year" placeholder="Journal Year Information">
-          </label>
-        </div>
+        <div class="row">
+          <div class="small-6 column">
+            <label>PubmedId *
+              <input type="text" name="pubmedId" formControlName="pubmedId" placeholder="12345678" required>
+            </label>
+          </div>
 
-        <div class="small-6 column">
-          <label>Volume of the Journal
-            <input type="text" name="volume" formControlName="volume" placeholder="Journal Volume Information">
-          </label>
-        </div>
-
-        <div class="small-6 column">
-          <label>Page Information
-            <input type="text" name="pageInfo" formControlName="pageInfo" placeholder="Page Information">
-          </label>
-        </div>
-
-        <div class="small-6 column">
-          <label>PubmedId *
-            <input type="text" name="pubmedid" formControlName="pubmedid" placeholder="12345678" required>
-          </label>
-        </div>
-
-        <div class="small-6 column">
-          <label>DOI *
-            <input type="text" name="doi" formControlName="doi" placeholder="DOI Information..." required>
-          </label>
+          <div class="small-6 column">
+            <label>DOI *
+              <input type="text" name="doi" formControlName="doi" placeholder="DOI Information..." required>
+            </label>
+          </div>
         </div>
 
         <div class="row">
           <div class="small-6 column">
             <label>Status *
-              <select name="pubStatus" required>
-                <option *ngFor="let status of publicationStatuses">
+              <select name="status" formControlName="status" required>
+                <option *ngFor="let status of publicationStatuses" [value]="status">
                   {{ status }}
                 </option>
               </select>
@@ -85,12 +101,53 @@
         </div>
 
       </fieldset>
-      <div>
-        <button class="button secondary-color white-background" (click)="onSaveExit()" [disabled]="publicationForm.invalid">Save &amp; exit</button>
-        <button class="button readmore" (click)="onSaveContinue()" [disabled]="publicationForm.invalid">Save &amp; continue</button>
-      </div>
     </form>
 
+    <button class="button secondary-color white-background" (click)="onAddPublication()" [disabled]="publicationForm.invalid"><i class="icon icon-functional" data-icon="+"></i> Add New Publication</button>
+
+    <div *ngIf="activeProject?.publications?.length > 0">
+      <h3>Publications</h3>
+      <table class="hover">
+        <thead class="fixed">
+          <tr>
+            <th>PubmedId</th>
+            <th>Article Title</th>
+            <th>Journal Title</th>
+            <th>Authors</th>
+            <th>DOI</th>
+            <th>ISSN</th>
+            <th>Issue</th>
+            <th>Year</th>
+            <th>Volume</th>
+            <th>Page Info</th>
+            <th>Status</th>
+            <th></th>
+          </tr>
+        </thead>
+
+        <tbody>
+        <tr *ngFor="let publication of activeProject.publications; let i = index">
+          <td>{{ publication.pubmedId }}</td>
+          <td>{{ publication.articleTitle }}</td>
+          <td>{{ publication.journalTitle }}</td>
+          <td>{{ publication.authors }}</td>
+          <td>{{ publication.doi }}</td>
+          <td>{{ publication.journalIssn }}</td>
+          <td>{{ publication.issue }}</td>
+          <td>{{ publication.year }}</td>
+          <td>{{ publication.volume }}</td>
+          <td>{{ publication.pageInfo }}</td>
+          <td>{{ publication.status }}</td>
+          <td class="text-center"><i class="icon icon-functional" data-icon="d" (click)="onDeletePublication(i)"></i></td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div>
+      <button class="button secondary-color white-background" (click)="onSaveExit()" [disabled]="publicationForm.dirty && publicationForm.invalid">Save &amp; exit</button>
+      <button class="button readmore" (click)="onSaveContinue()" [disabled]="publicationForm.dirty && publicationForm.invalid">Save &amp; continue</button>
+    </div>
 
   </section>
 </div>

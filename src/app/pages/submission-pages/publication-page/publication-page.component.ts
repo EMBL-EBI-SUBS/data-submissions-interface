@@ -3,6 +3,7 @@ import { PublicationStatus } from './../../../models/publication-status';
 import { Component, OnInit } from '@angular/core';
 import { SubmissionsService } from 'src/app/services/submissions.service';
 import { FormGroup, FormControl } from '@angular/forms';
+import { RequestsService } from 'src/app/services/requests.service';
 
 @Component({
   selector: 'app-publication-page',
@@ -17,6 +18,7 @@ export class PublicationPageComponent implements OnInit {
 
   constructor(
     private submissionsService: SubmissionsService,
+    private requestsService: RequestsService,
     private router: Router
   ) {}
 
@@ -30,9 +32,9 @@ export class PublicationPageComponent implements OnInit {
       year: new FormControl(''),
       volume: new FormControl(''),
       pageInfo: new FormControl(''),
-      pubmedid: new FormControl(''),
+      pubmedId: new FormControl(''),
       doi: new FormControl(''),
-      pubStatus: new FormControl('')
+      status: new FormControl('')
     });
 
     this.initializeForm();
@@ -63,6 +65,37 @@ export class PublicationPageComponent implements OnInit {
         }
       );
     }
+  }
+
+  onCreateProject() {
+    this.router.navigate(['submission/project']);
+  }
+
+  onAddPublication() {
+    this.activeProject.publications.push(this.publicationForm.value);
+    const projectUpdateUrl = this.activeProject._links['self:update'].href;
+    this.requestsService.update(projectUpdateUrl, this.activeProject).subscribe(
+      (project) => {
+        this.submissionsService.setActiveProject(project);
+      },
+      (error) => {
+        // TODO: Handle errors.
+      }
+    );
+    this.publicationForm.reset();
+  }
+
+  onDeletePublication(publicationIndex: number) {
+    this.activeProject.publications.splice(publicationIndex, 1);
+    const projectUpdateUrl = this.activeProject._links['self:update'].href;
+    this.requestsService.update(projectUpdateUrl, this.activeProject).subscribe(
+      (project) => {
+        this.submissionsService.setActiveProject(project);
+      },
+      (error) => {
+        // TODO: Handle errors.
+      }
+    );
   }
 
   onSaveExit() {
