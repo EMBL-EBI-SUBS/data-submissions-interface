@@ -63,7 +63,7 @@ export class PublicationPageComponent implements OnInit {
           }
         },
         (error) => {
-
+          console.log(error);
         }
       );
     }
@@ -86,6 +86,7 @@ export class PublicationPageComponent implements OnInit {
       },
       (error) => {
         // TODO: Handle errors.
+        console.log(error);
       }
     );
     this.publicationForm.reset();
@@ -120,6 +121,7 @@ export class PublicationPageComponent implements OnInit {
       },
       (error) => {
         // TODO: Handle errors.
+        console.log(error);
       }
     );
   }
