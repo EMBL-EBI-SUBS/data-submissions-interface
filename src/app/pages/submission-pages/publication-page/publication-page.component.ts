@@ -15,6 +15,8 @@ export class PublicationPageComponent implements OnInit {
   activeProject: any;
   publicationForm: FormGroup;
   publicationStatuses = PublicationStatus.values();
+  editMode = false;
+  selectedPublicationIndex = -1;
 
   constructor(
     private submissionsService: SubmissionsService,
@@ -72,7 +74,11 @@ export class PublicationPageComponent implements OnInit {
   }
 
   onAddPublication() {
-    this.activeProject.publications.push(this.publicationForm.value);
+    if (this.selectedPublicationIndex > -1) {
+      this.activeProject.publications[this.selectedPublicationIndex] = this.publicationForm.value;
+    } else {
+      this.activeProject.publications.push(this.publicationForm.value);
+    }
     const projectUpdateUrl = this.activeProject._links['self:update'].href;
     this.requestsService.update(projectUpdateUrl, this.activeProject).subscribe(
       (project) => {
@@ -83,6 +89,26 @@ export class PublicationPageComponent implements OnInit {
       }
     );
     this.publicationForm.reset();
+    this.editMode = false;
+    this.selectedPublicationIndex = -1;
+  }
+
+  onEditPublication(publicationIndex: number) {
+    const selectedPublication = this.activeProject.publications[publicationIndex];
+    this.publicationForm.controls['pubmedId'].setValue(selectedPublication.pubmedId);
+    this.publicationForm.controls['articleTitle'].setValue(selectedPublication.articleTitle);
+    this.publicationForm.controls['journalTitle'].setValue(selectedPublication.journalTitle);
+    this.publicationForm.controls['journalIssn'].setValue(selectedPublication.journalIssn);
+    this.publicationForm.controls['authors'].setValue(selectedPublication.authors);
+    this.publicationForm.controls['doi'].setValue(selectedPublication.doi);
+    this.publicationForm.controls['issue'].setValue(selectedPublication.issue);
+    this.publicationForm.controls['year'].setValue(selectedPublication.year);
+    this.publicationForm.controls['volume'].setValue(selectedPublication.volume);
+    this.publicationForm.controls['pageInfo'].setValue(selectedPublication.pageInfo);
+    this.publicationForm.controls['status'].setValue(selectedPublication.status);
+
+    this.editMode = true;
+    this.selectedPublicationIndex = publicationIndex;
   }
 
   onDeletePublication(publicationIndex: number) {

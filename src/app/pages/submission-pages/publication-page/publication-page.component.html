@@ -103,7 +103,8 @@
       </fieldset>
     </form>
 
-    <button class="button secondary-color white-background" (click)="onAddPublication()" [disabled]="publicationForm.invalid"><i class="icon icon-functional" data-icon="+"></i> Add New Publication</button>
+    <button *ngIf="!editMode" class="button secondary-color white-background" (click)="onAddPublication()" [disabled]="publicationForm.invalid && !editMode"><i class="icon icon-functional" data-icon="+"></i> Add New Publication</button>
+    <button *ngIf="editMode" class="button secondary-color white-background" (click)="onAddPublication()" [disabled]="publicationForm.invalid && editMode"><i class="icon icon-functional" data-icon="S"></i> Update Publication</button>
 
     <div *ngIf="activeProject?.publications?.length > 0">
       <h3>Publications</h3>
@@ -121,7 +122,7 @@
             <th>Volume</th>
             <th>Page Info</th>
             <th>Status</th>
-            <th></th>
+            <th width="20px">Actions</th>
           </tr>
         </thead>
 
@@ -138,7 +139,10 @@
           <td>{{ publication.volume }}</td>
           <td>{{ publication.pageInfo }}</td>
           <td>{{ publication.status }}</td>
-          <td class="text-center"><i class="icon icon-functional" data-icon="d" (click)="onDeletePublication(i)"></i></td>
+          <td class="text-center">
+            <i class="icon icon-functional" data-icon="e" (click)="onEditPublication(i)"></i> &nbsp;
+            <i class="icon icon-functional" data-icon="d" (click)="onDeletePublication(i)"></i>
+          </td>
         </tr>
         </tbody>
       </table>
