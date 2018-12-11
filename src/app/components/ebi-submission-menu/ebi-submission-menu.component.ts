@@ -35,6 +35,7 @@ export class EbiSubmissionMenuComponent implements OnInit {
   public tabLinks: TabLinks[] = [
     { title: 'Overview', href: '/submission/overview' },
     { title: 'Project', href: '/submission/project' },
+    { title: 'Publications', href: '/submission/publications' },
     { title: 'Contacts', href: '/submission/contacts' },
     { title: 'Data', href: '/submission/data' },
     { title: 'Submit', href: '/submission/submit' },
@@ -65,7 +66,9 @@ export class EbiSubmissionMenuComponent implements OnInit {
   updateDataTypeLinks(dataTypes: DataType[]): void {
     for (const dataType of dataTypes) {
       if (dataType.id !== 'projects') {
-        this.tabLinks.splice(4, 0, { title: dataType.displayNamePlural, href: `/submission/metadata/${dataType.id}` });
+        this.tabLinks.splice(this.tabLinks.length - 1, 0,
+          { title: dataType.displayNamePlural, href: `/submission/metadata/${dataType.id}` }
+        );
       }
     }
   }

@@ -53,18 +53,6 @@
 
       </fieldset>
 
-      <!-- Publications Fieldset. -->
-      <fieldset required class="large-form padding-bottom-large padding-top-large">
-        <legend>Publication</legend>
-
-        <label>Link to original publication, if available at this point:
-          <input type="url" placeholder="http://www.example.com”" formControlName="submissionPublication" pattern="https?://.+"/>
-          <span class="form-error">
-        Yo, you had better fill this out, it's required.
-        </span>
-        </label>
-      </fieldset>
-
       <div>
         <button class="button secondary-color white-background" (click)="onSaveExit()" [disabled]="projectForm.invalid">Save &amp; exit</button>
         <button class="button readmore" (click)="onSaveContinue()" [disabled]="projectForm.invalid">Save &amp; continue</button>

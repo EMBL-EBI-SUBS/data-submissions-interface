@@ -52,6 +52,7 @@ import { FileSizeModule } from 'ngx-filesize';
 // Import Interceptors.
 import { httpInterceptorProviders } from './http-interceptors/index';
 import { YesNoPipe } from './pipes/yes-no.pipe';
+import { PublicationPageComponent } from './pages/submission-pages/publication-page/publication-page.component';
 
 export function getToken(): string {
   return localStorage.getItem('jwt_token') || '';
@@ -88,7 +89,8 @@ export function removeToken(): void {
     HelpPageComponent,
     ProjectsPageComponent,
     ProjectCreatePageComponent,
-    YesNoPipe
+    YesNoPipe,
+    PublicationPageComponent
   ],
   imports: [
     BrowserModule,
