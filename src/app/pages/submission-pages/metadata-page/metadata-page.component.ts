@@ -28,7 +28,7 @@ export class MetadataPageComponent implements OnInit {
   id: string;
   objectKeys = Object.keys;
   activeSubmission: any;
-  selectedMetadataErrorMessages = [];
+  selectedMetadataErrorMessages = {};
   selectedMetadataAttributes = new Object;
   activeDataType: any;
   submissionMetadata: any;
@@ -236,8 +236,7 @@ export class MetadataPageComponent implements OnInit {
    * On showing errors for a specific metadata row.
    */
   showMetadataErrors(errorMessage: any) {
-    this.selectedMetadataErrorMessages = [];
-    this.selectedMetadataErrorMessages.push(errorMessage);
+    this.selectedMetadataErrorMessages = errorMessage;
     this.ngxSmartModalService.getModal('metadataErrorWindow').open();
   }
 
@@ -383,7 +382,7 @@ export class MetadataPageComponent implements OnInit {
 
       const errorObject = tempMetadata._embedded.validationResult.errorMessages;
       if (errorObject) {
-        this.metadataValues[index]['errorMessages'] = this.getErrorMessages(errorObject);
+        this.metadataValues[index]['errorMessages'] = errorObject;
       }
     }
   }
@@ -422,16 +421,6 @@ export class MetadataPageComponent implements OnInit {
     }
 
     return attributes;
-  }
-
-  getErrorMessages(errorObject: any): string {
-    let errorMessage = '';
-    const errorKeys = this.objectKeys(errorObject);
-    for (const errorKey of errorKeys) {
-      errorMessage = errorMessage.concat( errorObject[errorKey]);
-    }
-
-    return errorMessage;
   }
 
   getEmbeddedValue(object: any, key: string): string {

@@ -4,6 +4,7 @@
   <app-ebi-header></app-ebi-header>
 
   <ngx-smart-modal #fileErrorWindow identifier="fileErrorWindow">
+    <legend class="text-center">Error messages</legend>
     <div *ngFor="let errorType of objectKeys(selectedFileErrorMessages)" class="errormessage-row">
       <legend>{{ errorType }}</legend>
       <ul *ngFor="let errorMessage of selectedFileErrorMessages[errorType]">
