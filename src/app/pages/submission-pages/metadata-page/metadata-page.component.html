@@ -9,31 +9,31 @@
     <ngx-loading [show]="loading" [config]=""></ngx-loading>
 
     <ngx-smart-modal #metadataErrorWindow identifier="metadataErrorWindow">
-      <div *ngFor="let metadataError of selectedMetadataErrorMessages" class="metadata-error-row">
+      <div *ngFor="let metadataError of selectedMetadataErrorMessages" class="errormessage-row">
         {{ metadataError }}
       </div>
     </ngx-smart-modal>
 
     <ngx-smart-modal #attributesWindow identifier="attributesWindow">
-        <legend align="center">Attributes</legend>
-        <br/>
-        <table>
-          <thead>
-            <tr>
-              <th>Type</th>
-              <th>Value</th>
-            </tr>
-          </thead>
+      <legend align="center">Attributes</legend>
+      <br/>
+      <table>
+        <thead>
+          <tr>
+            <th>Type</th>
+            <th>Value</th>
+          </tr>
+        </thead>
 
-          <tbody>
-            <tr *ngFor="let attribute of selectedMetadataAttributes | keyvalue">
-              <td>{{ attribute.key }}</td>
-              <td>{{ attribute.value }}</td>
-            </tr>
-          </tbody>
-        </table>
+        <tbody>
+          <tr *ngFor="let attribute of selectedMetadataAttributes | keyvalue">
+            <td>{{ attribute.key }}</td>
+            <td>{{ attribute.value }}</td>
+          </tr>
+        </tbody>
+      </table>
         
-      </ngx-smart-modal>
+    </ngx-smart-modal>
 
       <!-- Uploading metaData sheet fieldset. -->
     <fieldset required class="large-form padding-bottom-large padding-top-large">

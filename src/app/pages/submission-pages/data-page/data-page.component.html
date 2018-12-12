@@ -3,6 +3,15 @@
 
   <app-ebi-header></app-ebi-header>
 
+  <ngx-smart-modal #fileErrorWindow identifier="fileErrorWindow">
+    <div *ngFor="let errorType of objectKeys(selectedFileErrorMessages)" class="errormessage-row">
+      <legend>{{ errorType }}</legend>
+      <ul *ngFor="let errorMessage of selectedFileErrorMessages[errorType]">
+        <li>{{ errorMessage }}</li>
+      </ul>
+    </div>
+  </ngx-smart-modal>
+
   <section id="main-content-area" class="row padding-top-xsmall padding-bottom-xsmall" role="main">
     <h2 class="padding-top-xlarge">Data upload</h2>
 
@@ -31,6 +40,7 @@
             <th>Date</th>
             <th>Size</th>
             <th>Status</th>
+            <th>Errors</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -40,7 +50,20 @@
             <td>{{ file.uploadStartDate }}</td>
             <td>{{ file.totalSize | filesize }}</td>
             <td>{{ formatFileStatus(file.status) }}</td>
-            <td><button class="button" (click)="onDeleteFile($event, file)">Delete</button></td>
+            <td>
+              <button 
+                *ngIf="file._embedded.validationResult.errorMessages"
+                class="reveal-button"
+                type='button'
+                (click)="showValidationErrors(file._embedded.validationResult.errorMessages)">
+                <i class="icon icon-generic errors row-errors" data-icon="l"></i>
+              </button>
+            </td>
+            <td>
+              <button type='button' (click)="onDeleteFile($event, file)">
+                <i class="icon icon-functional" data-icon="d"></i>
+              </button>
+            </td>
           </tr>
         </tbody>
       </table>
