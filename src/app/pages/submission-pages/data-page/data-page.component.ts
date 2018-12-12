@@ -1,3 +1,4 @@
+import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { TokenService } from 'angular-aap-auth';
@@ -22,13 +23,16 @@ import { RequestsService } from 'src/app/services/requests.service';
   styleUrls: ['./data-page.component.scss']
 })
 export class DataPageComponent implements OnInit {
-  activeSubmission: any;
 
+  objectKeys = Object.keys;
+  activeSubmission: any;
   uploadEndpoint = environment.uploadEndpoint;
   uploadUppy: any;
   files: any;
   userHasTeam = true;
   token: string;
+
+  selectedFileErrorMessages = {};
 
   constructor(
     private router: Router,
@@ -37,7 +41,8 @@ export class DataPageComponent implements OnInit {
     private tokenService: TokenService,
     private requestsService: RequestsService,
     private fileService: FileService,
-    private elementRef: ElementRef
+    private elementRef: ElementRef,
+    public ngxSmartModalService: NgxSmartModalService
   ) {}
 
   ngOnInit() {
@@ -49,6 +54,11 @@ export class DataPageComponent implements OnInit {
         this.files = response;
       }
     );
+
+    this.initUppy();
+  }
+
+  initUppy() {
     this.uploadUppy = Uppy({
       id: this.convertToSlug(
         this.activeSubmission.name +
@@ -120,26 +130,6 @@ export class DataPageComponent implements OnInit {
     );
   }
 
-  onSaveExit() {
-    this.submissionsService.deleteActiveSubmission();
-    this.submissionsService.deleteActiveProject();
-    this.teamsService.deleteActiveTeam();
-
-    this.router.navigate(['/']);
-  }
-
-  onSaveContinue() {
-    this.elementRef.nativeElement
-      .querySelector('li.tabs-title.active+li a')
-      .click();
-  }
-
-  convertToSlug(Text) {
-    return Text.toLowerCase()
-      .replace(/ /g, '-')
-      .replace(/[^\w-]+/g, '');
-  }
-
   /**
    * When click on pager, update files.
    */
@@ -165,6 +155,31 @@ export class DataPageComponent implements OnInit {
         console.log(err);
       }
     );
+  }
+
+  showValidationErrors(errorMessages: {}) {
+    this.selectedFileErrorMessages = errorMessages;
+    this.ngxSmartModalService.getModal('fileErrorWindow').open();
+  }
+
+  onSaveExit() {
+    this.submissionsService.deleteActiveSubmission();
+    this.submissionsService.deleteActiveProject();
+    this.teamsService.deleteActiveTeam();
+
+    this.router.navigate(['/']);
+  }
+
+  onSaveContinue() {
+    this.elementRef.nativeElement
+      .querySelector('li.tabs-title.active+li a')
+      .click();
+  }
+
+  convertToSlug(Text) {
+    return Text.toLowerCase()
+      .replace(/ /g, '-')
+      .replace(/[^\w-]+/g, '');
   }
 
   /**
