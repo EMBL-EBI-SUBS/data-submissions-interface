@@ -308,6 +308,8 @@ export class MetadataPageComponent implements OnInit {
         return false;
       }
 
+      fileResults = this.addDefaultProjectAliasIfNotPresent(fileResults);
+
       this.spreadsheetsService
         .create(templateUploadLink, fileResults)
         .subscribe(
@@ -325,6 +327,37 @@ export class MetadataPageComponent implements OnInit {
         );
     };
     reader.readAsDataURL(event.target.files[0]);
+  }
+
+  addDefaultProjectAliasIfNotPresent(fileResults: string): string {
+    const result = [];
+    const lines = fileResults.split('\r\n');
+    const index = this.getProjectAliasIndex(lines);
+
+    result.push(lines.shift());
+    for (let line of lines) {
+      const values = line.split(',');
+      if (index === values.length) {
+        line = line.concat(',', this.activeSubmission.projectName);
+      } else if (values[index] === '') {
+        values[index] = this.activeSubmission.projectName;
+        line = values.join(',');
+      }
+
+      result.push(line);
+    }
+
+    return result.join('\r\n');
+  }
+
+  getProjectAliasIndex(lines): number {
+    let index = lines[0].split(',').indexOf('project alias');
+    if (index === -1) {
+      lines[0] = lines[0].concat(',project alias');
+      index = lines[0].split(',').length - 1;
+    }
+
+    return index;
   }
 
   /**
