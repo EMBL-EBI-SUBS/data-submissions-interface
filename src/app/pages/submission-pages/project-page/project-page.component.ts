@@ -253,7 +253,7 @@ export class ProjectPageComponent implements OnInit {
         this.projects[this.projectForm.value.project].alias,
         this.projects[this.projectForm.value.project].title,
         this.projects[this.projectForm.value.project].description,
-        this.projects[this.projectForm.value.releaseDate].releaseDate
+        this.projects[this.projectForm.value.project].releaseDate
       );
     } else {
       this.updateProjectForm('', '', '', '');
