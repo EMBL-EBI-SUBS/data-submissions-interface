@@ -75,8 +75,6 @@ export class OverviewPageComponent implements OnInit {
   }
 
   public onChangeField(): void {
-    const message = 'You are about to modify an important value. Are you sure?';
-    window.confirm(message);
     this.lockedPlan = false;
   }
 
