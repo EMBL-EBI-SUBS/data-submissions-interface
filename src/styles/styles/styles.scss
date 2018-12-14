@@ -172,6 +172,14 @@ a.disabled {
   text-align: center;
   width: 1.5rem;
 }
+
+
+label.big-checkbox,
+label.big-checkbox:before {
+  font-size: 1.5rem;
+  vertical-align: bottom;
+}
+
 /* Checked styles */
 .large-form > input[type=radio] + label:hover:before,
 .large-form > input[type=radio]:checked + label:before {

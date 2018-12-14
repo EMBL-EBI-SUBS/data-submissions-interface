@@ -24,9 +24,8 @@
                You have selected: <span class="font-weight-bold">{{ gdpr | yesno:'I agree':'I don\'t agree' }}</span>
               </div>
               <ng-template #showGPDR>
-                <!-- TODO: this should be a checkbox rather than radio button, but need to create styles for it match -->
-                <input type="radio" value="1" formControlName="gdpr" id="gdpr">
-                <label for="gdpr">I agree</label>
+                <input type="checkbox" value="1" formControlName="gdpr" id="gdpr" required>
+                <label for="gdpr" class="big-checkbox">I agree</label>
               </ng-template>
             </fieldset>
 
@@ -36,52 +35,62 @@
                 You have selected: <span class="font-weight-bold">{{ human.value | yesno }}</span>
               </div>
               <ng-template #showHuman>
-                <input type="radio" value="1" formControlName="human" id="human-yes">
+                <input type="radio" value="1" formControlName="human" id="human-yes" (click)="humanResearch()">
                 <label for="human-yes">Yes</label>
-                <input type="radio" value="0" formControlName="human" id="human-no">
+                <input type="radio" value="0" formControlName="human" id="human-no" (click)="noHumanResearch()">
                 <label for="human-no">No</label>
               </ng-template>
             </fieldset>
 
-            <fieldset class="large-form padding-bottom-large padding-top-large">
-              <legend>Does it require controlled access once it becomes public?</legend>
-              <div *ngIf="locked; else showControlled">
-                You have selected: <span class="font-weight-bold">{{ controlled | yesno }}</span>
-              </div>
-              <ng-template #showControlled>
-                <input type="radio" value="1" formControlName="controlled" id="controlled-yes">
-                <label for="controlled-yes">Yes</label>
-                <input type="radio" value="0" formControlName="controlled" id="controlled-no">
-                <label for="controlled-no">No</label>
-              </ng-template>
-            </fieldset>
+            <div *ngIf="isHuman">
+                <fieldset class="large-form padding-bottom-large padding-top-large">
+                <legend>Does it require controlled access once it becomes public?</legend>
+                <div *ngIf="locked; else showControlled">
+                  You have selected: <span class="font-weight-bold">{{ controlled | yesno }}</span>
+                </div>
+                <ng-template #showControlled>
+                  <input type="radio" value="1" formControlName="controlled" id="controlled-yes" (click)="controlledResearch()">
+                  <label for="controlled-yes">Yes</label>
+                  <input type="radio" value="0" formControlName="controlled" id="controlled-no" (click)="notControlledResearch()">
+                  <label for="controlled-no">No</label>
+                </ng-template>
+              </fieldset>
+            </div>
 
-            <fieldset class="large-form padding-bottom-large padding-top-large">
-              <legend>What type of data are you submitting?</legend>
-              <div *ngIf="locked; else showPlan">
-                You have selected: <span class="font-weight-bold">{{ submissionPlanName }}</span>
-              </div>
-              <ng-template #showPlan>
-                <ng-container *ngFor="let plan of submissionPlans; let i = index">
-                  <!-- TODO: this should be a checkbox rather than radio button, but need to create styles for it match -->
-                  <input type="radio" [value]="plan" formControlName="submissionPlan" id="{{ 'plan-' + i }}">
-                  <label for="{{ 'plan-' + i }}" data-tooltip title="{{ plan.description }}">{{ plan.displayName }}</label>
-                </ng-container>
-              </ng-template>
-            </fieldset>
+            <div *ngIf="isControlled">
+              Please, go and submit your data through the <a href="https://ega-archive.org/submission-form.php" target="_blank">EGA submission page</a>.
+            </div>
+
+            <div *ngIf="!isHuman || !isControlled">
+              <fieldset class="large-form padding-bottom-large padding-top-large">
+                <legend>What type of data are you submitting?</legend>
+                <div *ngIf="locked; else showPlan">
+                  You have selected: <span class="font-weight-bold">{{ submissionPlanName }}</span>
+                </div>
+                <ng-template #showPlan>
+                  <ng-container *ngFor="let plan of submissionPlans; let i = index">
+                    <!-- TODO: this should be a checkbox rather than radio button, but need to create styles for it match -->
+                    <input type="radio" [value]="plan" formControlName="submissionPlan" id="{{ 'plan-' + i }}">
+                    <label for="{{ 'plan-' + i }}" data-tooltip title="{{ plan.description }}">{{ plan.displayName }}</label>
+                  </ng-container>
+                </ng-template>
+              </fieldset>
+            </div>
           </ng-container>
         </ng-container>
 
-        <fieldset required class="large-form padding-bottom-large padding-top-large">
-          <legend>Submission short name (for easy reference)</legend>
-          <div *ngIf="lockedPlan; else showName">
-            You have selected: <span class="font-weight-bold">{{ name }}</span><a (click)="onChangeField()"> (change)</a>
-          </div>
-          <ng-template #showName>
-            <input type="text" placeholder="e.g. &quot;RAD sequencing - 2004 Liverpool&quot;" formControlName="name">
-            <span>This name will show in your dashboard.</span>
-          </ng-template>
-        </fieldset>
+        <div *ngIf="!isHuman || !isControlled">
+          <fieldset required class="large-form padding-bottom-large padding-top-large">
+            <legend>Submission short name (for easy reference)</legend>
+            <div *ngIf="lockedPlan; else showName">
+              You have selected: <span class="font-weight-bold">{{ name }}</span><a (click)="onChangeField()"> (change)</a>
+            </div>
+            <ng-template #showName>
+              <input type="text" placeholder="e.g. &quot;RAD sequencing - 2004 Liverpool&quot;" formControlName="name">
+              <span>This name will show in your dashboard.</span>
+            </ng-template>
+          </fieldset>
+        </div>
 
       </fieldset>
 

@@ -20,7 +20,7 @@ export class OverviewPageComponent implements OnInit {
       overview: this._fb.group({
         gdpr: ['', Validators.required],
         human: ['', Validators.required],
-        controlled: ['', Validators.required],
+        controlled: [''],
         submissionPlan: ['', Validators.required],
       }),
     }),
@@ -30,6 +30,8 @@ export class OverviewPageComponent implements OnInit {
   public submissionPlans;
   public locked = false;
   public lockedPlan = false;
+  public isHuman = false;
+  public isControlled = false;
 
   get gdpr(): string {
     return this.overviewForm.get('uiData.overview.gdpr').value;
@@ -76,6 +78,22 @@ export class OverviewPageComponent implements OnInit {
 
   public onChangeField(): void {
     this.lockedPlan = false;
+  }
+
+  public humanResearch() {
+    this.isHuman = true;
+  }
+
+  public noHumanResearch() {
+    this.isHuman = false;
+  }
+
+  public controlledResearch() {
+    this.isControlled = true;
+  }
+
+  public notControlledResearch() {
+    this.isControlled = false;
   }
 
   public onSaveExit(): void {
