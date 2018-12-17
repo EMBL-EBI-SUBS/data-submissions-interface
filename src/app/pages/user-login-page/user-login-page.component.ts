@@ -31,31 +31,6 @@ export class UserLoginPageComponent implements OnInit {
   ngOnInit() {
     this.username = '';
     this.password = '';
-
-    // TODO: Improve this nested calls. maybe using flatMap
-    this.authService.addLogInEventListener(() => {
-      this.userService.getUserTeams().subscribe(
-        (data) => {
-          if (data['page']['totalElements'] === 0) {
-            this.teamsService.createTeam().subscribe(
-              (unused) => {
-                this.authService.logOut();
-                alert('New team has beeen created, you have to login again.');
-              },
-              (err) => {
-                console.log(err);
-              }
-            );
-          }
-          // User already has team, redirect him/her to the dashboard.
-          this.router.navigate(['/dashboard']);
-        },
-        (err) => {
-          // TODO: Handle Errors.
-          console.log(err);
-        }
-      );
-    });
   }
 
   /**
