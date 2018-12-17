@@ -57,11 +57,11 @@
               </fieldset>
             </div>
 
-            <div *ngIf="isControlled">
+            <div *ngIf="isHuman && isControlled">
               Please, go and submit your data through the <a href="https://ega-archive.org/submission-form.php" target="_blank">EGA submission page</a>.
             </div>
 
-            <div *ngIf="!isHuman || !isControlled">
+            <div *ngIf="!isControlled">
               <fieldset class="large-form padding-bottom-large padding-top-large">
                 <legend>What type of data are you submitting?</legend>
                 <div *ngIf="locked; else showPlan">
@@ -95,8 +95,8 @@
       </fieldset>
 
       <div>
-        <button class="button secondary-color white-background" (click)="onSaveExit()" [disabled]="overviewForm.invalid">Save & exit</button>
-        <button class="button readmore" (click)="onSaveContinue()" [disabled]="overviewForm.invalid">Save &amp; continue</button>
+        <button class="button secondary-color white-background" (click)="onSaveExit()" [disabled]="isControlled || overviewForm.invalid">Save & exit</button>
+        <button class="button readmore" (click)="onSaveContinue()" [disabled]="isControlled || overviewForm.invalid">Save &amp; continue</button>
       </div>
     </form>
   </section>
