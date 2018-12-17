@@ -31,7 +31,7 @@ export class OverviewPageComponent implements OnInit {
   public locked = false;
   public lockedPlan = false;
   public isHuman = false;
-  public isControlled = false;
+  public isControlled = true;
 
   get gdpr(): string {
     return this.overviewForm.get('uiData.overview.gdpr').value;
@@ -82,10 +82,12 @@ export class OverviewPageComponent implements OnInit {
 
   public humanResearch() {
     this.isHuman = true;
+    this.isControlled = true;
   }
 
   public noHumanResearch() {
     this.isHuman = false;
+    this.isControlled = false;
   }
 
   public controlledResearch() {
