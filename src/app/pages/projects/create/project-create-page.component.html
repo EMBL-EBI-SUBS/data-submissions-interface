@@ -9,23 +9,16 @@
 
               <label>Project title
                 <input type="text" required placeholder="e.g. “Parallelism in Fish”" class="form-control" name="projectTitle" formControlName="projectTitle"/>
-                <span class="form-error" *ngIf="projectForm.get('projectTitle').hasError('required')">
-              Yo, you had better fill this out, it's required.
-              </span>
+                <span class="form-error" *ngIf="projectForm.get('projectTitle').hasError('required')">Project title is required</span>
               </label>
 
               <label>Project description
                 <textarea rows="5" placeholder="Enter project description here"  name="projectDescription" formControlName="projectDescription"></textarea>
-                <span class="form-error">
-              Yo, you had better fill this out, it's required.
-              </span>
               </label>
 
               <label>Project short name (for easy reference)
                 <input type="text" placeholder="e.g. &quot;RAD sequencing - 2004 Liverpool&quot;"  name="projectShortName" formControlName="projectShortName"/>
-                <span class="form-error">
-              Yo, you had better fill this out, it's required.
-              </span>
+                <span class="form-error">Project short name is required</span>
               </label>
 
             </fieldset>
