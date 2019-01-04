@@ -69,7 +69,7 @@ export class DashboardPageComponent implements OnInit {
    * Get User submissions.
    */
   getUserSubmissions() {
-    this.userService.geUserSubmissions().subscribe(
+    this.userService.getUserSubmissions().subscribe(
       (data) => {
         // Store active submission in a local variable.
         this.submissions = data;
@@ -105,7 +105,7 @@ export class DashboardPageComponent implements OnInit {
     this.submissions = this.getUserSubmissionsByUrl(getSubmissionUrl);
   }
 
-  onEditDraftSubmission(submissionItem: any) {
+  onEditSubmission(submissionItem: any) {
     const submissionLinkEndpoint = submissionItem._links['self'].href;
     this.requestsService.get(submissionLinkEndpoint).subscribe(
       (data) => {
@@ -118,10 +118,6 @@ export class DashboardPageComponent implements OnInit {
         console.log(err);
       }
     );
-  }
-
-  onEditSubmittedSubmission(submissionItem: any) {
-
   }
 
   onViewCompletedSubmission(submissionItem: any) {
@@ -145,5 +141,4 @@ export class DashboardPageComponent implements OnInit {
       }
     );
   }
-
 }
