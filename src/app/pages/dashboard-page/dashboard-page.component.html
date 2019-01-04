@@ -29,7 +29,7 @@
           <th>Submission</th>
           <th>Project</th>
           <th>Status</th>
-          <th></th>
+          <th>Actions</th>
         </tr>
       </thead>
 
@@ -40,15 +40,18 @@
           <td class="col-project">{{ submissionItem?.projectName }}</td>
           <td class="col-status status-{{submissionItem.submissionStatus | lowercase}}">{{ submissionItem.submissionStatus }}</td>
           <td>
-            <!-- TODO: Update actions based on correct status names -->
-            <!-- Delete Submission -->
-            <a (click)="onDeleteSubmission(submissionItem)">Delete ></a>
-            <!-- Edit Draft Action -->
-            <a *ngIf="submissionItem.submissionStatus == 'Draft'" (click)="onEditDraftSubmission(submissionItem)">Edit ></a>
-            <!-- Edit Submitted Action -->
-            <a *ngIf="submissionItem.submissionStatus == 'Submitted'" (click)="onEditSubmittedSubmission(submissionItem)">Edit ></a>
-            <!-- View Completed Action -->
-            <a *ngIf="submissionItem.submissionStatus == 'Completed'" (click)="onViewCompletedSubmission(submissionItem)">Public ></a>
+            <!-- Delete Submission action -->
+            <button type='button' *ngIf="submissionItem._links.hasOwnProperty('self:delete')" (click)="onDeleteSubmission(submissionItem)" title="Delete">
+              <i class="icon icon-functional" data-icon="d"></i>
+            </button>
+            <!-- Edit Submission action -->
+            <button type='button' *ngIf="submissionItem._links.hasOwnProperty('self:update')" (click)="onEditSubmission(submissionItem)" title="Edit">
+              <i class="icon icon-functional" data-icon="e"></i>
+            </button>
+            <!-- View Completed action -->
+            <button type='button' *ngIf="!submissionItem._links.hasOwnProperty('self:update')" (click)="onViewCompletedSubmission(submissionItem)" title="View">
+              <i class="icon icon-functional" data-icon="4"></i>
+            </button>
           </td>
         </tr>
       </tbody>

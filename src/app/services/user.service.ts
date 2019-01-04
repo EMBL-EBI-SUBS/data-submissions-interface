@@ -37,7 +37,7 @@ export class UserService {
   /**
    * Get User Submissions.
    */
-  geUserSubmissions() {
+  getUserSubmissions() {
     const requestUrl = this.userSubmissionsEndpoint;
     const response = this.http.get(requestUrl);
     return response;
