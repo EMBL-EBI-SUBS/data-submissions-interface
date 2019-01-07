@@ -98,7 +98,7 @@ export class DataPageComponent implements OnInit {
     });
   }
 
-  onDeleteFile(event, file) {
+  onDeleteFile(file: any, index: number) {
     if (
       !confirm(
         `Are you sure you would like to delete this file: ${file.filename}`
@@ -112,12 +112,10 @@ export class DataPageComponent implements OnInit {
     this.fileService.deleteFile(fileHref).subscribe(
       response => {
         if (response.status === HttpStatus.NO_CONTENT) {
-          // console.debug(`File: ${file.filename} has been succcesfully deleted from the storage.`);
-          this.files = this.files['_embedded']['files'].filter(
-            item => item !== file
-          );
+          console.log(`File: ${file.filename} has been succcesfully deleted from the storage.`);
+          this.files['_embedded']['files'].splice(index, 1);
         } else {
-          // console.log(`File deletion has failed. The reason: ${response.statusText}`);
+          console.log(`File deletion has failed. The reason: ${response.statusText}`);
         }
       },
       err => {
