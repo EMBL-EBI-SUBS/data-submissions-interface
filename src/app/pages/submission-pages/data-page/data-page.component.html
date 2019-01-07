@@ -46,7 +46,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let file of files._embedded.files">
+          <tr *ngFor="let file of files._embedded.files; let last = last; let i = index;">
             <td>{{ file.filename }}</td>
             <td>{{ file.uploadStartDate }}</td>
             <td>{{ file.totalSize | filesize }}</td>
@@ -61,7 +61,7 @@
               </button>
             </td>
             <td>
-              <button type='button' (click)="onDeleteFile($event, file)">
+              <button type='button' (click)="onDeleteFile(file, i)">
                 <i class="icon icon-functional" data-icon="d"></i>
               </button>
             </td>
