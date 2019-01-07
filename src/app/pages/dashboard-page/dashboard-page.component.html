@@ -40,19 +40,21 @@
           <td class="col-project">{{ submissionItem?.projectName }}</td>
           <td class="col-status status-{{submissionItem.submissionStatus | lowercase}}">{{ submissionItem.submissionStatus }}</td>
           <td>
-            <!-- Delete Submission action -->
-            <button type='button' *ngIf="submissionItem._links.hasOwnProperty('self:delete')" (click)="onDeleteSubmission(submissionItem)" title="Delete">
-              <i class="icon icon-functional" data-icon="d"></i>
-            </button>
             <!-- Edit Submission action -->
             <button type='button' *ngIf="submissionItem._links.hasOwnProperty('self:update')" (click)="onEditSubmission(submissionItem)" title="Edit">
               <i class="icon icon-functional" data-icon="e"></i>
+              &nbsp;
             </button>
             <!-- View Completed action -->
             <button type='button' *ngIf="!submissionItem._links.hasOwnProperty('self:update')" (click)="onViewCompletedSubmission(submissionItem)" title="View">
               <i class="icon icon-functional" data-icon="4"></i>
+              &nbsp;
             </button>
-          </td>
+            <!-- Delete Submission action -->
+            <button type='button' *ngIf="submissionItem._links.hasOwnProperty('self:delete')" (click)="onDeleteSubmission(submissionItem)" title="Delete">
+                <i class="icon icon-functional" data-icon="d"></i>
+              </button>
+            </td>
         </tr>
       </tbody>
     </table>
