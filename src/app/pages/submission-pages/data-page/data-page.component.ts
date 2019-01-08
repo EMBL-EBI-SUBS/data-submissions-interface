@@ -1,5 +1,5 @@
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { TokenService } from 'angular-aap-auth';
 
@@ -42,7 +42,8 @@ export class DataPageComponent implements OnInit {
     private requestsService: RequestsService,
     private fileService: FileService,
     private elementRef: ElementRef,
-    public ngxSmartModalService: NgxSmartModalService
+    public ngxSmartModalService: NgxSmartModalService,
+    private changeDetectorRef: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
@@ -74,7 +75,7 @@ export class DataPageComponent implements OnInit {
         trigger: '.UppyModalOpenerBtn',
         inline: true,
         target: '.uppy-drag-drop',
-        note: 'Drag & drop filled out .CSV file'
+        note: 'Drag & drop data files here'
       })
       .use(Form, {
         target: '.uppy-metadata',
@@ -145,8 +146,8 @@ export class DataPageComponent implements OnInit {
   getSubmissionFilesByUrl(serviceUrl: string) {
     this.requestsService.get(serviceUrl).subscribe(
       data => {
-        // Store active submission in a local variable.
         this.files = data;
+        this.changeDetectorRef.detectChanges();
       },
       err => {
         // TODO: Handle Errors.
