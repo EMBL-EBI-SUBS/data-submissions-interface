@@ -34,6 +34,8 @@
     <ng-template #filesBlock>
       <h3>Data Files</h3>
 
+      <button class="button center" (click)="onRefreshFileStatuses()">Refresh file status</button>
+
       <table class="hover">
         <thead class="fixed">
           <tr>
@@ -53,7 +55,7 @@
             <td>{{ formatFileStatus(file.status) }}</td>
             <td>
               <button 
-                *ngIf="file._embedded.validationResult.errorMessages"
+                *ngIf="file._embedded && file._embedded.validationResult.errorMessages"
                 class="reveal-button"
                 type='button'
                 (click)="showValidationErrors(file._embedded.validationResult.errorMessages)">
