@@ -130,6 +130,14 @@ export class DataPageComponent implements OnInit {
     );
   }
 
+  onRefreshFileStatuses() {
+    this.fileService.getActiveSubmissionsFiles(this.activeSubmission).subscribe(
+      (response) => {
+        this.files = response;
+      }
+    );
+  }
+
   /**
    * When click on pager, update files.
    */
