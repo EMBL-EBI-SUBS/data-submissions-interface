@@ -115,6 +115,7 @@ export class DataPageComponent implements OnInit {
         if (response.status === HttpStatus.NO_CONTENT) {
           console.log(`File: ${file.filename} has been succcesfully deleted from the storage.`);
           this.files['_embedded']['files'].splice(index, 1);
+          this.changeDetectorRef.detectChanges();
         } else {
           console.log(`File deletion has failed. The reason: ${response.statusText}`);
         }
