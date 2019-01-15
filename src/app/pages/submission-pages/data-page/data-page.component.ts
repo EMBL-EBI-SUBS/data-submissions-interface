@@ -1,12 +1,11 @@
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { Component, OnInit, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ElementRef, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { TokenService } from 'angular-aap-auth';
 
 // Import Services.
 import { SubmissionsService } from '../../../services/submissions.service';
 import { TeamsService } from '../../../services/teams.service';
-import { environment } from 'src/environments/environment';
 
 import Uppy from '@uppy/core';
 import Dashboard from '@uppy/dashboard';
@@ -26,7 +25,7 @@ export class DataPageComponent implements OnInit {
 
   objectKeys = Object.keys;
   activeSubmission: any;
-  uploadEndpoint = environment.uploadEndpoint;
+  uploadEndpoint: any;
   uploadUppy: any;
   files: any;
   userHasTeam = true;
@@ -47,6 +46,13 @@ export class DataPageComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.fileService.getUploadEndpoint().toPromise().then(
+      response => {
+        this.uploadEndpoint = response;
+        this.initUppy();
+      }
+    );
+
     this.activeSubmission = this.submissionsService.getActiveSubmission();
     this.token = this.tokenService.getToken();
 
@@ -55,8 +61,6 @@ export class DataPageComponent implements OnInit {
         this.files = response;
       }
     );
-
-    this.initUppy();
   }
 
   initUppy() {
