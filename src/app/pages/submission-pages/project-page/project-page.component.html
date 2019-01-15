@@ -18,7 +18,7 @@
             </option>
 
             <option *ngFor="let project of projects; let i = index" [value]="i" [attr.selected]="activeProject && activeProject?.alias == project?.alias">
-              {{ project.title }}
+              {{ project.title }} ( {{ project.alias }} )
             </option>
           </select>
         </label>
