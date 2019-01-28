@@ -1,7 +1,7 @@
 import { PublicationStatus } from './../../../models/publication-status';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 
 // Import Services.
 import { SubmissionsService } from '../../../services/submissions.service';
@@ -26,23 +26,26 @@ export class ProjectPageComponent implements OnInit {
     private userService: UserService,
     private requestsService: RequestsService,
     private router: Router,
+    private formBuilder: FormBuilder
   ) { }
 
   ngOnInit() {
-    this.projectForm = new FormGroup({
-      project: new FormControl('_create', Validators.required),
-      projectTitle: new FormControl('', Validators.required),
-      projectDescription: new FormControl(''),
-      projectShortName: new FormControl('', Validators.required),
-      submissionShortName: new FormControl('', Validators.required),
-      releaseDate: new FormControl('', Validators.required),
-      submissionPublication: new FormControl(''),
+    this.projectForm = this.formBuilder.group({
+      project: ['_create'],
+      projectTitle: ['', [Validators.required, Validators.minLength(50)]],
+      projectDescription: ['', [Validators.required, Validators.minLength(50)]],
+      projectShortName: ['', Validators.required],
+      releaseDate: ['', [Validators.required]],
     });
+
     // Load list of projects.
     this.onLoadProjects();
     this.initializeForm();
     this.getActiveProject();
   }
+
+  // convenience getter for easy access to form fields
+  get f() { return this.projectForm.controls; }
 
   /**
    * On Save and Exit.
@@ -83,11 +86,7 @@ export class ProjectPageComponent implements OnInit {
 
     const submissionUpdateUrl = this.activeSubmission._links['self:update'].href;
     const submissionUpdateData = this.activeSubmission;
-    submissionUpdateData['name'] = this.projectForm.value.submissionShortName;
     submissionUpdateData['projectName'] = this.projectForm.value.projectShortName;
-    submissionUpdateData['uiData']['project'] = {
-      'publication': this.projectForm.value.submissionPublication
-    };
 
     // Update the submission.
     this.requestsService.update(submissionUpdateUrl, submissionUpdateData).subscribe(
@@ -144,11 +143,7 @@ export class ProjectPageComponent implements OnInit {
 
     const submissionUpdateUrl = this.activeSubmission._links['self:update'].href;
     const submissionUpdateData = this.activeSubmission;
-    submissionUpdateData['name'] = this.projectForm.value.submissionShortName;
     submissionUpdateData['projectName'] = this.projectForm.value.projectShortName;
-    submissionUpdateData['uiData']['project'] = {
-      'publication': this.projectForm.value.submissionPublication
-    };
 
     // Update the submission.
     this.requestsService.update(submissionUpdateUrl, submissionUpdateData).subscribe(
@@ -182,7 +177,6 @@ export class ProjectPageComponent implements OnInit {
       }
     );
   }
-
 
   getActiveProject() {
     this.activeProject = this.submissionsService.getActiveProject();
@@ -228,8 +222,6 @@ export class ProjectPageComponent implements OnInit {
   onLoadProjects() {
     this.userService.getUserProjects().subscribe(
       (data) => {
-        // TODO: Create a team if user has no tea m.
-        // If user has no team assigned to it.
         if (!data.hasOwnProperty('_embedded')) {
           return false;
         }
@@ -279,14 +271,5 @@ export class ProjectPageComponent implements OnInit {
         console.log(err);
       }
     );
-    if (this.activeSubmission) {
-      try {
-        // Update form fields.
-        this.projectForm.controls['submissionShortName'].setValue(this.activeSubmission.name);
-        this.projectForm.controls['submissionPublication'].setValue(this.activeSubmission.uiData.project.publication);
-      } catch (err) {
-
-      }
-    }
   }
 }
