@@ -442,3 +442,8 @@ button.center {
   margin-bottom: 15px;
   display:block;
 }
+
+b.mandatory {
+  color: $mandatory;
+  font-size: 1.5em;
+}
