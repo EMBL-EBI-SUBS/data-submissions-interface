@@ -303,6 +303,10 @@ fieldset {
   }
 }
 
+.form-error-msg {
+  color: $form-error;
+}
+
 div.ds-tabs {
   .tabs {
     li.tabs-title a {
