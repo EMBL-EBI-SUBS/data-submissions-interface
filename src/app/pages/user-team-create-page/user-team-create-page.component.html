@@ -8,12 +8,9 @@
     <form novalidate [formGroup]="teamCreateForm" >
       <!-- Team Details Fieldset. -->
       <fieldset required class="large-form padding-bottom-large padding-top-large">
-        <label>Institute / Project Name *
-          <input type="text" required placeholder="Enter institue or project name" class="form-control" name="centreName" formControlName="centreName"/>
-          <span class="form-error" *ngIf="teamCreateForm.get('centreName').hasError('required')">
-        Institute / Project name field is required.
-          </span>
-        </label>
+        <label for="centreName">Institute / Project Name <b class="mandatory">*</b></label>
+        <input type="text" required placeholder="Enter institue or project name" class="form-control" name="centreName" formControlName="centreName"/>
+        <span class="form-error" *ngIf="teamCreateForm.get('centreName').hasError('required')">Institute / Project name field is required.</span>
 
         <label>Team Description
           <input type="text" placeholder="Enter description of your team" class="form-control" name="description" formControlName="description"/>

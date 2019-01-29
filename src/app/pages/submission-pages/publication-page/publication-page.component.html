@@ -18,7 +18,7 @@
 
         <div class="row">
           <div class="small-12 column">
-            <label>Title of the article *
+            <label>Title of the article <b class="mandatory">*</b>
               <input type="text" name="articleTitle" formControlName="articleTitle" placeholder="Article title" required>
             </label>
           </div>
@@ -26,7 +26,7 @@
 
         <div class="row">
           <div class="small-12 column">
-            <label>Authors *
+            <label>Authors <b class="mandatory">*</b>
               <input type="text" name="authors" formControlName="authors" placeholder="Name of the authors" required>
             </label>
           </div>
@@ -34,13 +34,13 @@
 
         <div class="row">
           <div class="small-6 column">
-            <label>Title of the Journal *
+            <label>Title of the Journal <b class="mandatory">*</b>
               <input type="text" name="journalTitle" formControlName="journalTitle" placeholder="Journal title" required>
             </label>
           </div>
 
           <div class="small-6 column">
-            <label>ISSN of the Journal *
+            <label>ISSN of the Journal <b class="mandatory">*</b>
               <input type="text" name="journalIssn" formControlName="journalIssn" placeholder="ISSN number" required>
             </label>
           </div>
@@ -76,13 +76,13 @@
 
         <div class="row">
           <div class="small-6 column">
-            <label>PubmedId *
+            <label>PubmedId <b class="mandatory">*</b>
               <input type="text" name="pubmedId" formControlName="pubmedId" placeholder="12345678" required>
             </label>
           </div>
 
           <div class="small-6 column">
-            <label>DOI *
+            <label>DOI <b class="mandatory">*</b>
               <input type="text" name="doi" formControlName="doi" placeholder="DOI Information..." required>
             </label>
           </div>
@@ -90,7 +90,7 @@
 
         <div class="row">
           <div class="small-6 column">
-            <label>Status *
+            <label>Status <b class="mandatory">*</b>
               <select name="status" formControlName="status" required>
                 <option *ngFor="let status of publicationStatuses" [value]="status">
                   {{ status }}
