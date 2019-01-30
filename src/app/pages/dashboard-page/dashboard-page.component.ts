@@ -121,7 +121,7 @@ export class DashboardPageComponent implements OnInit {
   }
 
   onViewCompletedSubmission(submissionItem: any) {
-
+    this.onEditSubmission(submissionItem);
   }
 
   onDeleteSubmission(submissionItem: any) {
