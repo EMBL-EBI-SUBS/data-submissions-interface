@@ -25,7 +25,7 @@
 
         <div class="form-group">
           <label for="projectTitle">Project title <b class="mandatory">*</b></label>
-          <input type="text" placeholder="e.g. “Parallelism in Fish”" class="form-control" 
+          <input type="text" placeholder="e.g. “Parallelism in Fish”" class="form-control" required
                 formControlName="projectTitle"
                 [ngClass]="{ 'is-invalid': f.projectTitle.touched && f.projectTitle.errors }"/>
           <div *ngIf="f.projectTitle.touched && f.projectTitle.errors" class="form-error-msg">
@@ -36,7 +36,7 @@
 
         <div class="form-group">
           <label for="projectDescription">Project description <b class="mandatory">*</b></label>
-          <textarea rows="5" placeholder="Enter project description here" 
+          <textarea rows="5" placeholder="Enter project description here" required
                     class="form-control" formControlName="projectDescription"
                     [ngClass]="{ 'is-invalid': f.projectDescription.touched && f.projectDescription.errors }">
           </textarea>
@@ -48,7 +48,7 @@
 
         <div class="form-group">
           <label for="projectShortName">Project short name (for easy reference) <b class="mandatory">*</b></label>
-          <input type="text" placeholder="e.g. &quot;RAD sequencing - 2004 Liverpool&quot;" 
+          <input type="text" placeholder="e.g. &quot;RAD sequencing - 2004 Liverpool&quot;" class="form-control" required
                 formControlName="projectShortName"
                 [ngClass]="{ 'is-invalid': f.projectShortName.touched && f.projectShortName.errors }"/>
           <div *ngIf="f.projectShortName.touched && f.projectShortName.errors" class="form-error-msg">
@@ -58,7 +58,7 @@
 
         <div class="form-group">
           <label for="releaseDate">Release date <b class="mandatory">*</b></label>
-          <input type="date" placeholder="dd/mm/yyyy" formControlName="releaseDate"
+          <input type="date" placeholder="dd/mm/yyyy" formControlName="releaseDate" class="form-control" required
                 [ngClass]="{ 'is-invalid': f.releaseDate.touched && f.releaseDate.errors }"/>
           <div *ngIf="f.releaseDate.touched && f.releaseDate.errors" class="form-error-msg">
             <div *ngIf="f.releaseDate.errors.required">Release date is required</div>

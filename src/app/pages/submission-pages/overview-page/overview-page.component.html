@@ -86,7 +86,7 @@
               You have selected: <span class="font-weight-bold">{{ name }}</span><a (click)="onChangeField()"> (change)</a>
             </div>
             <ng-template #showName>
-              <input type="text" placeholder="e.g. &quot;RAD sequencing - 2004 Liverpool&quot;" formControlName="name">
+              <input type="text" placeholder="e.g. &quot;RAD sequencing - 2004 Liverpool&quot;" formControlName="name" required>
               <span>This name will show in your dashboard.</span>
             </ng-template>
           </fieldset>
