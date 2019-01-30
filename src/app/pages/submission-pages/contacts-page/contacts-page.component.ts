@@ -1,3 +1,4 @@
+import { SubmissionStatus } from './../../../models/submission-status';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
@@ -17,6 +18,8 @@ export class ContactsPageComponent implements OnInit {
   activeSubmission: any;
   activeProject: any;
 
+  viewOnly = false;
+
   constructor(
     private submissionsService: SubmissionsService,
     private requestsService: RequestsService,
@@ -26,19 +29,31 @@ export class ContactsPageComponent implements OnInit {
 
   ngOnInit() {
     this.activeSubmission = this.submissionsService.getActiveSubmission();
+
+    // TODO getStatus make it more generic with Promise
+    this.submissionsService.getStatus(this.activeSubmission._links.submissionStatus.href).subscribe(
+      (submissionStatus) => {
+        if (!SubmissionStatus.isEditableStatus(submissionStatus)) {
+          this.viewOnly = true;
+        }
+      }
+    );
+
     this.getActiveProject();
 
-    this.contactForm = new FormGroup({
-      orcid: new FormControl(''),
-      firstName: new FormControl('', Validators.required),
-      middleInitials: new FormControl(''),
-      lastName: new FormControl('', Validators.required),
-      email: new FormControl('', Validators.required),
-      address: new FormControl('', Validators.required),
-      affiliation: new FormControl('', Validators.required),
-      phone: new FormControl('', Validators.required),
-      fax: new FormControl(''),
-    });
+    if (!this.viewOnly) {
+      this.contactForm = new FormGroup({
+        orcid: new FormControl(''),
+        firstName: new FormControl('', Validators.required),
+        middleInitials: new FormControl(''),
+        lastName: new FormControl('', Validators.required),
+        email: new FormControl('', Validators.required),
+        address: new FormControl('', Validators.required),
+        affiliation: new FormControl('', Validators.required),
+        phone: new FormControl('', Validators.required),
+        fax: new FormControl(''),
+      });
+    }
   }
 
   onAddContact() {
