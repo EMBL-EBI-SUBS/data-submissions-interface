@@ -41,7 +41,7 @@
     </ngx-smart-modal>
 
       <!-- Uploading metaData sheet fieldset. -->
-    <fieldset required class="large-form padding-bottom-large padding-top-large">
+    <fieldset *ngIf="!viewOnly" required class="large-form padding-bottom-large padding-top-large">
       <legend>Upload {{ activeDataType.displayNamePlural }} Sheet</legend>
 
       <p>
@@ -126,7 +126,7 @@
                       <i class="icon icon-generic errors row-errors" data-icon="l"></i>
                     </button>
                     &nbsp;
-                    <button type='button' (click)="deleteMetadata(i)">
+                    <button *ngIf="!viewOnly" type='button' (click)="deleteMetadata(i)">
                         <i class="icon icon-functional" data-icon="d"></i>
                       </button>
                     </td>
@@ -158,7 +158,7 @@
       </div>
 
     </fieldset>
-    <div>
+    <div *ngIf="!viewOnly">
       <button class="button secondary-color white-background" (click)="onSaveExit()">Save &amp; exit</button>
       <button class="button readmore" (click)="onSaveContinue()">Save &amp; continue</button>
     </div>

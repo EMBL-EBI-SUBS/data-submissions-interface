@@ -12,6 +12,7 @@ import { SubmissionsService } from '../../../services/submissions.service';
 import { TeamsService } from '../../../services/teams.service';
 import { RequestsService } from '../../../services/requests.service';
 import { SpreadsheetsService } from '../../../services/spreadsheets.service';
+import { SubmissionStatus } from 'src/app/models/submission-status';
 
 @Component({
   selector: 'app-metadata-page',
@@ -74,6 +75,8 @@ export class MetadataPageComponent implements OnInit {
   metadataValues = [];
   metadataAttributes = [];
 
+  viewOnly = false;
+
   constructor(
     private router: Router,
     private submissionsService: SubmissionsService,
@@ -89,6 +92,16 @@ export class MetadataPageComponent implements OnInit {
     this.activatedRoute.params.subscribe(params => {
       this.resetVariables();
       this.activeSubmission = this.submissionsService.getActiveSubmission();
+
+      // TODO getStatus make it more generic with Promise
+      this.submissionsService.getStatus(this.activeSubmission._links.submissionStatus.href).subscribe(
+        (submissionStatus) => {
+          if (!SubmissionStatus.isEditableStatus(submissionStatus)) {
+            this.viewOnly = true;
+          }
+        }
+      );
+
       this.id = params.id;
       this.templatesList = [];
       this.loading = true;
