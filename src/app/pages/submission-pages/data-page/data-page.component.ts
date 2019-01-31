@@ -15,6 +15,7 @@ import GoldenRetriever from '@uppy/golden-retriever';
 import * as HttpStatus from 'http-status-codes';
 import { FileService } from 'src/app/services/file.service';
 import { RequestsService } from 'src/app/services/requests.service';
+import { SubmissionStatus } from 'src/app/models/submission-status';
 
 @Component({
   selector: 'app-data-page',
@@ -32,6 +33,8 @@ export class DataPageComponent implements OnInit {
   token: string;
 
   selectedFileErrorMessages = {};
+
+  viewOnly = false;
 
   constructor(
     private router: Router,
@@ -54,6 +57,16 @@ export class DataPageComponent implements OnInit {
     );
 
     this.activeSubmission = this.submissionsService.getActiveSubmission();
+
+    // TODO getStatus make it more generic with Promise
+    this.submissionsService.getStatus(this.activeSubmission._links.submissionStatus.href).subscribe(
+      (submissionStatus) => {
+        if (!SubmissionStatus.isEditableStatus(submissionStatus)) {
+          this.viewOnly = true;
+        }
+      }
+    );
+
     this.token = this.tokenService.getToken();
 
     this.fileService.getActiveSubmissionsFiles(this.activeSubmission).subscribe(

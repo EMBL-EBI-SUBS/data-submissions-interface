@@ -18,10 +18,12 @@
 
     <app-ebi-submission-menu [activeSubmission]="activeSubmission"></app-ebi-submission-menu>
 
-    <h3>Data Upload</h3>
-    <p>Based on your data type selection, please feel free to upload:</p>
+    <div *ngIf="!viewOnly">
+      <h3>Data Upload</h3>
+      <p>Based on your data type selection, please feel free to upload:</p>
+    </div>
 
-    <div class="uppy-drag-drop margin-bottom-large">
+    <div *ngIf="!viewOnly" class="uppy-drag-drop margin-bottom-large">
     </div>
 
     <form class="uppy-metadata">
@@ -29,11 +31,10 @@
       <input type="hidden" name="jwtToken" value="{{token}}" />
     </form>
 
-    <div *ngIf="files?._embedded?.files.length && files?._embedded?.files.length > 0; then filesBlock"></div>
+    <h3>Data Files</h3>
+    <div *ngIf="files?._embedded?.files.length && files?._embedded?.files.length > 0; then filesBlock else noFilesBlock"></div>
 
     <ng-template #filesBlock>
-      <h3>Data Files</h3>
-
       <button class="button center" (click)="onRefreshFileStatuses()">Refresh file status</button>
 
       <table class="hover">
@@ -63,7 +64,7 @@
               </button>
             </td>
             <td>
-              <button type='button' (click)="onDeleteFile(file, i)">
+              <button *ngIf="!viewOnly" type='button' (click)="onDeleteFile(file, i)">
                 <i class="icon icon-functional" data-icon="d"></i>
               </button>
             </td>
@@ -88,7 +89,11 @@
       </ul>
     </ng-template>
 
-    <div>
+    <ng-template #noFilesBlock>
+        <p>Data files are not submitted or not available, yet.</p>
+    </ng-template>
+
+    <div *ngIf="!viewOnly">
       <button class="button secondary-color white-background" (click)="onSaveExit()">Save &amp; exit</button>
       <button class="button readmore" (click)="onSaveContinue()">Save &amp; continue</button>
     </div>
