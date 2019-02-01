@@ -1,3 +1,4 @@
+import { PageService } from './../../../services/page.service';
 import { SubmissionStatus } from './../../../models/submission-status';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
@@ -25,23 +26,13 @@ export class ContactsPageComponent implements OnInit {
     private requestsService: RequestsService,
     private teamsService: TeamsService,
     private router: Router,
+    private pageService: PageService
   ) { }
 
   ngOnInit() {
     this.activeSubmission = this.submissionsService.getActiveSubmission();
 
-    // TODO getStatus make it more generic with Promise
-    const currentSubmissionStatus = this.submissionsService.getStoredSubmissionStatus();
-    if ( currentSubmissionStatus === null) {
-      this.submissionsService.getStatus(this.activeSubmission._links.submissionStatus.href).subscribe(
-        (submissionStatus) => {
-          this.submissionsService.setStoredSubmissionstatus(submissionStatus);
-          this.setSubmissionViewMode(submissionStatus);
-        }
-      );
-    } else {
-      this.setSubmissionViewMode(currentSubmissionStatus);
-    }
+    this.viewOnly = this.pageService.setSubmissionViewMode(this.activeSubmission._links.submissionStatus.href);
 
     this.getActiveProject();
 
@@ -56,12 +47,6 @@ export class ContactsPageComponent implements OnInit {
       phone: new FormControl('', Validators.required),
       fax: new FormControl(''),
     });
-  }
-
-  setSubmissionViewMode(submissionStatus: string) {
-    if (!SubmissionStatus.isEditableStatus(submissionStatus)) {
-      this.viewOnly = true;
-    }
   }
 
   onAddContact() {

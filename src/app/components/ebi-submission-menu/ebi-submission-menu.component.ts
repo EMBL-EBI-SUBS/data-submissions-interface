@@ -61,7 +61,7 @@ export class EbiSubmissionMenuComponent implements OnInit {
   }
 
   addSubmitLink(viewOnly: boolean) {
-    if (!viewOnly) {
+    if (viewOnly !== undefined && !viewOnly) {
       const submitLink = { title: 'Submit', href: '/submission/submit' };
       if (this.tabLinks.indexOf(submitLink) === -1) {
         this.tabLinks.push(submitLink);
