@@ -1,3 +1,5 @@
+import { PageService } from './../../../services/page.service';
+import { SubmissionStatus } from 'src/app/models/submission-status';
 import { Router } from '@angular/router';
 import { PublicationStatus } from './../../../models/publication-status';
 import { Component, OnInit } from '@angular/core';
@@ -18,9 +20,12 @@ export class PublicationPageComponent implements OnInit {
   editMode = false;
   selectedPublicationIndex = -1;
 
+  viewOnly = false;
+
   constructor(
     private submissionsService: SubmissionsService,
     private requestsService: RequestsService,
+    private pageService: PageService,
     private router: Router
   ) {}
 
@@ -49,6 +54,8 @@ export class PublicationPageComponent implements OnInit {
   initializeForm() {
     // Set Active Submission.
     this.activeSubmission = this.submissionsService.getActiveSubmission();
+
+    this.viewOnly = this.pageService.setSubmissionViewMode(this.activeSubmission._links.submissionStatus.href);
   }
 
   getActiveProject() {

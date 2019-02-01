@@ -1,3 +1,4 @@
+import { PageService } from './../../../services/page.service';
 import { PublicationStatus } from './../../../models/publication-status';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
@@ -8,6 +9,7 @@ import { SubmissionsService } from '../../../services/submissions.service';
 import { TeamsService } from '../../../services/teams.service';
 import { UserService } from '../../../services/user.service';
 import { RequestsService } from '../../../services/requests.service';
+import { SubmissionStatus } from 'src/app/models/submission-status';
 
 @Component({
   selector: 'app-project-page',
@@ -20,27 +22,23 @@ export class ProjectPageComponent implements OnInit {
   activeProject: any;
   projects: any;
 
+  viewOnly = false;
+
   constructor(
     private submissionsService: SubmissionsService,
     private teamsService: TeamsService,
     private userService: UserService,
     private requestsService: RequestsService,
+    private pageService: PageService,
     private router: Router,
     private formBuilder: FormBuilder
   ) { }
 
   ngOnInit() {
-    this.projectForm = this.formBuilder.group({
-      project: ['_create'],
-      projectTitle: ['', [Validators.required, Validators.minLength(50)]],
-      projectDescription: ['', [Validators.required, Validators.minLength(50)]],
-      projectShortName: ['', Validators.required],
-      releaseDate: ['', [Validators.required]],
-    });
+    this.initializeForm();
 
     // Load list of projects.
     this.onLoadProjects();
-    this.initializeForm();
     this.getActiveProject();
   }
 
@@ -258,6 +256,16 @@ export class ProjectPageComponent implements OnInit {
   initializeForm() {
     // Set Active Submission.
     this.activeSubmission = this.submissionsService.getActiveSubmission();
+
+    this.viewOnly = this.pageService.setSubmissionViewMode(this.activeSubmission._links.submissionStatus.href);
+
+    this.projectForm = this.formBuilder.group({
+      project: ['_create'],
+      projectTitle: ['', [Validators.required, Validators.minLength(50)]],
+      projectDescription: ['', [Validators.required, Validators.minLength(50)]],
+      projectShortName: ['', Validators.required],
+      releaseDate: ['', [Validators.required]],
+    });
 
     // Load Submission Content Actions.
     this.requestsService.get(this.activeSubmission._links.contents.href).subscribe(

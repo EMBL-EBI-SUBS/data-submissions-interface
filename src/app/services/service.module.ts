@@ -9,11 +9,13 @@ import { SubmissionsService } from './submissions.service';
 import { TeamsService } from './teams.service';
 import { UserService } from './user.service';
 import { VariablesService } from './variables.service';
+import { PageService } from './page.service';
 
 @NgModule({
   providers: [
     EndpointService,
     FileService,
+    PageService,
     ProjectsService,
     RequestsService,
     SpreadsheetsService,

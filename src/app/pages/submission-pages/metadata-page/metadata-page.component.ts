@@ -1,3 +1,4 @@
+import { PageService } from './../../../services/page.service';
 import {
   Component,
   OnInit,
@@ -12,6 +13,7 @@ import { SubmissionsService } from '../../../services/submissions.service';
 import { TeamsService } from '../../../services/teams.service';
 import { RequestsService } from '../../../services/requests.service';
 import { SpreadsheetsService } from '../../../services/spreadsheets.service';
+import { SubmissionStatus } from 'src/app/models/submission-status';
 
 @Component({
   selector: 'app-metadata-page',
@@ -74,6 +76,8 @@ export class MetadataPageComponent implements OnInit {
   metadataValues = [];
   metadataAttributes = [];
 
+  viewOnly = false;
+
   constructor(
     private router: Router,
     private submissionsService: SubmissionsService,
@@ -82,6 +86,7 @@ export class MetadataPageComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private elementRef: ElementRef,
     private _fb: FormBuilder,
+    private pageService: PageService,
     public ngxSmartModalService: NgxSmartModalService
   ) {}
 
@@ -89,6 +94,9 @@ export class MetadataPageComponent implements OnInit {
     this.activatedRoute.params.subscribe(params => {
       this.resetVariables();
       this.activeSubmission = this.submissionsService.getActiveSubmission();
+
+      this.viewOnly = this.pageService.setSubmissionViewMode(this.activeSubmission._links.submissionStatus.href);
+
       this.id = params.id;
       this.templatesList = [];
       this.loading = true;

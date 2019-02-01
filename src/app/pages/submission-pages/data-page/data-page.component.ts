@@ -1,3 +1,4 @@
+import { PageService } from './../../../services/page.service';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Component, OnInit, ElementRef, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
@@ -15,6 +16,7 @@ import GoldenRetriever from '@uppy/golden-retriever';
 import * as HttpStatus from 'http-status-codes';
 import { FileService } from 'src/app/services/file.service';
 import { RequestsService } from 'src/app/services/requests.service';
+import { SubmissionStatus } from 'src/app/models/submission-status';
 
 @Component({
   selector: 'app-data-page',
@@ -33,6 +35,8 @@ export class DataPageComponent implements OnInit {
 
   selectedFileErrorMessages = {};
 
+  viewOnly = false;
+
   constructor(
     private router: Router,
     private submissionsService: SubmissionsService,
@@ -42,18 +46,23 @@ export class DataPageComponent implements OnInit {
     private fileService: FileService,
     private elementRef: ElementRef,
     public ngxSmartModalService: NgxSmartModalService,
+    private pageService: PageService,
     private changeDetectorRef: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
-    this.fileService.getUploadEndpoint().toPromise().then(
-      response => {
-        this.uploadEndpoint = response;
-        this.initUppy();
-      }
-    );
-
     this.activeSubmission = this.submissionsService.getActiveSubmission();
+    this.viewOnly = this.pageService.setSubmissionViewMode(this.activeSubmission._links.submissionStatus.href);
+
+    if (!this.viewOnly) {
+      this.fileService.getUploadEndpoint().toPromise().then(
+        response => {
+          this.uploadEndpoint = response;
+          this.initUppy();
+        }
+      );
+    }
+
     this.token = this.tokenService.getToken();
 
     this.fileService.getActiveSubmissionsFiles(this.activeSubmission).subscribe(
