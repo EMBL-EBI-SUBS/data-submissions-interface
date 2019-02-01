@@ -25,14 +25,21 @@
           </label>
         </div>
 
-        <div *ngIf="!activeProject">
-          <p>Project data is not submitted or not available.</p>
-        </div>
-        <div *ngIf="activeProject">
-          <div *ngIf="viewOnly; else showTitle">
-            <p><b>Project title:</b> {{activeProject.title}}</p>
+        <div *ngIf="viewOnly; else editableProjectForm">
+          <div *ngIf="!activeProject; else viewOnlyValues">
+            <p>Project data is not submitted or not available.</p>
           </div>
-          <ng-template #showTitle class="form-group">
+
+          <ng-template #viewOnlyValues>
+              <p><b>Project title:</b> {{activeProject.title}}</p>
+              <p><b>Project description:</b> {{activeProject.description}}</p>
+              <p><b>Project short name (for easy reference):</b> {{activeProject.alias}}</p>
+              <p><b>Release date:</b> {{activeProject.releaseDate}}</p>
+          </ng-template>
+        </div>
+          
+        <ng-template #editableProjectForm>
+          <div class="form-group">
             <label for="projectTitle">Project title <b class="mandatory">*</b></label>
             <input type="text" placeholder="e.g. “Parallelism in Fish”" class="form-control" required
                   formControlName="projectTitle"
@@ -41,12 +48,9 @@
                 <div *ngIf="f.projectTitle.errors.required">Project title is required</div>
                 <div *ngIf="f.projectTitle.errors.minlength">Project title should be minimum 50 chars</div>
             </div>
-          </ng-template>
-        
-          <div *ngIf="viewOnly; else showProjectDescription">
-            <p><b>Project description:</b> {{activeProject.description}}</p>
           </div>
-          <ng-template #showProjectDescription class="form-group">
+        
+          <div class="form-group">
             <label for="projectDescription">Project description <b class="mandatory">*</b></label>
             <textarea rows="5" placeholder="Enter project description here" required
                       class="form-control" formControlName="projectDescription"
@@ -56,12 +60,9 @@
                 <div *ngIf="f.projectDescription.errors.required">Project description is required</div>
                 <div *ngIf="f.projectDescription.errors.minlength">Project description should be minimum 50 chars</div>
             </div>
-          </ng-template>
-
-          <div *ngIf="viewOnly; else showProjectShortName">
-            <p><b>Project short name (for easy reference):</b> {{activeProject.alias}}</p>
           </div>
-          <ng-template #showProjectShortName class="form-group">
+
+          <div class="form-group">
             <label for="projectShortName">Project short name (for easy reference) <b class="mandatory">*</b></label>
             <input type="text" placeholder="e.g. &quot;RAD sequencing - 2004 Liverpool&quot;" class="form-control" required
                   formControlName="projectShortName"
@@ -69,27 +70,24 @@
             <div *ngIf="f.projectShortName.touched && f.projectShortName.errors" class="form-error-msg">
               <div *ngIf="f.projectShortName.errors.required">Project short name is required</div>
             </div>
-          </ng-template>  
+          </div>  
 
-          <div *ngIf="viewOnly; else showReleaseDate">
-            <p><b>Release date:</b> {{activeProject.releaseDate}}</p>
-          </div>
-          <ng-template #showReleaseDate class="form-group">
+          <div class="form-group">
             <label for="releaseDate">Release date <b class="mandatory">*</b></label>
             <input type="date" placeholder="dd/mm/yyyy" formControlName="releaseDate" class="form-control" required
                   [ngClass]="{ 'is-invalid': f.releaseDate.touched && f.releaseDate.errors }"/>
             <div *ngIf="f.releaseDate.touched && f.releaseDate.errors" class="form-error-msg">
               <div *ngIf="f.releaseDate.errors.required">Release date is required</div>
             </div>
-          </ng-template>
+          </div>
 
-          <div *ngIf="!viewOnly" class="form-group">
+          <div class="form-group">
             <button class="button secondary-color white-background" (click)="onSaveExit()" 
                     [disabled]="projectForm.invalid">Save &amp; exit</button>
             <button class="button readmore" (click)="onSaveContinue()" 
                     [disabled]="projectForm.invalid">Save &amp; continue</button>
           </div>
-        </div>
+        </ng-template>
       </fieldset>
 
     </form>

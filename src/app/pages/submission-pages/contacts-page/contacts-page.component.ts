@@ -31,28 +31,36 @@ export class ContactsPageComponent implements OnInit {
     this.activeSubmission = this.submissionsService.getActiveSubmission();
 
     // TODO getStatus make it more generic with Promise
-    this.submissionsService.getStatus(this.activeSubmission._links.submissionStatus.href).subscribe(
-      (submissionStatus) => {
-        if (!SubmissionStatus.isEditableStatus(submissionStatus)) {
-          this.viewOnly = true;
+    const currentSubmissionStatus = this.submissionsService.getStoredSubmissionStatus();
+    if ( currentSubmissionStatus === null) {
+      this.submissionsService.getStatus(this.activeSubmission._links.submissionStatus.href).subscribe(
+        (submissionStatus) => {
+          this.submissionsService.setStoredSubmissionstatus(submissionStatus);
+          this.setSubmissionViewMode(submissionStatus);
         }
-      }
-    );
+      );
+    } else {
+      this.setSubmissionViewMode(currentSubmissionStatus);
+    }
 
     this.getActiveProject();
 
-    if (!this.viewOnly) {
-      this.contactForm = new FormGroup({
-        orcid: new FormControl(''),
-        firstName: new FormControl('', Validators.required),
-        middleInitials: new FormControl(''),
-        lastName: new FormControl('', Validators.required),
-        email: new FormControl('', Validators.required),
-        address: new FormControl('', Validators.required),
-        affiliation: new FormControl('', Validators.required),
-        phone: new FormControl('', Validators.required),
-        fax: new FormControl(''),
-      });
+    this.contactForm = new FormGroup({
+      orcid: new FormControl(''),
+      firstName: new FormControl('', Validators.required),
+      middleInitials: new FormControl(''),
+      lastName: new FormControl('', Validators.required),
+      email: new FormControl('', Validators.required),
+      address: new FormControl('', Validators.required),
+      affiliation: new FormControl('', Validators.required),
+      phone: new FormControl('', Validators.required),
+      fax: new FormControl(''),
+    });
+  }
+
+  setSubmissionViewMode(submissionStatus: string) {
+    if (!SubmissionStatus.isEditableStatus(submissionStatus)) {
+      this.viewOnly = true;
     }
   }
 

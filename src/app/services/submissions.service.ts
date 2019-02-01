@@ -191,6 +191,18 @@ export class SubmissionsService {
     localStorage.removeItem('submissions');
   }
 
+  setStoredSubmissionstatus(submissionstatus) {
+    localStorage.setItem('submissionStatus', submissionstatus);
+  }
+
+  getStoredSubmissionStatus() {
+    return localStorage.getItem('submissionStatus');
+  }
+
+  deleteStoredSubmissionStatus() {
+    localStorage.removeItem('submissionStatus');
+  }
+
   /**
    * Update active project.
    */

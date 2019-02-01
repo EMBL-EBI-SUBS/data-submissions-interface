@@ -1,8 +1,8 @@
 export enum SubmissionStatus {
-    Draft,
-    Submitted,
-    Processing,
-    Completed
+    Draft = 'Draft',
+    Submitted = 'Submitted',
+    Processing = 'Processing',
+    Completed = 'Completed'
 }
 
 export namespace SubmissionStatus {

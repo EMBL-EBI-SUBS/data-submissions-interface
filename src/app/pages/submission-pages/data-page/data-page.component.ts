@@ -1,3 +1,4 @@
+import { PageService } from './../../../services/page.service';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Component, OnInit, ElementRef, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
@@ -45,27 +46,22 @@ export class DataPageComponent implements OnInit {
     private fileService: FileService,
     private elementRef: ElementRef,
     public ngxSmartModalService: NgxSmartModalService,
+    private pageService: PageService,
     private changeDetectorRef: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
-    this.fileService.getUploadEndpoint().toPromise().then(
-      response => {
-        this.uploadEndpoint = response;
-        this.initUppy();
-      }
-    );
-
     this.activeSubmission = this.submissionsService.getActiveSubmission();
+    this.viewOnly = this.pageService.setSubmissionViewMode(this.activeSubmission._links.submissionStatus.href);
 
-    // TODO getStatus make it more generic with Promise
-    this.submissionsService.getStatus(this.activeSubmission._links.submissionStatus.href).subscribe(
-      (submissionStatus) => {
-        if (!SubmissionStatus.isEditableStatus(submissionStatus)) {
-          this.viewOnly = true;
+    if (!this.viewOnly) {
+      this.fileService.getUploadEndpoint().toPromise().then(
+        response => {
+          this.uploadEndpoint = response;
+          this.initUppy();
         }
-      }
-    );
+      );
+    }
 
     this.token = this.tokenService.getToken();
 

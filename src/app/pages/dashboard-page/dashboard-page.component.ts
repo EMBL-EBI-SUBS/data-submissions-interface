@@ -106,6 +106,7 @@ export class DashboardPageComponent implements OnInit {
   }
 
   onEditSubmission(submissionItem: any) {
+    this.submissionsService.deleteStoredSubmissionStatus();
     const submissionLinkEndpoint = submissionItem._links['self'].href;
     this.requestsService.get(submissionLinkEndpoint).subscribe(
       (data) => {

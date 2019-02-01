@@ -1,3 +1,4 @@
+import { PageService } from './../../../services/page.service';
 import { SubmissionStatus } from 'src/app/models/submission-status';
 import { Router } from '@angular/router';
 import { PublicationStatus } from './../../../models/publication-status';
@@ -24,6 +25,7 @@ export class PublicationPageComponent implements OnInit {
   constructor(
     private submissionsService: SubmissionsService,
     private requestsService: RequestsService,
+    private pageService: PageService,
     private router: Router
   ) {}
 
@@ -53,14 +55,7 @@ export class PublicationPageComponent implements OnInit {
     // Set Active Submission.
     this.activeSubmission = this.submissionsService.getActiveSubmission();
 
-    // TODO getStatus make it more generic with Promise
-    this.submissionsService.getStatus(this.activeSubmission._links.submissionStatus.href).subscribe(
-      (submissionStatus) => {
-        if (!SubmissionStatus.isEditableStatus(submissionStatus)) {
-          this.viewOnly = true;
-        }
-      }
-    );
+    this.viewOnly = this.pageService.setSubmissionViewMode(this.activeSubmission._links.submissionStatus.href);
   }
 
   getActiveProject() {

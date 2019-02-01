@@ -1,3 +1,4 @@
+import { PageService } from './../../../services/page.service';
 import {
   Component,
   OnInit,
@@ -85,6 +86,7 @@ export class MetadataPageComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private elementRef: ElementRef,
     private _fb: FormBuilder,
+    private pageService: PageService,
     public ngxSmartModalService: NgxSmartModalService
   ) {}
 
@@ -93,14 +95,7 @@ export class MetadataPageComponent implements OnInit {
       this.resetVariables();
       this.activeSubmission = this.submissionsService.getActiveSubmission();
 
-      // TODO getStatus make it more generic with Promise
-      this.submissionsService.getStatus(this.activeSubmission._links.submissionStatus.href).subscribe(
-        (submissionStatus) => {
-          if (!SubmissionStatus.isEditableStatus(submissionStatus)) {
-            this.viewOnly = true;
-          }
-        }
-      );
+      this.viewOnly = this.pageService.setSubmissionViewMode(this.activeSubmission._links.submissionStatus.href);
 
       this.id = params.id;
       this.templatesList = [];
