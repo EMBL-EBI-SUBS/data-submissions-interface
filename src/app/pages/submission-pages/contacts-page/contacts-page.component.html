@@ -66,10 +66,10 @@
             <label>ORCID</label>
             <input type="text" name="orcid" formControlName="orcid" placeholder="ORCID">
           </div>
+          <button *ngIf="!viewOnly" class="button" (click)="onAddContact()" [disabled]="contactForm.invalid"><i class="icon icon-functional" data-icon="+"></i> Add New Contact</button>
         </fieldset>
       </div>
 
-      <button *ngIf="!viewOnly" class="button secondary-color white-background" (click)="onAddContact()" [disabled]="contactForm.invalid"><i class="icon icon-functional" data-icon="+"></i> Add New Contact</button>
     </form>
 
     <div *ngIf="activeProject?.contacts?.length > 0">
