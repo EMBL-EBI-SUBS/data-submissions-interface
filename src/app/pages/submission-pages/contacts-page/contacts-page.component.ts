@@ -50,17 +50,19 @@ export class ContactsPageComponent implements OnInit {
   }
 
   onAddContact() {
-    this.activeProject.contacts.push(this.contactForm.value);
-    const projectUpdateUrl = this.activeProject._links['self:update'].href;
-    this.requestsService.update(projectUpdateUrl, this.activeProject).subscribe(
-      (project) => {
-        this.submissionsService.setActiveProject(project);
-      },
-      (error) => {
-        // TODO: Handle errors.
-      }
-    );
-    this.contactForm.reset();
+    if (this.contactForm.valid) {
+      this.activeProject.contacts.push(this.contactForm.value);
+      const projectUpdateUrl = this.activeProject._links['self:update'].href;
+      this.requestsService.update(projectUpdateUrl, this.activeProject).subscribe(
+        (project) => {
+          this.submissionsService.setActiveProject(project);
+        },
+        (error) => {
+          // TODO: Handle errors.
+        }
+      );
+      this.contactForm.reset();
+    }
   }
 
   onCreateProject() {
@@ -99,6 +101,8 @@ export class ContactsPageComponent implements OnInit {
   }
 
   onSaveExit() {
+    this.onAddContact();
+
     this.submissionsService.deleteActiveSubmission();
     this.submissionsService.deleteActiveProject();
     this.teamsService.deleteActiveTeam();
@@ -107,7 +111,8 @@ export class ContactsPageComponent implements OnInit {
   }
 
   onSaveContinue() {
+    this.onAddContact();
+
     this.router.navigate(['/submission/data']);
   }
-
 }
