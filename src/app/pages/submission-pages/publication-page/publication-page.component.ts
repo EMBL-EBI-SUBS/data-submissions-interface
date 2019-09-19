@@ -81,24 +81,26 @@ export class PublicationPageComponent implements OnInit {
   }
 
   onAddPublication() {
-    if (this.selectedPublicationIndex > -1) {
-      this.activeProject.publications[this.selectedPublicationIndex] = this.publicationForm.value;
-    } else {
-      this.activeProject.publications.push(this.publicationForm.value);
-    }
-    const projectUpdateUrl = this.activeProject._links['self:update'].href;
-    this.requestsService.update(projectUpdateUrl, this.activeProject).subscribe(
-      (project) => {
-        this.submissionsService.setActiveProject(project);
-      },
-      (error) => {
-        // TODO: Handle errors.
-        console.log(error);
+    if (this.publicationForm.valid) {
+      if (this.selectedPublicationIndex > -1) {
+        this.activeProject.publications[this.selectedPublicationIndex] = this.publicationForm.value;
+      } else {
+        this.activeProject.publications.push(this.publicationForm.value);
       }
-    );
-    this.publicationForm.reset();
-    this.editMode = false;
-    this.selectedPublicationIndex = -1;
+      const projectUpdateUrl = this.activeProject._links['self:update'].href;
+      this.requestsService.update(projectUpdateUrl, this.activeProject).subscribe(
+        (project) => {
+          this.submissionsService.setActiveProject(project);
+        },
+        (error) => {
+          // TODO: Handle errors.
+          console.log(error);
+        }
+      );
+      this.publicationForm.reset();
+      this.editMode = false;
+      this.selectedPublicationIndex = -1;
+    }
   }
 
   onEditPublication(publicationIndex: number) {
@@ -134,12 +136,16 @@ export class PublicationPageComponent implements OnInit {
   }
 
   onSaveExit() {
+    this.onAddPublication();
+
     this.submissionsService.deleteActiveSubmission();
     this.submissionsService.deleteActiveProject();
     this.router.navigate(['/']);
   }
 
   onSaveContinue() {
+    this.onAddPublication();
+
     this.router.navigate(['/submission/contacts']);
   }
 }

@@ -63,6 +63,10 @@ a.disabled {
   }
 }
 
+.button {
+  margin-top: 2rem;
+}
+
 .button:focus {
   background: $button-primary;
 }
