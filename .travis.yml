@@ -9,6 +9,7 @@ addons:
     sources:
       - google-chrome
     packages:
+      - dpkg
       - google-chrome-stable
       - google-chrome-beta
 
