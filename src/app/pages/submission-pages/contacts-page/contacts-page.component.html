@@ -13,69 +13,67 @@
     <form *ngIf="activeProject" [formGroup]="contactForm" novalidate class="conditional-form">
 
       <!-- Print Team Field -->
-      <fieldset required class="large-form padding-bottom-large padding-top-large ">
-        <legend>Add new Contact</legend>
+      <div *ngIf="!activeProject">
+        <p>Contact data is not submitted or not available.</p>
+      </div>
+      <div *ngIf="activeProject && !viewOnly">
+        <fieldset required class="large-form padding-bottom-large padding-top-large ">
 
-        <div class="row">
+          <legend>Add new Contact</legend>
+
+      <!-- <div class="row"> -->
           <div class="small-4 columns">
-            <Label>First Name *
-              <input type="text" name="firstName" formControlName="firstName" placeholder="First name" required>
-            </Label>
+            <label for="firstName">First Name <b class="mandatory">*</b></label>
+            <input type="text" name="firstName" formControlName="firstName" placeholder="First name" required>
           </div>
+
           <div class="small-4 columns">
-            <Label>Middle Name
-              <input type="text" name="middleInitials" formControlName="middleInitials" placeholder="Middle name">
-            </Label>
+            <label for="middleInitials">Middle Name</label>
+            <input type="text" name="middleInitials" formControlName="middleInitials" placeholder="Middle name">
           </div>
+          
           <div class="small-4 columns">
-            <Label>Last Name *
-              <input type="text" name="lastName" formControlName="lastName" placeholder="Last name" required>
-            </Label>
+            <label for="lastName">Last Name <b class="mandatory">*</b></label>
+            <input type="text" name="lastName" formControlName="lastName" placeholder="Last name" required>
           </div>
 
           <div class="small-6 columns">
-            <Label>Email *
-              <input type="email" name="email" formControlName="email" placeholder="email" required>
-            </Label>
+            <label>Email <b class="mandatory">*</b></label>
+            <input type="email" name="email" formControlName="email" placeholder="email" required>
           </div>
 
           <div class="small-6 columns">
-            <Label>Address *
-              <input type="text" name="address" formControlName="address" placeholder="Address information.." required>
-            </Label>
+            <label>Address <b class="mandatory">*</b></label>
+            <input type="text" name="address" formControlName="address" placeholder="Address information.." required>
           </div>
 
           <div class="small-6 columns">
-            <Label>Phone *
-              <input type="tel" name="phone" formControlName="phone" placeholder="Phone number" required>
-            </Label>
+            <label>Phone <b class="mandatory">*</b></label>
+            <input type="tel" name="phone" formControlName="phone" placeholder="Phone number" required>
           </div>
 
           <div class="small-6 columns">
-            <Label>Fax
-              <input type="tel" name="fax" formControlName="fax" placeholder="Fax number">
-            </Label>
+            <label>Fax</label>
+            <input type="tel" name="fax" formControlName="fax" placeholder="Fax number">
           </div>
 
           <div class="small-6 columns">
-            <Label>Affiliation Organization *
-              <input type="text" name="affiliation" formControlName="affiliation" placeholder="Affiliation Organization" required>
-            </Label>
+            <label>Affiliation Organization <b class="mandatory">*</b></label>
+            <input type="text" name="affiliation" formControlName="affiliation" placeholder="Affiliation Organization" required>
           </div>
 
           <div class="small-6 columns">
-            <Label>ORCID
-              <input type="text" name="orcid" formControlName="orcid" placeholder="ORCID">
-            </Label>
+            <label>ORCID</label>
+            <input type="text" name="orcid" formControlName="orcid" placeholder="ORCID">
           </div>
-        </div>
-      </fieldset>
+          <button *ngIf="!viewOnly" class="button" (click)="onAddContact()" [disabled]="contactForm.invalid"><i class="icon icon-functional" data-icon="+"></i> Add New Contact</button>
+        </fieldset>
+      </div>
 
-      <button class="button secondary-color white-background" (click)="onAddContact()" [disabled]="contactForm.invalid"><i class="icon icon-functional" data-icon="+"></i> Add New Contact</button>
     </form>
 
     <div *ngIf="activeProject?.contacts?.length > 0">
-      <h3>Contacts</h3>
+      <h3>Contacts List</h3>
       <table class="hover">
         <thead class="fixed">
           <tr>
@@ -86,7 +84,7 @@
             <th>Fax</th>
             <th>Affiliation Organization</th>
             <th>ORCID</th>
-            <th></th>
+            <th>Actions</th>
           </tr>
         </thead>
 
@@ -99,13 +97,16 @@
           <td>{{ contact.fax }}</td>
           <td>{{ contact.affiliation }}</td>
           <td>{{ contact.orcid }}</td>
-          <td class="text-center"><i class="icon icon-functional" data-icon="d" (click)="onDeleteContact(i)"></i></td>
+          <td *ngIf="!viewOnly; else noAction" class="text-center"><i class="icon icon-functional" data-icon="d" (click)="onDeleteContact(i)"></i></td>
+          <ng-template #noAction>
+            <td></td>
+          </ng-template>
         </tr>
         </tbody>
       </table>
     </div>
 
-    <div>
+    <div *ngIf="!viewOnly">
       <button class="button secondary-color white-background" (click)="onSaveExit()">Save & exit</button>
       <button class="button readmore" (click)="onSaveContinue()">Save &amp; continue</button>
     </div>

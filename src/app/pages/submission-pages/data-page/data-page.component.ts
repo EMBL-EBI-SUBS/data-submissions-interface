@@ -1,11 +1,12 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { PageService } from './../../../services/page.service';
+import { NgxSmartModalService } from 'ngx-smart-modal';
+import { Component, OnInit, ElementRef, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { TokenService } from 'angular-aap-auth';
 
 // Import Services.
 import { SubmissionsService } from '../../../services/submissions.service';
 import { TeamsService } from '../../../services/teams.service';
-import { environment } from 'src/environments/environment';
 
 import Uppy from '@uppy/core';
 import Dashboard from '@uppy/dashboard';
@@ -15,6 +16,7 @@ import GoldenRetriever from '@uppy/golden-retriever';
 import * as HttpStatus from 'http-status-codes';
 import { FileService } from 'src/app/services/file.service';
 import { RequestsService } from 'src/app/services/requests.service';
+import { SubmissionStatus } from 'src/app/models/submission-status';
 
 @Component({
   selector: 'app-data-page',
@@ -22,13 +24,18 @@ import { RequestsService } from 'src/app/services/requests.service';
   styleUrls: ['./data-page.component.scss']
 })
 export class DataPageComponent implements OnInit {
-  activeSubmission: any;
 
-  uploadEndpoint = environment.uploadEndpoint;
+  objectKeys = Object.keys;
+  activeSubmission: any;
+  uploadEndpoint: any;
   uploadUppy: any;
   files: any;
   userHasTeam = true;
   token: string;
+
+  selectedFileErrorMessages = {};
+
+  viewOnly = false;
 
   constructor(
     private router: Router,
@@ -37,11 +44,25 @@ export class DataPageComponent implements OnInit {
     private tokenService: TokenService,
     private requestsService: RequestsService,
     private fileService: FileService,
-    private elementRef: ElementRef
+    private elementRef: ElementRef,
+    public ngxSmartModalService: NgxSmartModalService,
+    private pageService: PageService,
+    private changeDetectorRef: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
     this.activeSubmission = this.submissionsService.getActiveSubmission();
+    this.viewOnly = this.pageService.setSubmissionViewMode(this.activeSubmission._links.submissionStatus.href);
+
+    if (!this.viewOnly) {
+      this.fileService.getUploadEndpoint().toPromise().then(
+        response => {
+          this.uploadEndpoint = response;
+          this.initUppy();
+        }
+      );
+    }
+
     this.token = this.tokenService.getToken();
 
     this.fileService.getActiveSubmissionsFiles(this.activeSubmission).subscribe(
@@ -49,6 +70,9 @@ export class DataPageComponent implements OnInit {
         this.files = response;
       }
     );
+  }
+
+  initUppy() {
     this.uploadUppy = Uppy({
       id: this.convertToSlug(
         this.activeSubmission.name +
@@ -64,7 +88,7 @@ export class DataPageComponent implements OnInit {
         trigger: '.UppyModalOpenerBtn',
         inline: true,
         target: '.uppy-drag-drop',
-        note: 'Drag & drop filled out .CSV file'
+        note: 'Drag & drop data files here'
       })
       .use(Form, {
         target: '.uppy-metadata',
@@ -88,7 +112,7 @@ export class DataPageComponent implements OnInit {
     });
   }
 
-  onDeleteFile(event, file) {
+  onDeleteFile(file: any, index: number) {
     if (
       !confirm(
         `Are you sure you would like to delete this file: ${file.filename}`
@@ -102,12 +126,11 @@ export class DataPageComponent implements OnInit {
     this.fileService.deleteFile(fileHref).subscribe(
       response => {
         if (response.status === HttpStatus.NO_CONTENT) {
-          // console.debug(`File: ${file.filename} has been succcesfully deleted from the storage.`);
-          this.files = this.files['_embedded']['files'].filter(
-            item => item !== file
-          );
+          console.log(`File: ${file.filename} has been succcesfully deleted from the storage.`);
+          this.files['_embedded']['files'].splice(index, 1);
+          this.changeDetectorRef.detectChanges();
         } else {
-          // console.log(`File deletion has failed. The reason: ${response.statusText}`);
+          console.log(`File deletion has failed. The reason: ${response.statusText}`);
         }
       },
       err => {
@@ -118,6 +141,46 @@ export class DataPageComponent implements OnInit {
         );
       }
     );
+  }
+
+  onRefreshFileStatuses() {
+    this.fileService.getActiveSubmissionsFiles(this.activeSubmission).subscribe(
+      (response) => {
+        this.files = response;
+      }
+    );
+  }
+
+  /**
+   * When click on pager, update files.
+   */
+  onPagerClick(action: string) {
+    const getFilesUrl = this.files._links[action]
+      .href;
+    this.files = this.getSubmissionFilesByUrl(
+      getFilesUrl
+    );
+  }
+
+    /**
+   * Retrieve the new metadata object when pager clicked.
+   */
+  getSubmissionFilesByUrl(serviceUrl: string) {
+    this.requestsService.get(serviceUrl).subscribe(
+      data => {
+        this.files = data;
+        this.changeDetectorRef.detectChanges();
+      },
+      err => {
+        // TODO: Handle Errors.
+        console.log(err);
+      }
+    );
+  }
+
+  showValidationErrors(errorMessages: {}) {
+    this.selectedFileErrorMessages = errorMessages;
+    this.ngxSmartModalService.getModal('fileErrorWindow').open();
   }
 
   onSaveExit() {
@@ -138,33 +201,6 @@ export class DataPageComponent implements OnInit {
     return Text.toLowerCase()
       .replace(/ /g, '-')
       .replace(/[^\w-]+/g, '');
-  }
-
-  /**
-   * When click on pager, update files.
-   */
-  onPagerClick(action: string) {
-    const getFilesUrl = this.files._links[action]
-      .href;
-    this.files = this.getSubmissionFilesByUrl(
-      getFilesUrl
-    );
-  }
-
-    /**
-   * Retrieve the new metadata object when pager clicked.
-   */
-  getSubmissionFilesByUrl(serviceUrl: string) {
-    this.requestsService.get(serviceUrl).subscribe(
-      data => {
-        // Store active submission in a local variable.
-        this.files = data;
-      },
-      err => {
-        // TODO: Handle Errors.
-        console.log(err);
-      }
-    );
   }
 
   /**

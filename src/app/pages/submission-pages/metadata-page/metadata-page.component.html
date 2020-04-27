@@ -8,16 +8,40 @@
 
     <ngx-loading [show]="loading" [config]=""></ngx-loading>
 
-    <ngx-smart-modal #myModal identifier="myModal">
-        <div *ngIf="activeMetadataRow && activeMetadataRow.errors.length > 0">
-            <div *ngFor="let metadataError of activeMetadataRow.errors" class="metadata-error-row">
-              {{ metadataError }}
-            </div>
-        </div>
+    <ngx-smart-modal #metadataErrorWindow identifier="metadataErrorWindow">
+      <legend class="text-center">Error messages</legend>
+      <div *ngFor="let errorType of objectKeys(selectedMetadataErrorMessages)" class="errormessage-row">
+        <legend>{{ errorType }}</legend>
+        <br/>
+        <ul *ngFor="let errorMessage of selectedMetadataErrorMessages[errorType]">
+          <li>{{ errorMessage }}</li>
+        </ul>
+      </div>
     </ngx-smart-modal>
 
-    <!-- Uploading metaData sheet fieldset. -->
-    <fieldset required class="large-form padding-bottom-large padding-top-large">
+    <ngx-smart-modal #attributesWindow identifier="attributesWindow">
+      <legend class="text-center">Attributes</legend>
+      <br/>
+      <table>
+        <thead>
+          <tr>
+            <th>Type</th>
+            <th>Value</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let attribute of selectedMetadataAttributes | keyvalue">
+            <td>{{ attribute.key }}</td>
+            <td>{{ attribute.value }}</td>
+          </tr>
+        </tbody>
+      </table>
+        
+    </ngx-smart-modal>
+
+      <!-- Uploading metaData sheet fieldset. -->
+    <fieldset *ngIf="!viewOnly" required class="large-form padding-bottom-large padding-top-large">
       <legend>Upload {{ activeDataType.displayNamePlural }} Sheet</legend>
 
       <p>
@@ -48,7 +72,7 @@
         <a href="{{selectedTemplate?._links['spreadsheet-csv-download'].href}}" target="_blank" class="hollow button uppercase margin-right-10">Download
           The Template</a>
 
-        <button href="#" (click)="triggerUpload()" target="_blank" [disabled]="!submissionMetadata" class="button primary uppercase">Upload Filled Template</button>
+        <button href="#" (click)="triggerUpload()" target="_blank" class="button primary uppercase">Upload Filled Template</button>
         <input type="file" name="csv-template" (change)="previewCSVFile($event)" class="hide" />
       </div>
     </fieldset>
@@ -58,9 +82,9 @@
       <legend>View Uploaded {{ activeDataType.displayNamePlural }}</legend>
 
       <div required class="large-form padding-bottom-large padding-top-large ds-tabs">
-        <div *ngIf="submissionMetadata && submissionMetadata.hasOwnProperty('_embedded')">
-          <div class="row">
-            <div *ngIf="processingSheets.length > 0" class="sheet-items-wrapper">
+        <div>
+          <div *ngIf="processingSheets.length > 0" class="row">
+            <div class="sheet-items-wrapper">
               <div *ngFor="let processingSheet of processingSheets; let i = index" class="sheet-item">
                 Sheet #{{ i + 1 }} : Processing {{ processingSheet.processedRowCount }} of
                 {{ processingSheet.totalRowCount }}
@@ -75,37 +99,38 @@
               {{ activeDataType.displayNamePlural }}</div>
           </div>
 
-          <table class="margin-top-20 samples-table inline-editing-table">
+          <table *ngIf="submissionMetadata && submissionMetadata.hasOwnProperty('_embedded')" class="margin-top-20 samples-table inline-editing-table">
             <thead>
               <tr>
-                <th class="actions"></th>
-                <ng-container *ngFor="let keyName of objectKeys(submissionMetadata._embedded[objectKeys(submissionMetadata?._embedded)[0]][0])">
-                  <th *ngIf="blackListSampleFields.indexOf(keyName) < 0 && addMetadataActiveKey(keyName)"> {{keyName |
-                    uppercase}}</th>
-                </ng-container>
+                <th *ngFor="let headerName of metadataTableHeaders">{{ headerName | titlecase }}</th>
+                <th *ngIf="metadataAttributes && objectKeys(metadataAttributes).length > 0">Attributes</th>
+                <th class="actions">Actions</th>
               </tr>
             </thead>
 
             <tbody>
-              <tr *ngFor="let metaData of submissionMetadata?._embedded[objectKeys(submissionMetadata?._embedded)[0]]; let last = last; let i = index;">
-                <td class="text-center actions">
-                  <button type='button' (click)="deleteMetadata(metaData, i)">
-                    <i class="icon icon-functional" data-icon="x"></i>
-                  </button>
-
-                  <button class="reveal-button"
-                    data-open="metadata-errors"
-                    type='button'
-                    *ngIf="metaData._embedded.validationResult.errorMessages && objectKeys(metaData._embedded.validationResult.errorMessages)[0].length > 0"
-                    (click)="showMetadataErrors(metaData, i)">
-                    <i class="icon icon-generic errors row-errors" data-icon="l"></i>
-                  </button>
+              <tr *ngFor="let metadataRow of metadataValues; let last = last; let i = index;">
+                <td *ngFor="let header of metadataTableHeaders">
+                  {{ metadataRow[header] }}
                 </td>
-
-                <td *ngFor="let key of activeMetadataFields">
-                  {{ metaData[key] }}
+                <td *ngIf="metadataAttributes && objectKeys(metadataAttributes).length > 0">
+                    <button *ngIf="metadataAttributes && metadataAttributes[metadataRow['alias']]"
+                            type='button' (click)="showAttributes(metadataAttributes[metadataRow['alias']])" class="">Show</button>
                 </td>
-              </tr>
+                <td class="text-center">
+                    <button class="reveal-button"
+                      data-open="metadata-errors"
+                      type='button'
+                      *ngIf="metadataRow.errorMessages"
+                      (click)="showMetadataErrors(metadataRow.errorMessages)">
+                      <i class="icon icon-generic errors row-errors" data-icon="l"></i>
+                    </button>
+                    &nbsp;
+                    <button *ngIf="!viewOnly" type='button' (click)="deleteMetadata(i)">
+                        <i class="icon icon-functional" data-icon="d"></i>
+                      </button>
+                    </td>
+                </tr>
             </tbody>
           </table>
 
@@ -126,14 +151,14 @@
           </ul>
         </div>
 
-        <div *ngIf="submissionMetadata && !submissionMetadata.hasOwnProperty('_embedded')">
+        <div *ngIf="!submissionMetadata || !submissionMetadata.hasOwnProperty('_embedded')">
           No {{ activeDataType.displayNamePlural }} has been uploaded yet. If you just uploaded the spreadsheet then it
           may take a while to appears.
         </div>
       </div>
 
     </fieldset>
-    <div>
+    <div *ngIf="!viewOnly">
       <button class="button secondary-color white-background" (click)="onSaveExit()">Save &amp; exit</button>
       <button class="button readmore" (click)="onSaveContinue()">Save &amp; continue</button>
     </div>

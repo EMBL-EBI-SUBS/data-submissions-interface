@@ -1,12 +1,15 @@
+import { PageService } from './../../../services/page.service';
+import { PublicationStatus } from './../../../models/publication-status';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 
 // Import Services.
 import { SubmissionsService } from '../../../services/submissions.service';
 import { TeamsService } from '../../../services/teams.service';
 import { UserService } from '../../../services/user.service';
 import { RequestsService } from '../../../services/requests.service';
+import { SubmissionStatus } from 'src/app/models/submission-status';
 
 @Component({
   selector: 'app-project-page',
@@ -19,29 +22,28 @@ export class ProjectPageComponent implements OnInit {
   activeProject: any;
   projects: any;
 
+  viewOnly = false;
+
   constructor(
     private submissionsService: SubmissionsService,
     private teamsService: TeamsService,
     private userService: UserService,
     private requestsService: RequestsService,
+    private pageService: PageService,
     private router: Router,
+    private formBuilder: FormBuilder
   ) { }
 
   ngOnInit() {
-    this.projectForm = new FormGroup({
-      project: new FormControl('_create', Validators.required),
-      projectTitle: new FormControl('', Validators.required),
-      projectDescription: new FormControl(''),
-      projectShortName: new FormControl('', Validators.required),
-      submissionShortName: new FormControl('', Validators.required),
-      releaseDate: new FormControl('', Validators.required),
-      submissionPublication: new FormControl(''),
-    });
+    this.initializeForm();
+
     // Load list of projects.
     this.onLoadProjects();
-    this.initializeForm();
     this.getActiveProject();
   }
+
+  // convenience getter for easy access to form fields
+  get f() { return this.projectForm.controls; }
 
   /**
    * On Save and Exit.
@@ -82,11 +84,7 @@ export class ProjectPageComponent implements OnInit {
 
     const submissionUpdateUrl = this.activeSubmission._links['self:update'].href;
     const submissionUpdateData = this.activeSubmission;
-    submissionUpdateData['name'] = this.projectForm.value.submissionShortName;
     submissionUpdateData['projectName'] = this.projectForm.value.projectShortName;
-    submissionUpdateData['uiData']['project'] = {
-      'publication': this.projectForm.value.submissionPublication
-    };
 
     // Update the submission.
     this.requestsService.update(submissionUpdateUrl, submissionUpdateData).subscribe(
@@ -121,6 +119,8 @@ export class ProjectPageComponent implements OnInit {
       this.requestsService.partialUpdate(submissionProjectUpdateUrl, submissionProjectDataObject).subscribe(
         (data) => {
           this.submissionsService.setActiveProject(data);
+          this.updateSubmissionContent();
+          this.router.navigate(['/submission/publications']);
         },
         (err) => {
           // TODO: Handle Errors.
@@ -133,6 +133,8 @@ export class ProjectPageComponent implements OnInit {
       this.requestsService.create(submissionProjectUpdateUrl, submissionProjectDataObject).subscribe(
         (data) => {
           this.submissionsService.setActiveProject(data);
+          this.updateSubmissionContent();
+          this.router.navigate(['/submission/publications']);
         },
         (err) => {
           // TODO: Handle Errors.
@@ -140,27 +142,6 @@ export class ProjectPageComponent implements OnInit {
         }
       );
     }
-
-    const submissionUpdateUrl = this.activeSubmission._links['self:update'].href;
-    const submissionUpdateData = this.activeSubmission;
-    submissionUpdateData['name'] = this.projectForm.value.submissionShortName;
-    submissionUpdateData['projectName'] = this.projectForm.value.projectShortName;
-    submissionUpdateData['uiData']['project'] = {
-      'publication': this.projectForm.value.submissionPublication
-    };
-
-    // Update the submission.
-    this.requestsService.update(submissionUpdateUrl, submissionUpdateData).subscribe(
-      (data) => {
-        this.getSubmissionContents(data);
-      },
-      (err) => {
-        // TODO: Handle Errors.
-        console.log(err);
-      }
-    );
-
-    this.router.navigate(['/submission/contacts']);
   }
 
   /**
@@ -181,7 +162,6 @@ export class ProjectPageComponent implements OnInit {
       }
     );
   }
-
 
   getActiveProject() {
     this.activeProject = this.submissionsService.getActiveProject();
@@ -227,8 +207,6 @@ export class ProjectPageComponent implements OnInit {
   onLoadProjects() {
     this.userService.getUserProjects().subscribe(
       (data) => {
-        // TODO: Create a team if user has no tea m.
-        // If user has no team assigned to it.
         if (!data.hasOwnProperty('_embedded')) {
           return false;
         }
@@ -252,13 +230,12 @@ export class ProjectPageComponent implements OnInit {
         this.projects[this.projectForm.value.project].alias,
         this.projects[this.projectForm.value.project].title,
         this.projects[this.projectForm.value.project].description,
-        this.projects[this.projectForm.value.releaseDate].releaseDate
+        this.projects[this.projectForm.value.project].releaseDate
       );
     } else {
       this.updateProjectForm('', '', '', '');
     }
   }
-
 
   /**
    * This function set default value for forms and load submission content data.
@@ -266,6 +243,16 @@ export class ProjectPageComponent implements OnInit {
   initializeForm() {
     // Set Active Submission.
     this.activeSubmission = this.submissionsService.getActiveSubmission();
+
+    this.viewOnly = this.pageService.setSubmissionViewMode(this.activeSubmission._links.submissionStatus.href);
+
+    this.projectForm = this.formBuilder.group({
+      project: ['_create'],
+      projectTitle: ['', [Validators.required, Validators.minLength(25)]],
+      projectDescription: ['', [Validators.required, Validators.minLength(50)]],
+      projectShortName: ['', Validators.required],
+      releaseDate: ['', [Validators.required]],
+    });
 
     // Load Submission Content Actions.
     this.requestsService.get(this.activeSubmission._links.contents.href).subscribe(
@@ -279,14 +266,18 @@ export class ProjectPageComponent implements OnInit {
         console.log(err);
       }
     );
-    if (this.activeSubmission) {
-      try {
-        // Update form fields.
-        this.projectForm.controls['submissionShortName'].setValue(this.activeSubmission.name);
-        this.projectForm.controls['submissionPublication'].setValue(this.activeSubmission.uiData.project.publication);
-      } catch (err) {
+  }
 
-      }
-    }
+  private updateSubmissionContent() {
+    const submissionUpdateUrl = this.activeSubmission._links['self:update'].href;
+    const submissionUpdateData = this.activeSubmission;
+    submissionUpdateData['projectName'] = this.projectForm.value.projectShortName;
+    // Update the submission.
+    this.requestsService.update(submissionUpdateUrl, submissionUpdateData).subscribe((data) => {
+      this.getSubmissionContents(data);
+    }, (err) => {
+      // TODO: Handle Errors.
+      console.log(err);
+    });
   }
 }

@@ -17,19 +17,22 @@ export class NotificationInterceptor implements HttpInterceptor {
         if (error instanceof HttpErrorResponse) {
           switch (error.status) {
             case 401:
-              this._notify.error('Please login to continue.');
+              this._notify.error(
+                'The username or password that you entered did not match our records. Please double-check and try again.');
               break;
             case 404:
-              this._notify.error('Requested resource is not available.');
+              this._notify.error('Requested resource is not available. Please double-check and try again.');
               break;
             case 500:
-              this._notify.error('Sorry, there was a backend problem.');
+              let errorMessage = 'You have experienced a technical error. We apologize. We are working to correct this issue.';
+              errorMessage += ' Please, wait a few moments and try it again.';
+              this._notify.error(errorMessage);
               break;
             default:
-              this._notify.error('Sorry, there was and unknown error.');
+              this._notify.error('Sorry, there was an unknown error. We apologize. Please, report this through our help desk. Thank you.');
           }
         } else {
-          this._notify.error('Unknown network error. Please, try again.');
+          this._notify.error('Unknown network error happened. Please, try again.');
         }
         return throwError(error);
       })

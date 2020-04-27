@@ -1,3 +1,4 @@
+import { PageService } from './../../../services/page.service';
 import {
   Component,
   OnInit,
@@ -12,6 +13,7 @@ import { SubmissionsService } from '../../../services/submissions.service';
 import { TeamsService } from '../../../services/teams.service';
 import { RequestsService } from '../../../services/requests.service';
 import { SpreadsheetsService } from '../../../services/spreadsheets.service';
+import { SubmissionStatus } from 'src/app/models/submission-status';
 
 @Component({
   selector: 'app-metadata-page',
@@ -28,7 +30,8 @@ export class MetadataPageComponent implements OnInit {
   id: string;
   objectKeys = Object.keys;
   activeSubmission: any;
-  activeMetadataRow: any;
+  selectedMetadataErrorMessages = {};
+  selectedMetadataAttributes = new Object;
   activeDataType: any;
   submissionMetadata: any;
   templatesList: any;
@@ -37,8 +40,11 @@ export class MetadataPageComponent implements OnInit {
     selectedTemplate: [''],
   });
 
+  metadataTableHeaders = [];
+
   processingSheets = [];
   blackListSampleFields = [
+    'attributes',
     'fields',
     'createdBy',
     'createdDate',
@@ -46,18 +52,31 @@ export class MetadataPageComponent implements OnInit {
     'lastModifiedDate',
     'sampleRelationships',
     'team',
-    'attributes',
     'accession',
     'errors',
     'contacts',
-    'projectRef',
     'protocolRefs',
     '_embedded',
     '_links'
   ];
-  activeMetadataFields = [];
+  activeMetadataFieldsPath = [];
   activeMetadataIndex: number;
   public loading = false;
+
+  dataFieldMappingWithArray = {
+    'assayRefs': ['alias'],
+    'sampleUses': ['sampleRef', 'alias'],
+    'protocolUses': ['protocolRef', 'alias'],
+    'files': ['name']
+  };
+  dataFieldMappingSimple = {
+    'studyRef': ['alias'],
+    'projectRef': ['alias']
+  };
+  metadataValues = [];
+  metadataAttributes = [];
+
+  viewOnly = false;
 
   constructor(
     private router: Router,
@@ -67,6 +86,7 @@ export class MetadataPageComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private elementRef: ElementRef,
     private _fb: FormBuilder,
+    private pageService: PageService,
     public ngxSmartModalService: NgxSmartModalService
   ) {}
 
@@ -74,6 +94,9 @@ export class MetadataPageComponent implements OnInit {
     this.activatedRoute.params.subscribe(params => {
       this.resetVariables();
       this.activeSubmission = this.submissionsService.getActiveSubmission();
+
+      this.viewOnly = this.pageService.setSubmissionViewMode(this.activeSubmission._links.submissionStatus.href);
+
       this.id = params.id;
       this.templatesList = [];
       this.loading = true;
@@ -127,11 +150,29 @@ export class MetadataPageComponent implements OnInit {
   /**
    * Set metadata header columns based on first row keys.
    */
-  addMetadataActiveKey(keyName: string) {
-    if (this.activeMetadataFields.indexOf(keyName) < 0) {
-      this.activeMetadataFields.push(keyName);
+  processMetadataTableHeaders() {
+    if (!this.submissionMetadata._embedded) {
+      return;
     }
-    return true;
+
+    const originalHeaders = this.objectKeys(this.submissionMetadata._embedded[this.objectKeys(this.submissionMetadata._embedded)[0]][0]);
+
+    for (const keyName of originalHeaders) {
+      if (this.blackListSampleFields.indexOf(keyName) < 0) {
+        this.pushIfNotExist(this.metadataTableHeaders, keyName);
+      }
+    }
+  }
+
+  /**
+   * Push a new item into an array if it is not exists.
+   * @param array the array to push the new item into
+   * @param newItem the new item
+   */
+  pushIfNotExist(array: string[], newItem: string) {
+    if (array.indexOf(newItem) < 0) {
+      array.push(newItem);
+    }
   }
 
   /**
@@ -175,39 +216,45 @@ export class MetadataPageComponent implements OnInit {
   /**
    * Remove metadata object from the submission.
    */
-  deleteMetadata(metadata: any, index: number) {
+  deleteMetadata(index: number) {
     if (confirm('Are you sure you want to delete the item?')) {
       this.loading = true;
-      this.requestsService.delete(metadata['_links']['self:delete'].href).subscribe(
-        data => {
-          this.submissionMetadata._embedded[Object.keys(this.submissionMetadata._embedded)[0]].splice(index, 1);
-          this.loading = false;
-        },
-        err => {
-          console.log(err);
-          this.loading = false;
-        }
-      );
+      this.requestsService.delete(
+        this.submissionMetadata._embedded[
+          Object.keys(this.submissionMetadata._embedded)[0]][index]['_links']['self:delete'].href).subscribe(
+            data => {
+              const remainedMetadata = this.submissionMetadata._embedded[Object.keys(this.submissionMetadata._embedded)[0]];
+              remainedMetadata.splice(index, 1);
+              if (remainedMetadata.length < 1 ) {
+                this.metadataTableHeaders = [];
+                delete this.submissionMetadata;
+              } else {
+                this.metadataValues.splice(index, 1);
+              }
+            },
+            err => {
+              console.log(err);
+            }
+          );
+      this.loading = false;
     }
   }
 
   /**
    * On showing errors for a specific metadata row.
    */
-  showMetadataErrors(metadata: any, index: number) {
-    this.activeMetadataRow = metadata;
-    this.activeMetadataRow.errors = [];
-    for (const metadataErrorGroup in metadata._embedded.validationResult.errorMessages) {
-      if (metadata._embedded.validationResult.errorMessages[metadataErrorGroup].length > 0) {
-        for (const metadataError in metadata._embedded.validationResult.errorMessages[metadataErrorGroup]) {
-          if (typeof metadata._embedded.validationResult.errorMessages[metadataErrorGroup][metadataError] === 'string') {
-            this.activeMetadataRow.errors.push(metadata._embedded.validationResult.errorMessages[metadataErrorGroup][metadataError]);
-          }
-        }
-      }
-    }
+  showMetadataErrors(errorMessage: any) {
+    this.selectedMetadataErrorMessages = errorMessage;
+    this.ngxSmartModalService.getModal('metadataErrorWindow').open();
+  }
 
-    this.ngxSmartModalService.getModal('myModal').open();
+  /**
+   * Show attributes of a selected metadata row.
+   * @param attributes the attributes to display
+   */
+  showAttributes(attributes: Object) {
+    this.selectedMetadataAttributes = attributes;
+    this.ngxSmartModalService.getModal('attributesWindow').open();
   }
 
   /**
@@ -269,6 +316,8 @@ export class MetadataPageComponent implements OnInit {
         return false;
       }
 
+      fileResults = this.addDefaultProjectAliasIfNotPresent(fileResults);
+
       this.spreadsheetsService
         .create(templateUploadLink, fileResults)
         .subscribe(
@@ -288,6 +337,37 @@ export class MetadataPageComponent implements OnInit {
     reader.readAsDataURL(event.target.files[0]);
   }
 
+  addDefaultProjectAliasIfNotPresent(fileResults: string): string {
+    const result = [];
+    const lines = fileResults.split('\r\n');
+    const index = this.getProjectAliasIndex(lines);
+
+    result.push(lines.shift());
+    for (let line of lines) {
+      const values = line.split(',');
+      if (index === values.length) {
+        line = line.concat(',', this.activeSubmission.projectName);
+      } else if (values[index] === '') {
+        values[index] = this.activeSubmission.projectName;
+        line = values.join(',');
+      }
+
+      result.push(line);
+    }
+
+    return result.join('\r\n');
+  }
+
+  getProjectAliasIndex(lines): number {
+    let index = lines[0].split(',').indexOf('project alias');
+    if (index === -1) {
+      lines[0] = lines[0].concat(',project alias');
+      index = lines[0].split(',').length - 1;
+    }
+
+    return index;
+  }
+
   /**
    * Retrieve active metadata obejct.
    */
@@ -295,18 +375,97 @@ export class MetadataPageComponent implements OnInit {
     const submissionMetadataLink = this.activeDataType._links.self.href;
     this.requestsService.get(submissionMetadataLink).subscribe(
       data => {
-        this.loading = false;
         try {
           this.submissionMetadata = data;
+          this.processMetadataTableHeaders();
+          this.processMetaDataValues();
         } catch (e) {
           console.log(e);
         }
+        this.loading = false;
       },
       err => {
         console.log(err);
         this.loading = false;
       }
     );
+  }
+
+  processMetaDataValues() {
+    if (!this.submissionMetadata._embedded) {
+      return;
+    }
+
+    this.metadataValues = [];
+    for (const tempMetadata of this.submissionMetadata._embedded[this.objectKeys(this.submissionMetadata._embedded)[0]]) {
+      const index = this.metadataValues.length;
+      this.metadataValues[index] = [];
+      for (const metadataKey of this.metadataTableHeaders) {
+        let value = tempMetadata;
+        if (!this.dataFieldMappingWithArray.hasOwnProperty(metadataKey)
+                  && !this.dataFieldMappingSimple.hasOwnProperty(metadataKey)) {
+          value = this.getEmbeddedValue(value, metadataKey);
+        } else {
+          if (this.dataFieldMappingSimple.hasOwnProperty(metadataKey)) {
+          value = this.getEmbeddedValue(tempMetadata[metadataKey], this.dataFieldMappingSimple[metadataKey]);
+          } else {
+            const metadataObjectPath = this.getMetaDataObjectPath(metadataKey, tempMetadata[metadataKey].length);
+            value = this.getMetadataObjectValue(metadataObjectPath, tempMetadata);
+          }
+        }
+
+        this.metadataValues[index][metadataKey] = value;
+      }
+
+      if (tempMetadata.hasOwnProperty('attributes')) {
+        this.metadataAttributes[tempMetadata['alias']] = this.getAttributes(tempMetadata['attributes']);
+      }
+
+      const errorObject = tempMetadata._embedded.validationResult.errorMessages;
+      if (errorObject) {
+        this.metadataValues[index]['errorMessages'] = errorObject;
+      }
+    }
+  }
+
+  getMetaDataObjectPath(name: string, numberOfElements: number): Object {
+    return {
+      'rootName': name,
+      'numberOfElements': numberOfElements,
+      'additionalPath': this.dataFieldMappingWithArray[name]
+    };
+  }
+
+  getMetadataObjectValue(metadataObjectPath: Object, metadataObject: any) {
+    const finalMetadataValue = [];
+    const metadataValue = this.getEmbeddedValue(metadataObject, metadataObjectPath['rootName']);
+    for (let index = 0; index < metadataObjectPath['numberOfElements']; index++) {
+      let tempMetadataValue = this.getEmbeddedValue(metadataValue, index.toString());
+      const metadataPath = metadataObjectPath['additionalPath'];
+      for (const tempKey of metadataPath) {
+        tempMetadataValue = this.getEmbeddedValue(tempMetadataValue, tempKey);
+      }
+
+      finalMetadataValue.push(tempMetadataValue);
+    }
+
+    return finalMetadataValue.join(', ');
+  }
+
+  getAttributes(attributesObject: Object): Object {
+    const attributes = new Object();
+    for (const attributeName of this.objectKeys(attributesObject)) {
+      const attributeValue = attributesObject[attributeName][0].value;
+      if (attributeValue) {
+        attributes[attributeName] = attributeValue;
+      }
+    }
+
+    return attributes;
+  }
+
+  getEmbeddedValue(object: any, key: string): string {
+    return object[key];
   }
 
   /**
@@ -367,9 +526,13 @@ export class MetadataPageComponent implements OnInit {
     delete this.activeDataType;
     delete this.selectedTemplate;
     delete this.templatesList;
-    delete this.activeMetadataRow;
+    this.selectedMetadataErrorMessages = [];
+    delete this.selectedMetadataAttributes;
     this.processingSheets = [];
-    this.activeMetadataFields = [];
+    this.activeMetadataFieldsPath = [];
+    this.metadataTableHeaders = [];
+    this.metadataValues = [];
+    this.metadataAttributes = [];
     this.templateForm.reset();
   }
 }

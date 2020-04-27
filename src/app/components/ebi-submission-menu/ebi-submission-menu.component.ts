@@ -1,3 +1,4 @@
+import { PageService } from './../../services/page.service';
 import { Component, Input, OnInit } from '@angular/core';
 import { SubmissionsService } from '../../services/submissions.service';
 
@@ -35,15 +36,15 @@ export class EbiSubmissionMenuComponent implements OnInit {
   public tabLinks: TabLinks[] = [
     { title: 'Overview', href: '/submission/overview' },
     { title: 'Project', href: '/submission/project' },
+    { title: 'Publications', href: '/submission/publications' },
     { title: 'Contacts', href: '/submission/contacts' },
     { title: 'Data', href: '/submission/data' },
-    { title: 'Submit', href: '/submission/submit' },
   ];
 
   constructor(
-    private _submissionsService: SubmissionsService
-  ) {
-  }
+    private submissionsService: SubmissionsService,
+    private pageService: PageService
+  ) {}
 
   ngOnInit(): void {
     if (this.activeSubmission) {
@@ -59,15 +60,29 @@ export class EbiSubmissionMenuComponent implements OnInit {
     }
   }
 
+  addSubmitLink(viewOnly: boolean) {
+    if (viewOnly !== undefined && !viewOnly) {
+      const submitLink = { title: 'Submit', href: '/submission/submit' };
+      if (this.tabLinks.indexOf(submitLink) === -1) {
+        this.tabLinks.push(submitLink);
+      }
+    }
+  }
+
+
   /**
    * Alter menu links and add submission DataTypes as links.
    */
   updateDataTypeLinks(dataTypes: DataType[]): void {
     for (const dataType of dataTypes) {
       if (dataType.id !== 'projects') {
-        this.tabLinks.splice(4, 0, { title: dataType.displayNamePlural, href: `/submission/metadata/${dataType.id}` });
+        this.tabLinks.splice(this.tabLinks.length, 0,
+          { title: dataType.displayNamePlural, href: `/submission/metadata/${dataType.id}` }
+        );
       }
     }
+
+    this.addSubmitLink(this.pageService.setSubmissionViewMode(this.activeSubmission._links['submissionStatus'].href));
   }
 
   /**
@@ -75,12 +90,12 @@ export class EbiSubmissionMenuComponent implements OnInit {
    */
   getSubmissionContents(): void {
     const submissionLinksRequestUrl = this.activeSubmission._links.contents.href;
-    this._submissionsService.get(submissionLinksRequestUrl).subscribe(
+    this.submissionsService.get(submissionLinksRequestUrl).subscribe(
       data => {
         this.activeSubmission._links.contents._links = data['_links'];
         this.activeSubmission._links.contents.dataTypes = data['dataTypes'];
         this.updateDataTypeLinks(data['dataTypes']);
-        this._submissionsService.setActiveSubmission(this.activeSubmission);
+        this.submissionsService.setActiveSubmission(this.activeSubmission);
       }
     );
   }

@@ -22,6 +22,10 @@ fieldset {
   padding-left: 1.5rem;
 }
 
+.text-center {
+  text-align: center;
+}
+
 legend {
   color: rgb(0,124,130);
   margin: 0;
@@ -54,9 +58,13 @@ a.disabled {
   & > a {
     color: $tabs-dark-gray;
     font-size: 1rem;
-    margin: 0 1.25rem;
+    margin: 0 0.8rem;
     padding: 1.25rem 0.25rem 0.5rem;
   }
+}
+
+.button {
+  margin-top: 2rem;
 }
 
 .button:focus {
@@ -168,6 +176,14 @@ a.disabled {
   text-align: center;
   width: 1.5rem;
 }
+
+
+label.big-checkbox,
+label.big-checkbox:before {
+  font-size: 1.5rem;
+  vertical-align: bottom;
+}
+
 /* Checked styles */
 .large-form > input[type=radio] + label:hover:before,
 .large-form > input[type=radio]:checked + label:before {
@@ -291,6 +307,10 @@ fieldset {
   }
 }
 
+.form-error-msg {
+  color: $form-error;
+}
+
 div.ds-tabs {
   .tabs {
     li.tabs-title a {
@@ -403,7 +423,7 @@ i.errors {
   color: $form-error;
 }
 
-.metadata-error-row {
+.errormessage-row {
   border-bottom: 1px solid $tabs-inactive;
   padding: 10px 0;
   color: $form-error;
@@ -419,4 +439,28 @@ i.errors {
   justify-content: space-between;
   flex-wrap: wrap;
   align-items: center; 
+}
+
+button.center {
+  margin:auto;
+  margin-bottom: 15px;
+  display:block;
+}
+
+.mandatory-label{
+  display: flex;
+  flex-direction: row;
+  align-items: baseline; 
+}
+
+b.mandatory {
+  color: $mandatory;
+}
+
+.ng-valid[required], .ng-valid.required  {
+  border-left: 5px solid $valid;
+}
+
+.ng-invalid[required], .ng-invalid.required  {
+  border-left: 5px solid $mandatory;
 }

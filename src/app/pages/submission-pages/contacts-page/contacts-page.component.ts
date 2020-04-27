@@ -1,3 +1,5 @@
+import { PageService } from './../../../services/page.service';
+import { SubmissionStatus } from './../../../models/submission-status';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
@@ -17,15 +19,21 @@ export class ContactsPageComponent implements OnInit {
   activeSubmission: any;
   activeProject: any;
 
+  viewOnly = false;
+
   constructor(
     private submissionsService: SubmissionsService,
     private requestsService: RequestsService,
     private teamsService: TeamsService,
     private router: Router,
+    private pageService: PageService
   ) { }
 
   ngOnInit() {
     this.activeSubmission = this.submissionsService.getActiveSubmission();
+
+    this.viewOnly = this.pageService.setSubmissionViewMode(this.activeSubmission._links.submissionStatus.href);
+
     this.getActiveProject();
 
     this.contactForm = new FormGroup({
@@ -42,17 +50,19 @@ export class ContactsPageComponent implements OnInit {
   }
 
   onAddContact() {
-    this.activeProject.contacts.push(this.contactForm.value);
-    const projectUpdateUrl = this.activeProject._links['self:update'].href;
-    this.requestsService.update(projectUpdateUrl, this.activeProject).subscribe(
-      (project) => {
-        this.submissionsService.setActiveProject(project);
-      },
-      (error) => {
-        // TODO: Handle errors.
-      }
-    );
-    this.contactForm.reset();
+    if (this.contactForm.valid) {
+      this.activeProject.contacts.push(this.contactForm.value);
+      const projectUpdateUrl = this.activeProject._links['self:update'].href;
+      this.requestsService.update(projectUpdateUrl, this.activeProject).subscribe(
+        (project) => {
+          this.submissionsService.setActiveProject(project);
+        },
+        (error) => {
+          // TODO: Handle errors.
+        }
+      );
+      this.contactForm.reset();
+    }
   }
 
   onCreateProject() {
@@ -91,6 +101,8 @@ export class ContactsPageComponent implements OnInit {
   }
 
   onSaveExit() {
+    this.onAddContact();
+
     this.submissionsService.deleteActiveSubmission();
     this.submissionsService.deleteActiveProject();
     this.teamsService.deleteActiveTeam();
@@ -99,7 +111,8 @@ export class ContactsPageComponent implements OnInit {
   }
 
   onSaveContinue() {
+    this.onAddContact();
+
     this.router.navigate(['/submission/data']);
   }
-
 }

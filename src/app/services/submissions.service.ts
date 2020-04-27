@@ -1,3 +1,4 @@
+import { SubmissionStatus } from 'src/app/models/submission-status';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { HttpParams } from '@angular/common/http';
@@ -43,6 +44,29 @@ export class SubmissionsService {
       { params: httpParams }
     );
     return response;
+  }
+
+  getStatus(href: string) {
+    const statusResponse = this.http.get(href).pipe(
+      map( res => {
+        return res['status'];
+      }));
+
+    return statusResponse;
+  }
+
+  getStatusAndReturnViewMode(href: string) {
+    const resolvePromise = this.getStatus(href).subscribe(
+      (submissionStatus) => {
+        if (!SubmissionStatus.isEditableStatus(submissionStatus)) {
+          return true;
+        }
+
+        return false;
+      }
+    );
+
+    return resolvePromise;
   }
 
   /**
@@ -165,6 +189,18 @@ export class SubmissionsService {
    */
   deleteSubmissions() {
     localStorage.removeItem('submissions');
+  }
+
+  setStoredSubmissionstatus(submissionstatus) {
+    localStorage.setItem('submissionStatus', submissionstatus);
+  }
+
+  getStoredSubmissionStatus() {
+    return localStorage.getItem('submissionStatus');
+  }
+
+  deleteStoredSubmissionStatus() {
+    localStorage.removeItem('submissionStatus');
   }
 
   /**

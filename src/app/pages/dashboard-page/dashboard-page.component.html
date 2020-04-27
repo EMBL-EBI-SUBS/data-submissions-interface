@@ -5,19 +5,22 @@
     <h2 class="padding-top-xlarge">Hi {{ authService.realname() | async }}</h2>
 
     <div class="row">
-      <div class="columns small-9">
-        <p>
-          This is your dashboard. You currently have {{ submissionsSummary?.Draft }} active draft submissions, using 300 GB of space.
-          <br>
-          You have successfully completed 4 submissions to our archives.
-          Thanks for contributing to the future of science.
-        </p>
+      <div *ngIf="submissionsSummary && submissionsSummary.hasOwnProperty('content')" class="columns small-9">
+          This is your dashboard. You currently have {{ submissionsSummary.content?.Draft }} active draft submissions.
+        <br>
+        <div *ngIf="submissionsSummary.content.hasOwnProperty('Completed') && submissionsSummary.content.Completed > 0">You have successfully completed {{ submissionsSummary.content?.Completed }} submissions to our archives.</div>
+        <div *ngIf="!submissionsSummary.content.hasOwnProperty('Completed')">You have not successfully completed any submissions to our archives.</div>
+        Thanks for contributing to the future of science.
+      </div>
+      <div *ngIf="submissionsSummary && !submissionsSummary.hasOwnProperty('content')" class="columns small-9">
+          This is your dashboard. You currently do not have any submissions, yet.
       </div>
 
       <div class="columns small-3 text-right">
         <a class="button" (click)="onStartSubmission()">Start a new Submission</a>
       </div>
     </div>
+    <br>
 
     <table class="stack" *ngIf="submissions?._embedded?.submissions?.length > 0">
       <thead>
@@ -26,7 +29,7 @@
           <th>Submission</th>
           <th>Project</th>
           <th>Status</th>
-          <th></th>
+          <th>Actions</th>
         </tr>
       </thead>
 
@@ -37,16 +40,21 @@
           <td class="col-project">{{ submissionItem?.projectName }}</td>
           <td class="col-status status-{{submissionItem.submissionStatus | lowercase}}">{{ submissionItem.submissionStatus }}</td>
           <td>
-            <!-- TODO: Update actions based on correct status names -->
-            <!-- Delete Submission -->
-            <a (click)="onDeleteSubmission(submissionItem)">Delete ></a>
-            <!-- Edit Draft Action -->
-            <a *ngIf="submissionItem.submissionStatus == 'Draft'" (click)="onEditDraftSubmission(submissionItem)">Edit ></a>
-            <!-- Edit Submitted Action -->
-            <a *ngIf="submissionItem.submissionStatus == 'Submitted'" (click)="onEditSubmittedSubmission(submissionItem)">Edit ></a>
-            <!-- View Completed Action -->
-            <a *ngIf="submissionItem.submissionStatus == 'Completed'" (click)="onViewCompletedSubmission(submissionItem)">Public ></a>
-          </td>
+            <!-- Edit Submission action -->
+            <button type='button' *ngIf="submissionItem._links.hasOwnProperty('self:update')" (click)="onEditSubmission(submissionItem)" title="Edit">
+              <i class="icon icon-functional" data-icon="e"></i>
+              &nbsp;
+            </button>
+            <!-- View Completed action -->
+            <button type='button' *ngIf="!submissionItem._links.hasOwnProperty('self:update')" (click)="onViewCompletedSubmission(submissionItem)" title="View">
+              <i class="icon icon-functional" data-icon="4"></i>
+              &nbsp;
+            </button>
+            <!-- Delete Submission action -->
+            <button type='button' *ngIf="submissionItem._links.hasOwnProperty('self:delete')" (click)="onDeleteSubmission(submissionItem)" title="Delete">
+                <i class="icon icon-functional" data-icon="d"></i>
+              </button>
+            </td>
         </tr>
       </tbody>
     </table>
