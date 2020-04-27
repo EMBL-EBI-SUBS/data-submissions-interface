@@ -5,13 +5,12 @@ node_js:
   - "10.11.0"
 
 addons:
+  chrome: stable
   apt:
     sources:
       - google-chrome
     packages:
       - dpkg
-      - google-chrome-stable
-      - google-chrome-beta
 
 branches:
   only:

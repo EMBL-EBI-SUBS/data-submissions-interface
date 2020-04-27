@@ -119,6 +119,8 @@ export class ProjectPageComponent implements OnInit {
       this.requestsService.partialUpdate(submissionProjectUpdateUrl, submissionProjectDataObject).subscribe(
         (data) => {
           this.submissionsService.setActiveProject(data);
+          this.updateSubmissionContent();
+          this.router.navigate(['/submission/publications']);
         },
         (err) => {
           // TODO: Handle Errors.
@@ -131,6 +133,8 @@ export class ProjectPageComponent implements OnInit {
       this.requestsService.create(submissionProjectUpdateUrl, submissionProjectDataObject).subscribe(
         (data) => {
           this.submissionsService.setActiveProject(data);
+          this.updateSubmissionContent();
+          this.router.navigate(['/submission/publications']);
         },
         (err) => {
           // TODO: Handle Errors.
@@ -138,23 +142,6 @@ export class ProjectPageComponent implements OnInit {
         }
       );
     }
-
-    const submissionUpdateUrl = this.activeSubmission._links['self:update'].href;
-    const submissionUpdateData = this.activeSubmission;
-    submissionUpdateData['projectName'] = this.projectForm.value.projectShortName;
-
-    // Update the submission.
-    this.requestsService.update(submissionUpdateUrl, submissionUpdateData).subscribe(
-      (data) => {
-        this.getSubmissionContents(data);
-      },
-      (err) => {
-        // TODO: Handle Errors.
-        console.log(err);
-      }
-    );
-
-    this.router.navigate(['/submission/publications']);
   }
 
   /**
@@ -261,7 +248,7 @@ export class ProjectPageComponent implements OnInit {
 
     this.projectForm = this.formBuilder.group({
       project: ['_create'],
-      projectTitle: ['', [Validators.required, Validators.minLength(50)]],
+      projectTitle: ['', [Validators.required, Validators.minLength(25)]],
       projectDescription: ['', [Validators.required, Validators.minLength(50)]],
       projectShortName: ['', Validators.required],
       releaseDate: ['', [Validators.required]],
@@ -279,5 +266,18 @@ export class ProjectPageComponent implements OnInit {
         console.log(err);
       }
     );
+  }
+
+  private updateSubmissionContent() {
+    const submissionUpdateUrl = this.activeSubmission._links['self:update'].href;
+    const submissionUpdateData = this.activeSubmission;
+    submissionUpdateData['projectName'] = this.projectForm.value.projectShortName;
+    // Update the submission.
+    this.requestsService.update(submissionUpdateUrl, submissionUpdateData).subscribe((data) => {
+      this.getSubmissionContents(data);
+    }, (err) => {
+      // TODO: Handle Errors.
+      console.log(err);
+    });
   }
 }
