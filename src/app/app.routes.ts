@@ -11,6 +11,7 @@ import { FAQPageComponent } from './pages/faq-page/faq-page.component';
 import { HelpPageComponent } from './pages/help-page/help-page.component';
 import { DataPageComponent } from './pages/submission-pages/data-page/data-page.component';
 import { ProjectPageComponent } from './pages/submission-pages/project-page/project-page.component';
+import { SampleGroupPageComponent } from './pages/submission-pages/sample-group-page/sample-group-page.component';
 import { MetadataPageComponent } from './pages/submission-pages/metadata-page/metadata-page.component';
 import { ContactsPageComponent } from './pages/submission-pages/contacts-page/contacts-page.component';
 import { OverviewPageComponent } from './pages/submission-pages/overview-page/overview-page.component';
@@ -35,6 +36,7 @@ export const ROUTES: Routes = [
   { path: 'submission/publications', component: PublicationPageComponent, canActivate: [LoggedInGuard] },
   { path: 'submission/contacts', component: ContactsPageComponent, canActivate: [LoggedInGuard] },
   { path: 'submission/data', component: DataPageComponent, canActivate: [LoggedInGuard] },
+  { path: 'submission/sample-group', component: SampleGroupPageComponent, canActivate: [LoggedInGuard] },
   { path: 'submission/metadata/:id', component: MetadataPageComponent, canActivate: [LoggedInGuard] },
   { path: 'submission/submit', component: SubmitPageComponent, canActivate: [LoggedInGuard] },
   { path: 'dashboard', component: DashboardPageComponent, canActivate: [LoggedInGuard] },

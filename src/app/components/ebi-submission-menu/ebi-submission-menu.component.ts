@@ -39,6 +39,7 @@ export class EbiSubmissionMenuComponent implements OnInit {
     { title: 'Publications', href: '/submission/publications' },
     { title: 'Contacts', href: '/submission/contacts' },
     { title: 'Data', href: '/submission/data' },
+    { title: 'Sample Group', href: '/submission/sample-group' },
   ];
 
   constructor(

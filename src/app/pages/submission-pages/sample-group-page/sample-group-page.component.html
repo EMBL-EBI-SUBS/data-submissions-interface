@@ -1,0 +1,459 @@
+<div id="content">
+  <app-ebi-header></app-ebi-header>
+
+  <section id="main-content-area" class="row padding-top-xsmall padding-bottom-xsmall" role="main">
+    <h2 class="padding-top-xlarge">Sample Group</h2>
+
+    <app-ebi-submission-menu [activeSubmission]="activeSubmission"></app-ebi-submission-menu>
+
+    <form [formGroup]="sampleGroupForm">
+      <!-- Submission details fieldset -->
+      <fieldset formGroupName="submissionForm" class="large-form padding-bottom-large padding-top-large">
+        <legend>Submission</legend>
+
+        <p>The submission block describes overall features of the submission and its associated samples.</p>
+
+        <div *ngIf="!viewOnly">
+          
+          <!-- TODO search field for Submission Identifier -->
+
+          <!-- <label [class.hide]="!Submissions || activeSampleGroup">Select from Submissions
+            <select name="Submission" formControlName="Submission"  (change)="onSelectSubmission()">
+              <option [attr.selected]="!activeSampleGroup" value="_create">
+                Create a new Submission
+              </option>
+
+              <option *ngFor="let Submission of Submissions; let i = index" [value]="i" [attr.selected]="activeSampleGroup && activeSampleGroup?.alias == Submission?.alias">
+                {{ Submission.title }} ( {{ Submission.alias }} )
+              </option>
+            </select>
+          </label> -->
+        </div>
+
+        <div *ngIf="viewOnly; else editablesampleGroupSubmissionFieldSet">
+          <div *ngIf="!activeSampleGroup; else viewOnlyValues">
+            <p>Sample group data is not submitted or not available.</p>
+          </div>
+
+          <ng-template #viewOnlyValues>
+              <p><b>Submission Title:</b> {{ activeSampleGroup.submission.title }}</p>
+              <p><b>Submission Description:</b> {{ activeSampleGroup.submission.description }}</p>
+              <p><b>Submission Version:</b> {{ activeSampleGroup.submission.version }}</p>
+              <p><b>Submission Update Date:</b> {{ activeSampleGroup.submission.updateDate }}</p>
+              <p><b>Submission Release Date:</b> {{ activeSampleGroup.submission.submissionReleaseDate }}</p>
+          </ng-template>
+        </div>
+          
+        <ng-template #editablesampleGroupSubmissionFieldSet>
+          <div class="form-group">
+            <label for="submissionTitle">Submission Title <b class="mandatory">*</b>
+              <input type="text" placeholder="e.g. “Parallelism in Fish”"
+                      class="form-control" formControlName="submissionTitle" required />
+            </label>
+          </div>
+        
+          <div class="form-group">
+            <label for="submissionDescription">Submission Description <b class="mandatory">*</b>
+              <textarea rows="5" placeholder="Enter Submission description here" required
+                        class="form-control" formControlName="submissionDescription">
+              </textarea>
+            </label>
+          </div>
+
+          <div class="form-group">
+            <label for="submissionVersion">Submission Version
+              <input type="text" placeholder="Version of SampleTab specification" class="form-control"
+                    formControlName="submissionVersion"/>
+            </label>
+          </div>  
+
+          <div class="form-group">
+            <label for="submissionUpdateDate">Submission Update Date
+              <input type="date" placeholder="dd/mm/yyyy" formControlName="submissionUpdateDate" class="form-control"/>
+            </label>
+          </div>
+
+          <div class="form-group">
+            <label for="submissionReleaseDate">Submission Release Date
+              <input type="date" placeholder="dd/mm/yyyy" formControlName="submissionReleaseDate" class="form-control"/>
+            </label>
+          </div>
+
+        </ng-template>
+      </fieldset>
+
+       <!-- Person details fieldset -->
+      <fieldset formGroupName="personForm" class="large-form padding-bottom-large padding-top-large">
+        <legend>Person</legend>
+
+        <p>The Person section contains information describing who supplied the sample information.</p>
+
+        <div *ngIf="viewOnly; else editablesampleGroupPersonFieldSet">
+          <div *ngIf="!activeSampleGroup; else viewOnlyValuesPerson">
+            <p>Sample group data is not submitted or not available.</p>
+          </div>
+
+          <ng-template #viewOnlyValuesPerson>
+              <p><b>Person Last Name:</b> {{ activeSampleGroup.person.lastname }}</p>
+              <p><b>Person Initials:</b> {{ activeSampleGroup.person.initials }}</p>
+              <p><b>Person First Name:</b> {{ activeSampleGroup.person.firstname }}</p>
+              <p><b>Person Email:</b> {{ activeSampleGroup.person.email }}</p>
+              <p><b>Person Role:</b> {{ activeSampleGroup.person.role }}</p>
+          </ng-template>
+        </div>
+          
+        <ng-template #editablesampleGroupPersonFieldSet> 
+          <div class="form-group">
+            <label for="lastname">Person Last Name <b class="mandatory">*</b>
+              <input type="text" class="form-control" formControlName="lastname" required />
+            </label>
+          </div>
+        
+          <div class="form-group">
+            <label for="initials">Person Initials
+              <input type="text" class="form-control" formControlName="initials" />
+            </label>
+          </div>
+
+          <div class="form-group">
+            <label for="firstname">Person First Name
+              <input type="text" class="form-control" formControlName="firstname" />
+            </label>
+          </div>
+
+          <div class="form-group">
+            <label for="email">Person Email
+              <input type="text" class="form-control" formControlName="email" />
+            </label>
+          </div>
+
+          <div class="form-group">
+            <label for="role">Person Role
+              <input type="text" class="form-control" formControlName="role"/>
+            </label>
+          </div>
+
+          <button *ngIf="!viewOnly && !editMode" class="button" (click)="onAddPerson()" [disabled]="this.sampleGroupForm.get('personForm').invalid && !editMode"><i class="icon icon-functional" data-icon="+"></i> Add New Person</button>
+          <button *ngIf="!viewOnly && editMode" class="button" (click)="onAddPerson()" [disabled]="this.sampleGroupForm.get('personForm').invalid && editMode"><i class="icon icon-functional" data-icon="S"></i> Update Person</button>
+
+          <div *ngIf="activeSampleGroup?.persons?.length > 0">
+            <h3>Persons</h3>
+            <table class="hover">
+              <thead class="fixed">
+                <tr>
+                  <th>Person Last Name</th>
+                  <th>Person Initials</th>
+                  <th>Person First Name</th>
+                  <th>Person Email</th>
+                  <th>Person Role</th>
+                  <th width="20px">Actions</th>
+                </tr>
+              </thead>
+      
+              <tbody>
+              <tr *ngFor="let person of this.activeSampleGroup.persons; let i = index">
+                <td>{{ person.lastname }}</td>
+                <td>{{ person.initials }}</td>
+                <td>{{ person.firstname }}</td>
+                <td>{{ person.email }}</td>
+                <td>{{ person.role }}</td>
+                <td class="text-center">
+                  <i *ngIf="!viewOnly" class="icon icon-functional" data-icon="e" (click)="onEditPerson(i)"></i> &nbsp;
+                  <i *ngIf="!viewOnly" class="icon icon-functional" data-icon="d" (click)="onDeletePerson(i)"></i>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+
+        </ng-template>
+      </fieldset>
+
+       <!-- Organization details fieldset -->
+      <fieldset formGroupName="organizationForm" class="large-form padding-bottom-large padding-top-large">
+        <legend>Organization</legend>
+
+        <p>The Organization section contains information describing who supplied the sample information per-organization basis.</p>
+
+        <div *ngIf="viewOnly; else editablesampleGroupOrganizationFieldSet">
+          <div *ngIf="!activeSampleGroup; else viewOnlyValues">
+            <p>Sample group data is not submitted or not available.</p>
+          </div>
+
+          <ng-template #viewOnlyValues>
+              <p><b>Organization Name:</b> {{ activeSampleGroup.organization.name }}</p>
+              <p><b>Organization Address:</b> {{ activeSampleGroup.organization.address }}</p>
+              <p><b>Organization URI:</b> {{ activeSampleGroup.organization.uri }}</p>
+              <p><b>Organization Role:</b> {{ activeSampleGroup.organization.role }}</p>
+          </ng-template>
+        </div>
+          
+        <ng-template #editablesampleGroupOrganizationFieldSet>
+          <div class="form-group">
+            <label for="name">Organization Name <b class="mandatory">*</b>
+              <input type="text" placeholder="Enter name of the organization here"
+                      class="form-control" formControlName="name" required />
+            </label>
+          </div>
+        
+          <div class="form-group">
+            <label for="address">Organization Address
+              <input type="text" placeholder="Enter the address of the organization here. One line, comma separated."
+                        class="form-control" formControlName="address" />
+            </label>
+          </div>
+
+          <div class="form-group">
+            <label for="uri">Organization URI
+              <input type="text" formControlName="uri" class="form-control"/>
+            </label>
+          </div>
+
+          <div class="form-group">
+            <label for="role">Organization Role
+              <input type="text" formControlName="role" class="form-control"/>
+            </label>
+          </div>
+
+          <button *ngIf="!viewOnly && !editMode" class="button" (click)="onAddOrganization()" [disabled]="this.sampleGroupForm.get('organizationForm').invalid && !editMode"><i class="icon icon-functional" data-icon="+"></i> Add New Organization</button>
+          <button *ngIf="!viewOnly && editMode" class="button" (click)="onAddOrganization()" [disabled]="this.sampleGroupForm.get('organizationForm').invalid && editMode"><i class="icon icon-functional" data-icon="S"></i> Update Organization</button>
+
+          <div *ngIf="activeSampleGroup?.organizations?.length > 0">
+            <h3>Organizations</h3>
+            <table class="hover">
+              <thead class="fixed">
+                <tr>
+                  <th>Organization Name</th>
+                  <th>Organization Address</th>
+                  <th>Organization URI</th>
+                  <th>Organization Role</th>
+                  <th width="20px">Actions</th>
+                </tr>
+              </thead>
+      
+              <tbody>
+              <tr *ngFor="let organization of this.activeSampleGroup.organizations; let i = index">
+                <td>{{ organization.name }}</td>
+                <td>{{ organization.address }}</td>
+                <td>{{ organization.uri }}</td>
+                <td>{{ organization.role }}</td>
+                <td class="text-center">
+                  <i *ngIf="!viewOnly" class="icon icon-functional" data-icon="e" (click)="onEditOrganization(i)"></i> &nbsp;
+                  <i *ngIf="!viewOnly" class="icon icon-functional" data-icon="d" (click)="onDeleteOrganization(i)"></i>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+
+        </ng-template>
+      </fieldset>
+
+      <!-- Publication details fieldset -->
+      <fieldset formGroupName="publicationForm" class="large-form padding-bottom-large padding-top-large">
+        <legend>Publication</legend>
+
+        <p>Publication section links to papers and other published materials describing these samples, in particular how they were created and treated.</p>
+
+        <div *ngIf="viewOnly; else editablesampleGroupPublicationFieldSet">
+          <div *ngIf="!activeSampleGroup; else viewOnlyValues">
+            <p>Sample group data is not submitted or not available.</p>
+          </div>
+
+          <ng-template #viewOnlyValues>
+              <p><b>Publication PubMed ID:</b> {{ activeSampleGroup.publication.pubmedid }}</p>
+              <p><b>Publication DOI:</b> {{ activeSampleGroup.publication.doi }}</p>
+          </ng-template>
+        </div>
+          
+        <ng-template #editablesampleGroupPublicationFieldSet>
+          <div class="form-group">
+            <label for="pubmedid">Publication PubMed ID
+              <input type="text" class="form-control" formControlName="pubmedid" />
+            </label>
+          </div>
+        
+          <div class="form-group">
+            <label for="doi">Publication DOI
+              <input type="text" class="form-control" formControlName="doi" />
+            </label>
+          </div>
+
+          <button *ngIf="!viewOnly && !editMode" class="button" (click)="onAddPublication()" [disabled]="!this.sampleGroupForm.get('publicationForm').dirty && !editMode"><i class="icon icon-functional" data-icon="+"></i> Add New Publication</button>
+          <button *ngIf="!viewOnly && editMode" class="button" (click)="onAddPublication()" [disabled]="this.sampleGroupForm.get('publicationForm').invalid && editMode"><i class="icon icon-functional" data-icon="S"></i> Update Publication</button>
+
+          <div *ngIf="activeSampleGroup?.publications?.length > 0">
+            <h3>Publications</h3>
+            <table class="hover">
+              <thead class="fixed">
+                <tr>
+                  <th>Publication PubMed ID</th>
+                  <th>Publication DOI</th>
+                  <th width="20px">Actions</th>
+                </tr>
+              </thead>
+      
+              <tbody>
+              <tr *ngFor="let publication of this.activeSampleGroup.publications; let i = index">
+                <td>{{ publication.pubmedid }}</td>
+                <td>{{ publication.doi }}</td>
+                <td class="text-center">
+                  <i *ngIf="!viewOnly" class="icon icon-functional" data-icon="e" (click)="onEditPublication(i)"></i> &nbsp;
+                  <i *ngIf="!viewOnly" class="icon icon-functional" data-icon="d" (click)="onDeletePublication(i)"></i>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+
+        </ng-template>
+      </fieldset>
+
+       <!-- Database details fieldset -->
+      <fieldset formGroupName="databaseForm" class="large-form padding-bottom-large padding-top-large">
+        <legend>Database</legend>
+
+        <p>The database section provides links to other databases that have data associated with this submission.</p>
+
+        <div *ngIf="viewOnly; else editablesampleGroupDatabaseFieldSet">
+          <div *ngIf="!activeSampleGroup; else viewOnlyValues">
+            <p>Sample group data is not submitted or not available.</p>
+          </div>
+
+          <ng-template #viewOnlyValues>
+              <p><b>Database Name:</b> {{ activeSampleGroup.publication.pubmedid }}</p>
+              <p><b>Database ID:</b> {{ activeSampleGroup.publication.doi }}</p>
+              <p><b>Database URI:</b> {{ activeSampleGroup.publication.doi }}</p>
+          </ng-template>
+        </div>
+          
+        <ng-template #editablesampleGroupDatabaseFieldSet>
+          <div class="form-group">
+            <label for="name">Database Name
+              <input type="text" class="form-control" formControlName="name" />
+            </label>
+          </div>
+        
+          <div class="form-group">
+            <label for="id">Database ID
+              <input type="text" class="form-control" formControlName="id" />
+            </label>
+          </div>
+
+          <div class="form-group">
+            <label for="uri">Database URI
+              <input type="text" class="form-control" formControlName="uri" />
+            </label>
+          </div>
+
+          <button *ngIf="!viewOnly && !editMode" class="button" (click)="onAddDatabase()" [disabled]="!this.sampleGroupForm.get('databaseForm').dirty && !editMode"><i class="icon icon-functional" data-icon="+"></i> Add New Database</button>
+          <button *ngIf="!viewOnly && editMode" class="button" (click)="onAddDatabase()" [disabled]="this.sampleGroupForm.get('databaseForm').invalid && editMode"><i class="icon icon-functional" data-icon="S"></i> Update Database</button>
+
+          <div *ngIf="activeSampleGroup?.databases?.length > 0">
+            <h3>Databases</h3>
+            <table class="hover">
+              <thead class="fixed">
+                <tr>
+                  <th>Database Name</th>
+                  <th>Database ID</th>
+                  <th>Database URI</th>
+                  <th width="20px">Actions</th>
+                </tr>
+              </thead>
+      
+              <tbody>
+              <tr *ngFor="let database of this.activeSampleGroup.databases; let i = index">
+                <td>{{ database.name }}</td>
+                <td>{{ database.id }}</td>
+                <td>{{ database.uri }}</td>
+                <td class="text-center">
+                  <i *ngIf="!viewOnly" class="icon icon-functional" data-icon="e" (click)="onEditDatabase(i)"></i> &nbsp;
+                  <i *ngIf="!viewOnly" class="icon icon-functional" data-icon="d" (click)="onDeleteDatabase(i)"></i>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        
+        </ng-template>
+      </fieldset>
+
+       <!-- Term Source details fieldset -->
+      <fieldset formGroupName="termSourceForm" class="large-form padding-bottom-large padding-top-large">
+        <legend>Term Source</legend>
+
+        <p>The Term Source section is used to specify ontologies or controlled vocabularies (i.e. NCBI Taxonomy).</p>
+
+        <div *ngIf="viewOnly; else editablesampleGroupTermSourceFieldSet">
+          <div *ngIf="!activeSampleGroup; else viewOnlyValues">
+            <p>Sample group data is not submitted or not available.</p>
+          </div>
+
+          <ng-template #viewOnlyValues>
+              <p><b>Term Source Name:</b> {{ activeSampleGroup.publication.pubmedid }}</p>
+              <p><b>Term Source URI:</b> {{ activeSampleGroup.publication.doi }}</p>
+              <p><b>Term Source Version:</b> {{ activeSampleGroup.publication.doi }}</p>
+          </ng-template>
+        </div>
+          
+        <ng-template #editablesampleGroupTermSourceFieldSet>
+          <div class="form-group">
+            <label for="name">Term Source Name
+              <input type="text" class="form-control" formControlName="name" />
+            </label>
+          </div>
+        
+          <div class="form-group">
+            <label for="uri">Term Source URI
+              <input type="text" class="form-control" formControlName="uri">
+            </label>
+          </div>
+
+          <div class="form-group">
+            <label for="version">Term Source Version
+              <input type="text" class="form-control" formControlName="version">
+            </label>
+          </div>
+
+          <button *ngIf="!viewOnly && !editMode" class="button" (click)="onAddTermSource()" [disabled]="!this.sampleGroupForm.get('termSourceForm').dirty && !editMode"><i class="icon icon-functional" data-icon="+"></i> Add New Term Source</button>
+          <button *ngIf="!viewOnly && editMode" class="button" (click)="onAddTermSource()" [disabled]="this.sampleGroupForm.get('termSourceForm').invalid && editMode"><i class="icon icon-functional" data-icon="S"></i> Update Term Source</button>
+
+          <div *ngIf="activeSampleGroup?.termSources?.length > 0">
+            <h3>Term Sources</h3>
+            <table class="hover">
+              <thead class="fixed">
+                <tr>
+                  <th>Term Source Name</th>
+                  <th>Term Source URI</th>
+                  <th>Term Source Version</th>
+                  <th width="20px">Actions</th>
+                </tr>
+              </thead>
+      
+              <tbody>
+              <tr *ngFor="let termSource of this.activeSampleGroup.termSources; let i = index">
+                <td>{{ termSource.name }}</td>
+                <td>{{ termSource.uri }}</td>
+                <td>{{ termSource.version }}</td>
+                <td class="text-center">
+                  <i *ngIf="!viewOnly" class="icon icon-functional" data-icon="e" (click)="onEditTermSource(i)"></i> &nbsp;
+                  <i *ngIf="!viewOnly" class="icon icon-functional" data-icon="d" (click)="onDeleteTermSource(i)"></i>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        
+        </ng-template>
+      </fieldset>
+
+      <div class="form-group">
+        <button class="button secondary-color white-background" (click)="onSaveExit()" 
+                [disabled]="sampleGroupForm.invalid">Save &amp; exit</button>
+        <button class="button readmore" (click)="onSaveContinue()" 
+                [disabled]="sampleGroupForm.invalid">Save &amp; continue</button>
+      </div>
+    
+    </form>
+  </section>
+</div>
