@@ -2,7 +2,7 @@
   <app-ebi-header></app-ebi-header>
 
   <section id="main-content-area" class="row padding-top-xsmall padding-bottom-xsmall" role="main">
-    <h2 class="padding-top-xlarge">Project and Publications</h2>
+    <h2 class="padding-top-xlarge">Project</h2>
 
     <app-ebi-submission-menu [activeSubmission]="activeSubmission"></app-ebi-submission-menu>
 
@@ -46,7 +46,7 @@
                   [ngClass]="{ 'is-invalid': f.projectTitle.touched && f.projectTitle.errors }"/>
             <div *ngIf="f.projectTitle.touched && f.projectTitle.errors" class="form-error-msg">
                 <div *ngIf="f.projectTitle.errors.required">Project title is required</div>
-                <div *ngIf="f.projectTitle.errors.minlength">Project title should be minimum 50 chars</div>
+                <div *ngIf="f.projectTitle.errors.minlength">Project title should be minimum 25 chars</div>
             </div>
           </div>
         

@@ -81,6 +81,11 @@ export class SubmissionsService {
   getSubmissionPlansUIData(submissionPlans) {
     const submissionPlansUIData = [];
     for (const submissionPlan of submissionPlans) {
+
+      if (submissionPlan.enabled === false) {
+        continue;
+      }
+
       const submissionPlanUIData = {};
       submissionPlanUIData['displayName'] = submissionPlan.displayName;
       submissionPlanUIData['description'] = submissionPlan.description;
@@ -89,6 +94,8 @@ export class SubmissionsService {
 
       submissionPlansUIData.push(submissionPlanUIData);
     }
+
+    submissionPlansUIData.sort((a, b) => a.id.localeCompare(b.id));
 
     return submissionPlansUIData;
   }

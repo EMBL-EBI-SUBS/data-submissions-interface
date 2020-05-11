@@ -26,6 +26,7 @@ import { DataPageComponent } from './pages/submission-pages/data-page/data-page.
 import { OverviewPageComponent } from './pages/submission-pages/overview-page/overview-page.component';
 import { SubmitPageComponent } from './pages/submission-pages/submit-page/submit-page.component';
 import { ProjectPageComponent } from './pages/submission-pages/project-page/project-page.component';
+import { SampleGroupPageComponent } from './pages/submission-pages/sample-group-page/sample-group-page.component';
 import { MetadataPageComponent } from './pages/submission-pages/metadata-page/metadata-page.component';
 import { ContactsPageComponent } from './pages/submission-pages/contacts-page/contacts-page.component';
 import { DashboardPageComponent } from './pages/dashboard-page/dashboard-page.component';
@@ -80,6 +81,7 @@ export function removeToken(): void {
     EbiSubmissionMenuComponent,
     DataPageComponent,
     ProjectPageComponent,
+    SampleGroupPageComponent,
     MetadataPageComponent,
     ContactsPageComponent,
     OverviewPageComponent,
