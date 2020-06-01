@@ -19,7 +19,9 @@ export class ContactsPageComponent implements OnInit {
   activeSubmission: any;
   activeProject: any;
 
+  editMode = false;
   viewOnly = false;
+  selectedContactIndex = -1;
 
   constructor(
     private submissionsService: SubmissionsService,
@@ -51,7 +53,12 @@ export class ContactsPageComponent implements OnInit {
 
   onAddContact() {
     if (this.contactForm.valid) {
-      this.activeProject.contacts.push(this.contactForm.value);
+      if (this.selectedContactIndex > -1) {
+        this.activeProject.contacts[this.selectedContactIndex] = this.contactForm.value;
+      } else {
+        this.activeProject.contacts.push(this.contactForm.value);
+      }
+
       const projectUpdateUrl = this.activeProject._links['self:update'].href;
       this.requestsService.update(projectUpdateUrl, this.activeProject).subscribe(
         (project) => {
@@ -62,11 +69,29 @@ export class ContactsPageComponent implements OnInit {
         }
       );
       this.contactForm.reset();
+      this.editMode = false;
+      this.selectedContactIndex = -1;
     }
   }
 
   onCreateProject() {
     this.router.navigate(['submission/project']);
+  }
+
+  onEditContact(contactIndex: number) {
+    const selectedContacts = this.activeProject.contacts[contactIndex];
+    this.contactForm.controls['firstName'].setValue(selectedContacts.firstName);
+    this.contactForm.controls['middleInitials'].setValue(selectedContacts.middleInitials);
+    this.contactForm.controls['lastName'].setValue(selectedContacts.lastName);
+    this.contactForm.controls['email'].setValue(selectedContacts.email);
+    this.contactForm.controls['address'].setValue(selectedContacts.address);
+    this.contactForm.controls['phone'].setValue(selectedContacts.phone);
+    this.contactForm.controls['fax'].setValue(selectedContacts.fax);
+    this.contactForm.controls['affiliation'].setValue(selectedContacts.affiliation);
+    this.contactForm.controls['orcid'].setValue(selectedContacts.orcid);
+
+    this.editMode = true;
+    this.selectedContactIndex = contactIndex;
   }
 
   onDeleteContact(contactIndex: number) {

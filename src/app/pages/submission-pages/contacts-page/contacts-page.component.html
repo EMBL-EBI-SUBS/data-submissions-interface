@@ -66,7 +66,9 @@
             <label>ORCID</label>
             <input type="text" name="orcid" formControlName="orcid" placeholder="ORCID">
           </div>
-          <button *ngIf="!viewOnly" class="button" (click)="onAddContact()" [disabled]="contactForm.invalid"><i class="icon icon-functional" data-icon="+"></i> Add New Contact</button>
+
+          <button *ngIf="!viewOnly && !editMode" class="button" (click)="onAddContact()" [disabled]="contactForm.invalid && !editMode"><i class="icon icon-functional" data-icon="+"></i> Add New Contact</button>
+          <button *ngIf="!viewOnly && editMode" class="button" (click)="onAddContact()" [disabled]="contactForm.invalid && editMode"><i class="icon icon-functional" data-icon="S"></i> Update Contact</button>
         </fieldset>
       </div>
 
@@ -97,10 +99,10 @@
           <td>{{ contact.fax }}</td>
           <td>{{ contact.affiliation }}</td>
           <td>{{ contact.orcid }}</td>
-          <td *ngIf="!viewOnly; else noAction" class="text-center"><i class="icon icon-functional" data-icon="d" (click)="onDeleteContact(i)"></i></td>
-          <ng-template #noAction>
-            <td></td>
-          </ng-template>
+          <td class="text-center">
+            <i *ngIf="!viewOnly" class="icon icon-functional" data-icon="e" (click)="onEditContact(i)"></i> &nbsp;
+            <i *ngIf="!viewOnly" class="icon icon-functional" data-icon="d" (click)="onDeleteContact(i)"></i>
+          </td>
         </tr>
         </tbody>
       </table>
