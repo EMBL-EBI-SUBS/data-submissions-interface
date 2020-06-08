@@ -38,7 +38,6 @@ export class EbiSubmissionMenuComponent implements OnInit {
     { title: 'Project', href: '/submission/project' },
     { title: 'Publications', href: '/submission/publications' },
     { title: 'Contacts', href: '/submission/contacts' },
-    { title: 'Data', href: '/submission/data' },
     { title: 'Sample Group', href: '/submission/sample-group' },
   ];
 
@@ -75,12 +74,23 @@ export class EbiSubmissionMenuComponent implements OnInit {
    * Alter menu links and add submission DataTypes as links.
    */
   updateDataTypeLinks(dataTypes: DataType[]): void {
+    let filesTabNeeded = false;
+    let fileDataType;
     for (const dataType of dataTypes) {
-      if (dataType.id !== 'projects') {
+      if (dataType.id === 'files') {
+        filesTabNeeded = true;
+        fileDataType = dataType;
+      } else if (dataType.id !== 'projects') {
         this.tabLinks.splice(this.tabLinks.length, 0,
           { title: dataType.displayNamePlural, href: `/submission/metadata/${dataType.id}` }
         );
       }
+    }
+
+    if (filesTabNeeded) {
+      this.tabLinks.splice(this.tabLinks.length, 0,
+        { title: fileDataType.displayNamePlural, href: `/submission/data` }
+      );
     }
 
     this.addSubmitLink(this.pageService.setSubmissionViewMode(this.activeSubmission._links['submissionStatus'].href));
