@@ -7,5 +7,8 @@ export const environment = {
   production: false,
   apiHost: 'https://submission-dev.ebi.ac.uk/api/',
   authenticationHost: 'https://explore.api.aai.ebi.ac.uk',
-  validationSchemaEndpoint: 'https://subs-json-schema-validator.herokuapp.com/validate'
+  validationSchemaEndpoint: 'https://subs-json-schema-validator.herokuapp.com/validate',
+  dashboard: {
+    reloadInterval: 60000
+  }
 };

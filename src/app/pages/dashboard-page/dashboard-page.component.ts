@@ -8,6 +8,8 @@ import { RequestsService } from '../../services/requests.service';
 import { UserService } from '../../services/user.service';
 import { SpreadsheetsService } from '../../services/spreadsheets.service';
 
+import { environment } from 'src/environments/environment';
+
 @Component({
   selector: 'app-dashboard-page',
   templateUrl: './dashboard-page.component.html',
@@ -33,15 +35,16 @@ export class DashboardPageComponent implements OnInit {
     this.spreadsheetsService.deleteActiveSpreadsheet();
     this.teamService.deleteActiveTeam();
 
+    this.loadSubmisionData();
+    setInterval(() => this.loadSubmisionData(), environment.dashboard.reloadInterval);
+  }
+
+  loadSubmisionData() {
     // Get all submissions.
-    if (!this.submissions) {
-      this.getUserSubmissions();
-    }
+    this.getUserSubmissions();
 
     // Get submissions summary.
-    if (!this.submissionsSummary) {
-      this.getUserSubmissionsSummary();
-    }
+    this.getUserSubmissionsSummary();
   }
 
   onStartSubmission() {
@@ -95,6 +98,10 @@ export class DashboardPageComponent implements OnInit {
         console.log(err);
       }
     );
+  }
+
+  onRefreshDashboard() {
+    this.loadSubmisionData();
   }
 
   /**
