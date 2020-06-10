@@ -4,11 +4,12 @@
   <section id="main-content-area" class="row padding-top-xs padding-bottom-xsmall" role="main">
     <h2 class="padding-top-xlarge">Hi {{ authService.realname() | async }}</h2>
 
-    <div class="row">
-      <div *ngIf="submissionsSummary && submissionsSummary.hasOwnProperty('content')" class="columns small-9">
-          This is your dashboard. You currently have {{ submissionsSummary.content?.Draft }} active draft submissions.
+    <div class="row align-justify">
+      <div *ngIf="submissionsSummary && submissionsSummary.hasOwnProperty('content')" class="columns small-12 medium-7 large-8 ">
+          You currently have {{ submissionsSummary.content?.Draft }} active draft submissions. {{ submissionsSummary.content?.Processing }} of your submissions are currently under processing.
         <br>
-        <div *ngIf="submissionsSummary.content.hasOwnProperty('Completed') && submissionsSummary.content.Completed > 0">You have successfully completed {{ submissionsSummary.content?.Completed }} submissions to our archives.</div>
+        <div *ngIf="submissionsSummary.content.hasOwnProperty('Completed') && submissionsSummary.content.Completed > 0">You have successfully completed {{ submissionsSummary.content?.Completed }} submissions into our archives.</div>
+        <div *ngIf="submissionsSummary.content.hasOwnProperty('Failed') && submissionsSummary.content.Failed > 0">You have {{ submissionsSummary.content?.Failed }} failed submissions in our archives.</div>
         <div *ngIf="!submissionsSummary.content.hasOwnProperty('Completed')">You have not successfully completed any submissions to our archives.</div>
         Thanks for contributing to the future of science.
       </div>
@@ -16,7 +17,8 @@
           This is your dashboard. You currently do not have any submissions, yet.
       </div>
 
-      <div class="columns small-3 text-right">
+      <div class="columns small-12 medium-5 large-4 text-right">
+        <a class="button" (click)="onRefreshDashboard()">Refresh Dashboard</a> &nbsp;
         <a class="button" (click)="onStartSubmission()">Start a new Submission</a>
       </div>
     </div>
