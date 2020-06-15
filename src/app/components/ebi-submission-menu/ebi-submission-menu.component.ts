@@ -33,6 +33,8 @@ export class EbiSubmissionMenuComponent implements OnInit {
 
   public isTabsDisabled = true;
 
+  private customMetadataTabs = ['projects', 'sampleGroups'];
+
   public tabLinks: TabLinks[] = [
     { title: 'Overview', href: '/submission/overview' },
     { title: 'Project', href: '/submission/project' },
@@ -80,7 +82,7 @@ export class EbiSubmissionMenuComponent implements OnInit {
       if (dataType.id === 'files') {
         filesTabNeeded = true;
         fileDataType = dataType;
-      } else if (dataType.id !== 'projects') {
+      } else if (this.customMetadataTabs.indexOf(dataType.id) === -1) {
         this.tabLinks.splice(this.tabLinks.length, 0,
           { title: dataType.displayNamePlural, href: `/submission/metadata/${dataType.id}` }
         );
