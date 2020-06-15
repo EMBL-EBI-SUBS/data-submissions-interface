@@ -40,7 +40,117 @@
         
     </ngx-smart-modal>
 
-      <!-- Uploading metaData sheet fieldset. -->
+    <form [formGroup]="sampleGroupForm">
+      <!-- Database details fieldset -->
+      <fieldset *ngIf="isSampleTab" formGroupName="databaseForm" class="large-form padding-bottom-large padding-top-large">
+        <legend>Database</legend>
+
+        <p>The database section provides links to other databases that have data associated with this submission.</p>
+
+        <div class="form-group">
+          <label for="name">Database Name
+            <input type="text" class="form-control" formControlName="name" />
+          </label>
+        </div>
+      
+        <div class="form-group">
+          <label for="id">Database ID
+            <input type="text" class="form-control" formControlName="id" />
+          </label>
+        </div>
+
+        <div class="form-group">
+          <label for="uri">Database URI
+            <input type="text" class="form-control" formControlName="uri" />
+          </label>
+        </div>
+
+        <button *ngIf="!viewOnly && !editDatabaseMode" class="button" (click)="onAddDatabase()" [disabled]="!this.sampleGroupForm.get('databaseForm').dirty && !editDatabaseMode"><i class="icon icon-functional" data-icon="+"></i> Add New Database</button>
+        <button *ngIf="!viewOnly && editDatabaseMode" class="button" (click)="onAddDatabase()" [disabled]="this.sampleGroupForm.get('databaseForm').invalid && editDatabaseMode"><i class="icon icon-functional" data-icon="S"></i> Update Database</button>
+
+        <div *ngIf="activeSampleGroup?.databases?.length > 0">
+          <h3>Databases</h3>
+          <table class="hover">
+            <thead class="fixed">
+              <tr>
+                <th>Database Name</th>
+                <th>Database ID</th>
+                <th>Database URI</th>
+                <th width="20px">Actions</th>
+              </tr>
+            </thead>
+    
+            <tbody>
+            <tr *ngFor="let database of this.activeSampleGroup.databases; let i = index">
+              <td>{{ database.name }}</td>
+              <td>{{ database.id }}</td>
+              <td>{{ database.uri }}</td>
+              <td class="text-center">
+                <i *ngIf="!viewOnly" class="icon icon-functional" data-icon="e" (click)="onEditDatabase(i)"></i> &nbsp;
+                <i *ngIf="!viewOnly" class="icon icon-functional" data-icon="d" (click)="onDeleteDatabase(i)"></i>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </fieldset>
+    
+      <!-- Term Source details fieldset -->
+      <fieldset *ngIf="isSampleTab" formGroupName="termSourceForm" class="large-form padding-bottom-large padding-top-large">
+        <legend>Term Source</legend>
+
+        <p>The Term Source section is used to specify ontologies or controlled vocabularies (i.e. NCBI Taxonomy).</p>
+
+        <div class="form-group">
+          <label for="name">Term Source Name
+            <input type="text" class="form-control" formControlName="name" />
+          </label>
+        </div>
+      
+        <div class="form-group">
+          <label for="uri">Term Source URI
+            <input type="text" class="form-control" formControlName="uri">
+          </label>
+        </div>
+
+        <div class="form-group">
+          <label for="version">Term Source Version
+            <input type="text" class="form-control" formControlName="version">
+          </label>
+        </div>
+
+        <button *ngIf="!viewOnly && !editTermSourceMode" class="button" (click)="onAddTermSource()" [disabled]="!this.sampleGroupForm.get('termSourceForm').dirty && !editTermSourceMode"><i class="icon icon-functional" data-icon="+"></i> Add New Term Source</button>
+        <button *ngIf="!viewOnly && editTermSourceMode" class="button" (click)="onAddTermSource()" [disabled]="this.sampleGroupForm.get('termSourceForm').invalid && editTermSourceMode"><i class="icon icon-functional" data-icon="S"></i> Update Term Source</button>
+
+        <div *ngIf="activeSampleGroup?.termSources?.length > 0">
+          <h3>Term Sources</h3>
+          <table class="hover">
+            <thead class="fixed">
+              <tr>
+                <th>Term Source Name</th>
+                <th>Term Source URI</th>
+                <th>Term Source Version</th>
+                <th width="20px">Actions</th>
+              </tr>
+            </thead>
+    
+            <tbody>
+            <tr *ngFor="let termSource of this.activeSampleGroup.termSources; let i = index">
+              <td>{{ termSource.name }}</td>
+              <td>{{ termSource.uri }}</td>
+              <td>{{ termSource.version }}</td>
+              <td class="text-center">
+                <i *ngIf="!viewOnly" class="icon icon-functional" data-icon="e" (click)="onEditTermSource(i)"></i> &nbsp;
+                <i *ngIf="!viewOnly" class="icon icon-functional" data-icon="d" (click)="onDeleteTermSource(i)"></i>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </fieldset>
+    </form>
+
+    <!-- Uploading metaData sheet fieldset. -->
     <fieldset *ngIf="!viewOnly" required class="large-form padding-bottom-large padding-top-large">
       <legend>Upload {{ activeDataType.displayNamePlural }} Sheet</legend>
 
@@ -76,6 +186,7 @@
         <input type="file" name="csv-template" (change)="previewCSVFile($event)" class="hide" />
       </div>
     </fieldset>
+    
 
     <!-- View uploaded metadata. -->
     <fieldset required class="large-form padding-bottom-large padding-top-large">

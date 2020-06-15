@@ -4,15 +4,17 @@ import {
   OnInit,
   ElementRef
 } from '@angular/core';
+import * as uuid from 'uuid';
 import { Router, ActivatedRoute } from '@angular/router';
-import { FormBuilder } from '@angular/forms';
 import { NgxSmartModalService } from 'ngx-smart-modal';
+import { FormGroup, FormControl, Validators, FormBuilder, AbstractControl } from '@angular/forms';
 
 // Import Services.
 import { SubmissionsService } from '../../../services/submissions.service';
 import { TeamsService } from '../../../services/teams.service';
 import { RequestsService } from '../../../services/requests.service';
 import { SpreadsheetsService } from '../../../services/spreadsheets.service';
+import { SampleGroupService } from '../../../services/samplegroup.service';
 import { SubmissionStatus } from 'src/app/models/submission-status';
 
 @Component({
@@ -21,24 +23,34 @@ import { SubmissionStatus } from 'src/app/models/submission-status';
   styleUrls: ['./metadata-page.component.scss'],
   providers: [
     SubmissionsService,
+    SampleGroupService,
     TeamsService,
     RequestsService,
     SpreadsheetsService
   ]
 })
 export class MetadataPageComponent implements OnInit {
+
+  SAMPLES_DATATYPE: string = "samples";
+  sampleGroupForm: FormGroup;
+  selectedIndex = -1;
+  newSampleGroup = false;
+
   id: string;
   objectKeys = Object.keys;
   activeSubmission: any;
+  activeSampleGroup: any;
   selectedMetadataErrorMessages = {};
   selectedMetadataAttributes = new Object;
   activeDataType: any;
   submissionMetadata: any;
   templatesList: any;
   selectedTemplate: any;
-  templateForm = this._fb.group({
+  templateForm = this.formBuilder.group({
     selectedTemplate: [''],
   });
+
+  isSampleTab = false;
 
   metadataTableHeaders = [];
 
@@ -77,15 +89,18 @@ export class MetadataPageComponent implements OnInit {
   metadataAttributes = [];
 
   viewOnly = false;
+  editDatabaseMode = false;
+  editTermSourceMode = false;
 
   constructor(
     private router: Router,
     private submissionsService: SubmissionsService,
     private requestsService: RequestsService,
     private spreadsheetsService: SpreadsheetsService,
+    private sampleGroupService: SampleGroupService,
     private activatedRoute: ActivatedRoute,
     private elementRef: ElementRef,
-    private _fb: FormBuilder,
+    private formBuilder: FormBuilder,
     private pageService: PageService,
     public ngxSmartModalService: NgxSmartModalService
   ) {}
@@ -94,6 +109,7 @@ export class MetadataPageComponent implements OnInit {
     this.activatedRoute.params.subscribe(params => {
       this.resetVariables();
       this.activeSubmission = this.submissionsService.getActiveSubmission();
+      this.getActiveSampleGroup();
 
       this.viewOnly = this.pageService.setSubmissionViewMode(this.activeSubmission._links.submissionStatus.href);
 
@@ -132,6 +148,11 @@ export class MetadataPageComponent implements OnInit {
       return false;
     }
 
+    if (this.activeDataType.id === this.SAMPLES_DATATYPE) {
+      this.isSampleTab = true;
+      this.initializeSampleGroupForms();
+    }
+
     this.requestsService
       .get(this.activeSubmission._links.contents._links[this.id].href)
       .subscribe(
@@ -145,6 +166,165 @@ export class MetadataPageComponent implements OnInit {
           this.loading = false;
         }
       );
+  }
+
+  initializeSampleGroupForms() {
+    this.sampleGroupForm = this.formBuilder.group({
+      databaseForm: this.formBuilder.group({
+        name: '',
+        id: '',
+        uri: ''
+      }),
+      termSourceForm: this.formBuilder.group({
+        name: '',
+        uri: '',
+        version: ''
+      })
+    });
+  }
+
+  getActiveSampleGroup() {
+    this.activeSampleGroup = this.sampleGroupService.getActiveSampleGroup();
+
+    // If there is no active sample group stored in session.
+    if (!this.activeSampleGroup) {
+      this.sampleGroupService.getActiveSubmissionSampleGroup(this.activeSubmission).subscribe(
+        (data) => {
+          if (data) {
+            this.activeSampleGroup = data;
+          }
+
+        },
+        (error) => {
+          //TODO: SUBS-1940
+        }
+      );
+    }
+  }
+
+  onAddDatabase() {
+    const databaseForm = this.clearWhitespaces(this.sampleGroupForm.get('databaseForm'));
+    if (this.initCheckSampleGroup(databaseForm)) {
+
+      if (this.selectedIndex > -1) {
+        this.activeSampleGroup.databases[this.selectedIndex] = databaseForm.value;
+      } else {
+        this.activeSampleGroup.databases.push(databaseForm.value);
+      }
+
+      this.upsertSampleGroup(databaseForm);
+      this.editDatabaseMode = false;
+    }
+  }
+
+  initialiseSampleGroup() {
+    this.activeSampleGroup = {};
+    this.activeSampleGroup.alias = uuid.v4(); // TODO: this should go to the API level, remove when its done
+    this.activeSampleGroup.persons = [];
+    this.activeSampleGroup.organizations = [];
+    this.activeSampleGroup.publications = [];
+    this.activeSampleGroup.databases = [];
+    this.activeSampleGroup.termSources = [];
+
+    this.newSampleGroup = true;
+  }
+
+  onEditDatabase(databaseIndex: number) {
+    const databaseForm = this.sampleGroupForm.get('databaseForm');
+    const selectedDatabase = this.activeSampleGroup.databases[databaseIndex];
+    databaseForm.get('name').setValue(selectedDatabase.name);
+    databaseForm.get('id').setValue(selectedDatabase.id);
+    databaseForm.get('uri').setValue(selectedDatabase.uri);
+
+    this.editDatabaseMode = true;
+    this.selectedIndex = databaseIndex;
+  }
+
+  onDeleteDatabase(databaseIndex: number) {
+    this.activeSampleGroup.databases.splice(databaseIndex, 1);
+
+    this.updateSampleGroup();
+  }
+
+  onAddTermSource() {
+    const termSourceForm = this.clearWhitespaces(this.sampleGroupForm.get('termSourceForm'));
+    if (this.initCheckSampleGroup(termSourceForm)) {
+
+      if (this.selectedIndex > -1) {
+        this.activeSampleGroup.termSources[this.selectedIndex] = termSourceForm.value;
+      } else {
+        this.activeSampleGroup.termSources.push(termSourceForm.value);
+      }
+
+      this.upsertSampleGroup(termSourceForm);
+      this.editTermSourceMode = false;
+    }
+  }
+
+  onEditTermSource(termSourceIndex: number) {
+    const termSourceForm = this.sampleGroupForm.get('termSourceForm');
+    const selectedtermSource = this.activeSampleGroup.termSources[termSourceIndex];
+    termSourceForm.get('name').setValue(selectedtermSource.name);
+    termSourceForm.get('uri').setValue(selectedtermSource.uri);
+    termSourceForm.get('version').setValue(selectedtermSource.version);
+
+    this.editTermSourceMode = true;
+    this.selectedIndex = termSourceIndex;
+  }
+
+  onDeleteTermSource(termSourceIndex: number) {
+    this.activeSampleGroup.termSources.splice(termSourceIndex, 1);
+
+    this.updateSampleGroup();
+  }
+
+  initCheckSampleGroup(formGroup: AbstractControl) : Boolean {
+    if (this.isFormEmpty(formGroup) === true) {
+      formGroup.reset();
+      return false;
+    }
+
+    if (formGroup.valid) {
+      if (!this.activeSampleGroup) {
+        this.initialiseSampleGroup();
+      }
+      return true;
+    }
+
+    return false;
+  }
+
+  upsertSampleGroup(formGroup: AbstractControl) {
+    if (this.newSampleGroup) {
+      const sampleGroupCreateUrl = this.activeSubmission._links.contents._links['sampleGroups:create'].href;
+      this.requestsService.create(sampleGroupCreateUrl, this.activeSampleGroup).subscribe(
+        (sampleGroup) => {
+          this.sampleGroupService.setActiveSampleGroup(sampleGroup);
+          this.activeSampleGroup = sampleGroup;
+        },
+        (error) => {
+          //TODO: SUBS-1940
+        }
+      );
+    } else {
+      this.updateSampleGroup();
+    }
+
+    this.newSampleGroup = false;
+    formGroup.reset();
+    this.selectedIndex = -1;
+  }
+
+
+  private updateSampleGroup() {
+    const sampleGroupUpdateUrl = this.activeSampleGroup._links['self:update'].href;
+    this.requestsService.update(sampleGroupUpdateUrl, this.activeSampleGroup).subscribe(
+      (sampleGroup) => {
+        this.sampleGroupService.setActiveSampleGroup(sampleGroup);
+      },
+      (error) => {
+      }
+    );
   }
 
   /**
@@ -209,6 +389,7 @@ export class MetadataPageComponent implements OnInit {
         }
       },
       err => {
+        //TODO: SUBS-1940
       }
     );
   }
@@ -234,6 +415,7 @@ export class MetadataPageComponent implements OnInit {
             },
             err => {
               console.log(err);
+              //TODO: SUBS-1940
             }
           );
       this.loading = false;
@@ -271,6 +453,7 @@ export class MetadataPageComponent implements OnInit {
         },
         error => {
           console.log(error);
+          //TODO: SUBS-1940
         }
       );
   }
@@ -330,6 +513,7 @@ export class MetadataPageComponent implements OnInit {
             this.loading = false;
             event.target.value = null;
             // TODO: Handle Errors.
+            //TODO: SUBS-1940
             console.log(err);
           }
         );
@@ -387,6 +571,7 @@ export class MetadataPageComponent implements OnInit {
       err => {
         console.log(err);
         this.loading = false;
+        //TODO: SUBS-1940
       }
     );
   }
@@ -522,6 +707,7 @@ export class MetadataPageComponent implements OnInit {
   }
 
   resetVariables() {
+    delete this.isSampleTab;
     delete this.submissionMetadata;
     delete this.activeDataType;
     delete this.selectedTemplate;
@@ -534,5 +720,29 @@ export class MetadataPageComponent implements OnInit {
     this.metadataValues = [];
     this.metadataAttributes = [];
     this.templateForm.reset();
+    this.sampleGroupService.deleteActiveSampleGroup();
   }
+
+  private isFormEmpty(form: AbstractControl) {
+    let isEmpty = true;
+    const formElement = Object.keys(form.value);
+    for (const element of formElement) {
+      const elementValue = form.value[element];
+      if (elementValue != null && elementValue !== '') {
+        isEmpty = false;
+      }
+    }
+
+    return isEmpty;
+  }
+
+  private clearWhitespaces(form: AbstractControl) {
+    const formElement = Object.keys(form.value);
+    for (const element of formElement) {
+      form.value[element] = form.value[element] == null ? '' : form.value[element].trim();
+    }
+
+    return form;
+  }
+
 }
