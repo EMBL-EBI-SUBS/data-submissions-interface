@@ -38,7 +38,7 @@
     "angular2-json-schema-form": "^0.7.0-alpha.1",
     "angular2-jwt": "^0.2.3",
     "core-js": "^2.5.3",
-    "datatables.net": "^1.10.16",
+    "datatables.net": "^1.11.3",
     "datatables.net-dt": "^1.10.16",
     "ebi-framework": "1.3.8",
     "http-status-codes": "^1.3.0",
